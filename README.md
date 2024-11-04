@@ -1,6 +1,6 @@
-# About Battleships
+# About Battleship
 
-Battleships is a traditional two-player strategy game where players try to sink each others' ships by correctly guessing their hidden locations on a 10x10 grid.
+Battleship is a traditional two-player strategy game where players try to sink each others' ships by correctly guessing their hidden locations on a 10x10 grid.
 
 ## Getting started
 
