@@ -72,6 +72,7 @@ The purpose of this project is to code a browser-based version of this game usin
 - It should be accessible and use aria attributes and appropriate semantic HTML.
 - It should have a mechanism to decide which player goes first. This might be random or implement a rock-paper-scissors approach.
 - It may be an option to guide the player by having a visible or toggleable heatmap advising which squares are most likely to contain a ship.
+- It should have the ability to save your game to come back to later.
 
 ### The tech stack
 
@@ -86,4 +87,6 @@ The purpose of this project is to code a browser-based version of this game usin
 - The Jest tests should form part of a CI/CD pipeline to enable me to determine where things have broken or degraded along the way.
 - It should use Git version control
 - It should be publicly viewable online using Netlify (I have found this much more flexible than Github pages in the past).
+- It should be set up with Google Analytics
+
  
