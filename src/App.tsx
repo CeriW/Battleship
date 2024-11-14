@@ -4,23 +4,36 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Board />
+    </>
   );
 }
+
+const Board = () => {
+  const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+  return (
+    <div className="board">
+      {rows.map((row) => {
+        const columns = [];
+        for (let i = 1; i <= 10; i++) {
+          columns.push(
+            <span key={i} className="number">
+              {i}
+            </span>
+          );
+        }
+
+        return (
+          <div key={row} className="row">
+            <span className="row-marker">{row}</span>
+            {columns}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default App;
