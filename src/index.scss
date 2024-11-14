@@ -16,7 +16,8 @@ code {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
 
-  .row {
+  .row,
+  .column-marker {
     display: grid;
     grid-template-columns: repeat(11, 1fr);
   }
