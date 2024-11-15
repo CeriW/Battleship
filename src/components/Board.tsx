@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function Board() {
   const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
