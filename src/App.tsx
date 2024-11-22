@@ -1,7 +1,7 @@
 import './index.scss';
 import Board from './components/Board';
 
-function App() {
+export function App() {
   return (
     <>
       <Board />
