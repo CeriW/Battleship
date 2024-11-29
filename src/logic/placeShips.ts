@@ -36,6 +36,7 @@ const shipTypes: ShipInfo[] = [
 //   destroyer: [],
 // };
 
+// TODO - write tests for this function
 const generateRandomPosition = (ship: ShipInfo): { row: number; startingColumn: number } => {
   const row = Math.floor(Math.random() * 10);
   let startingColumn = Math.floor(Math.random() * 10);
