@@ -6,7 +6,7 @@ import { initialiseShipArray, placeShips } from './logic/placeShips';
 export function App() {
   const computerShips = initialiseShipArray();
   placeShips();
-  console.log(computerShips);
+  // console.log(computerShips);
 
   return (
     <>

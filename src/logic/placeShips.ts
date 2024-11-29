@@ -6,41 +6,52 @@ export function initialiseShipArray() {
   return array;
 }
 
-type Ship = 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+// type Ship = 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
 
-const shipSizes: Record<Ship, number> = {
-  carrier: 5,
-  battleship: 4,
-  cruiser: 3,
-  submarine: 3,
-  destroyer: 2,
+type ShipInfo = {
+  name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+  size: number;
 };
 
-const computerShips: Record<Ship, string[]> = {
-  carrier: [],
-  battleship: [],
-  cruiser: [],
-  submarine: [],
-  destroyer: [],
-};
+const shipTypes: ShipInfo[] = [
+  { name: 'carrier', size: 5 },
+  { name: 'battleship', size: 4 },
+  { name: 'cruiser', size: 3 },
+  { name: 'submarine', size: 3 },
+  { name: 'destroyer', size: 2 },
+];
+// const shipSizes: Record<Ship, number> = {
+//   carrier: 5,
+//   battleship: 4,
+//   cruiser: 3,
+//   submarine: 3,
+//   destroyer: 2,
+// };
+
+// const computerShips: Record<Ship, string[]> = {
+//   carrier: [],
+//   battleship: [],
+//   cruiser: [],
+//   submarine: [],
+//   destroyer: [],
+// };
 
 const rowNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const placeShips = () => {
   // TODO - allow for horizontal and vertical
-  // Starting with horizontal as this one is the easiest
-  const axis = 'horizontal';
+  // Starting with horizontal as this one is the easiesta
 
-  (Object.keys(computerShips) as (keyof typeof computerShips)[]).forEach((ship) => {
-    computerShips[ship] = [];
+  const positions = initialiseShipArray();
 
+  shipTypes.forEach((ship) => {
     const row = Math.floor(Math.random() * 10);
-    const startingColumn = Math.floor(Math.random() * (10 - shipSizes[ship]));
-
-    for (let i = 0; i < shipSizes[ship]; i++) {
-      computerShips[ship].push(`${rowNames[row]}${startingColumn + i}`);
+    // const startingColumn = Math.floor(Math.random() * 10 - ship.size);
+    let startingColumn = Math.floor(Math.random() * 10);
+    while (startingColumn < 0 || startingColumn > 10 - ship.size) {
+      startingColumn = Math.floor(Math.random() * 10);
     }
-  });
 
-  console.log('Final positions for all ships:', computerShips);
+    console.log(ship, row, startingColumn);
+  });
 };
