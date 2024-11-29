@@ -1,4 +1,4 @@
-import { generateRandomPosition } from './placeShips';
+import { generateRandomPosition, checkValidShipState, PositionArray, initialiseShipArray } from './placeShips';
 
 describe('generateRandomShipPosition', () => {
   test('should ensure the startingColumn leaves enough space for the ship', () => {
@@ -46,5 +46,83 @@ describe('generateRandomShipPosition', () => {
     }
 
     expect(positions.size).toBeGreaterThan(1);
+  });
+});
+
+describe('checkValidShipState', () => {
+  test('returns true when there are no overlaps with other ships', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 0 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('returns false when the proposed positions overlap with existing ships', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][1] = 'battleship';
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 0 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('returns true when a ship is placed at the edge of the board without overlap', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 7 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('returns false when a ship overlaps another ship at the edge of the board', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][8] = 'carrier';
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 7 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('returns true when no ships overlap in different rows', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 0 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('returns false when ship size exceeds board boundaries', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { row: 0, startingColumn: 8 },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    const result = checkValidShipState(props);
+    expect(result).toBe(false);
   });
 });
