@@ -11,8 +11,8 @@ export function App() {
   return (
     <>
       <Board />
-      <Board />
-      <Board />
+      {/* <Board />
+      <Board /> */}
     </>
   );
 }
