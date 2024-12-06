@@ -128,7 +128,7 @@ describe('checkValidShipState', () => {
 });
 
 describe('placeShips', () => {
-  test('ships are all placed correctly on the board', () => {
+  test('each ship appears the correct number of times on the board', () => {
     for (let i = 0; i < 100; i++) {
       const positions = placeShips().flat();
       expect(positions.filter((ship) => ship === 'carrier')).toHaveLength(5);
