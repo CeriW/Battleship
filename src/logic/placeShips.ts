@@ -23,6 +23,8 @@ const shipTypes: ShipInfo[] = [
 
 // Generate a random ship position that does not go off the side of the board
 export const generateRandomPosition = (ship: ShipInfo): { row: number; startingColumn: number } => {
+  // TODO - vertical placement
+
   const row = Math.floor(Math.random() * 10);
   let startingColumn = Math.floor(Math.random() * 10);
 
@@ -43,9 +45,9 @@ export const checkValidShipState = ({
   proposedPositions: { row: number; startingColumn: number };
   shipSize: number;
   existingPositions: PositionArray;
-}) => {
+}): boolean => {
   for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
-    if (existingPositions[proposedPositions.row][i] || proposedPositions.startingColumn + shipSize) {
+    if (existingPositions[proposedPositions.row][i] || proposedPositions.startingColumn + shipSize > 10) {
       return false;
     }
   }
@@ -53,6 +55,7 @@ export const checkValidShipState = ({
 };
 
 // TODO - write tests
+// TODO - return type
 export const placeShips = () => {
   const positions = initialiseShipArray();
 
@@ -77,4 +80,5 @@ export const placeShips = () => {
   });
 
   console.log(positions);
+  return positions;
 };
