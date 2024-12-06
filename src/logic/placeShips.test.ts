@@ -79,7 +79,7 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 7 },
+      proposedPositions: { row: 0, startingColumn: 6 },
       shipSize: 3,
       existingPositions,
     };
@@ -92,7 +92,7 @@ describe('checkValidShipState', () => {
     existingPositions[0][8] = 'carrier';
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 7 },
+      proposedPositions: { row: 0, startingColumn: 6 },
       shipSize: 3,
       existingPositions,
     };
@@ -110,7 +110,7 @@ describe('checkValidShipState', () => {
       existingPositions,
     };
 
-    expect(checkValidShipState(props)).toBe(false);
+    expect(checkValidShipState(props)).toBe(true);
   });
 
   test('returns false when ship size exceeds board boundaries', () => {

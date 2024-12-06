@@ -47,7 +47,7 @@ export const checkValidShipState = ({
   existingPositions: PositionArray;
 }): boolean => {
   for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
-    if (existingPositions[proposedPositions.row][i] || proposedPositions.startingColumn + shipSize > 10) {
+    if (existingPositions[proposedPositions.row][i] || proposedPositions.startingColumn + shipSize > 9) {
       return false;
     }
   }
