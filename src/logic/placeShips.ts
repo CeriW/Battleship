@@ -26,10 +26,10 @@ export const generateRandomPosition = (ship: ShipInfo): { row: number; startingC
   // TODO - vertical placement
 
   const row = Math.floor(Math.random() * 10);
-  let startingColumn = Math.floor(Math.random() * 10);
+  let startingColumn = Math.floor(Math.random() * ship.size);
 
-  while (startingColumn < 0 || startingColumn > 10 - ship.size) {
-    startingColumn = Math.floor(Math.random() * 10);
+  while (startingColumn > 10 - ship.size) {
+    startingColumn = Math.floor(Math.random() * ship.size);
   }
 
   return { row, startingColumn };
