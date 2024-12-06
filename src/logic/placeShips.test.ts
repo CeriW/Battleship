@@ -127,19 +127,15 @@ describe('checkValidShipState', () => {
   });
 });
 
-// const shipTypes: ShipInfo[] = [
-//   { name: 'carrier', size: 5 },
-//   { name: 'battleship', size: 4 },
-//   { name: 'cruiser', size: 3 },
-//   { name: 'submarine', size: 3 },
-//   { name: 'destroyer', size: 2 },
-// ];
-
 describe('placeShips', () => {
   test('ships are all placed correctly on the board', () => {
-    // const positions = placeShips();
-    // console.log(positions);
-    // expect(positions.filter((item) => item === 'cruiser').length).toEqual(3);
-    expect(true).toBeTruthy();
+    for (let i = 0; i < 100; i++) {
+      const positions = placeShips().flat();
+      expect(positions.filter((ship) => ship === 'carrier')).toHaveLength(5);
+      expect(positions.filter((ship) => ship === 'battleship')).toHaveLength(4);
+      expect(positions.filter((ship) => ship === 'cruiser')).toHaveLength(3);
+      expect(positions.filter((ship) => ship === 'submarine')).toHaveLength(3);
+      expect(positions.filter((ship) => ship === 'destroyer')).toHaveLength(2);
+    }
   });
 });

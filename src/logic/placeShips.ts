@@ -54,9 +54,7 @@ export const checkValidShipState = ({
   return true;
 };
 
-// TODO - write tests
-// TODO - return type
-export const placeShips = () => {
+export const placeShips = (): PositionArray => {
   const positions = initialiseShipArray();
 
   shipTypes.forEach((ship: ShipInfo) => {
@@ -78,7 +76,5 @@ export const placeShips = () => {
       }
     }
   });
-
-  console.log(positions);
   return positions;
 };
