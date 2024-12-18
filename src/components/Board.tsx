@@ -4,7 +4,7 @@ export default function Board() {
   const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
   return (
-    <div className="board">
+    <div className="board" data-testid="board">
       <div className="column-marker">
         <BoardColumns row={'X'} startNum={0} />
       </div>
