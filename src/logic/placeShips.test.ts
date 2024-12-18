@@ -3,14 +3,14 @@ import { generateRandomPosition, checkValidShipState, initialiseShipArray, place
 describe('generateRandomShipPosition', () => {
   test('should ensure the startingColumn leaves enough space for the ship', () => {
     for (let i = 0; i < 100; i++) {
-      const { startingColumn } = generateRandomPosition({ name: 'cruiser', size: 4 });
+      const { startingColumn } = generateRandomPosition({ name: 'cruiser', size: 4 }, 'horizontal');
       expect(startingColumn).toBeLessThanOrEqual(6);
     }
   });
 
   test('should return a row and startingColumn within the board bounds', () => {
     for (let i = 0; i < 100; i++) {
-      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 3 });
+      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 3 }, 'horizontal');
 
       expect(row).toBeGreaterThanOrEqual(0);
       expect(row).toBeLessThan(10);
@@ -21,7 +21,7 @@ describe('generateRandomShipPosition', () => {
 
   test('should handle ships of size 1 correctly', () => {
     for (let i = 0; i < 100; i++) {
-      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 1 });
+      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 1 }, 'horizontal');
 
       expect(row).toBeGreaterThanOrEqual(0);
       expect(row).toBeLessThan(10);
@@ -32,7 +32,7 @@ describe('generateRandomShipPosition', () => {
 
   test('a theoretical size 10 ship should only be able to start in column 0', () => {
     for (let i = 0; i < 100; i++) {
-      const shipPosition = generateRandomPosition({ name: 'cruiser', size: 10 });
+      const shipPosition = generateRandomPosition({ name: 'cruiser', size: 10 }, 'horizontal');
       expect(shipPosition.startingColumn).toBe(0);
     }
   });
@@ -41,7 +41,7 @@ describe('generateRandomShipPosition', () => {
     const positions = new Set();
 
     for (let i = 0; i < 100; i++) {
-      const position = generateRandomPosition({ name: 'cruiser', size: 3 });
+      const position = generateRandomPosition({ name: 'cruiser', size: 3 }, 'horizontal');
       positions.add(`${position.row}-${position.startingColumn}`);
     }
 

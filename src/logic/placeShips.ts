@@ -22,14 +22,26 @@ const shipTypes: ShipInfo[] = [
 ];
 
 // Generate a random ship position that does not go off the side of the board
-export const generateRandomPosition = (ship: ShipInfo): { row: number; startingColumn: number } => {
-  // TODO - vertical placement
+export const generateRandomPosition = (
+  ship: ShipInfo,
+  alignment = Math.random() > 0.5 ? 'horizontal' : 'vertical'
+): { row: number; startingColumn: number } => {
+  let row, startingColumn;
 
-  const row = Math.floor(Math.random() * 10);
-  let startingColumn = Math.floor(Math.random() * ship.size);
-
-  while (startingColumn > 10 - ship.size) {
+  if (alignment === 'horizontal') {
+    row = Math.floor(Math.random() * 10);
     startingColumn = Math.floor(Math.random() * ship.size);
+
+    while (startingColumn > 10 - ship.size) {
+      startingColumn = Math.floor(Math.random() * ship.size);
+    }
+  } else {
+    row = Math.floor(Math.random() * 10);
+    startingColumn = Math.floor(Math.random() * ship.size);
+
+    while (row > 10 - ship.size) {
+      row = Math.floor(Math.random() * 10);
+    }
   }
 
   return { row, startingColumn };
