@@ -1,6 +1,6 @@
 import { generateRandomPosition, checkValidShipState, initialiseShipArray, placeShips } from './placeShips';
 
-describe('generateRandomShipPosition', () => {
+describe('generateRandomShipPosition - horizontal', () => {
   test('should ensure the startingColumn leaves enough space for the ship', () => {
     for (let i = 0; i < 100; i++) {
       const { startingColumn } = generateRandomPosition({ name: 'cruiser', size: 4 }, 'horizontal');
@@ -8,12 +8,12 @@ describe('generateRandomShipPosition', () => {
     }
   });
 
-  test('should return a row and startingColumn within the board bounds', () => {
+  test('should return a startingRow and startingColumn within the board bounds', () => {
     for (let i = 0; i < 100; i++) {
-      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 3 }, 'horizontal');
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 3 }, 'horizontal');
 
-      expect(row).toBeGreaterThanOrEqual(0);
-      expect(row).toBeLessThan(10);
+      expect(startingRow).toBeGreaterThanOrEqual(0);
+      expect(startingRow).toBeLessThan(10);
       expect(startingColumn).toBeGreaterThanOrEqual(0);
       expect(startingColumn).toBeLessThanOrEqual(9);
     }
@@ -21,10 +21,10 @@ describe('generateRandomShipPosition', () => {
 
   test('should handle ships of size 1 correctly', () => {
     for (let i = 0; i < 100; i++) {
-      const { row, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 1 }, 'horizontal');
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 1 }, 'horizontal');
 
-      expect(row).toBeGreaterThanOrEqual(0);
-      expect(row).toBeLessThan(10);
+      expect(startingRow).toBeGreaterThanOrEqual(0);
+      expect(startingRow).toBeLessThan(10);
       expect(startingColumn).toBeGreaterThanOrEqual(0);
       expect(startingColumn).toBeLessThan(10);
     }
@@ -42,7 +42,56 @@ describe('generateRandomShipPosition', () => {
 
     for (let i = 0; i < 100; i++) {
       const position = generateRandomPosition({ name: 'cruiser', size: 3 }, 'horizontal');
-      positions.add(`${position.row}-${position.startingColumn}`);
+      positions.add(`${position.startingRow}-${position.startingColumn}`);
+    }
+
+    expect(positions.size).toBeGreaterThan(1);
+  });
+});
+
+describe('generateRandomShipPosition - vertical', () => {
+  test('should ensure the starting startingRow leaves enough space for the ship', () => {
+    for (let i = 0; i < 100; i++) {
+      const { startingRow } = generateRandomPosition({ name: 'cruiser', size: 4 }, 'vertical');
+      expect(startingRow).toBeLessThanOrEqual(6);
+    }
+  });
+
+  test('should return a startingRow and startingColumn within the board bounds', () => {
+    for (let i = 0; i < 100; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 3 }, 'vertical');
+
+      expect(startingRow).toBeGreaterThanOrEqual(0);
+      expect(startingRow).toBeLessThan(10);
+      expect(startingColumn).toBeGreaterThanOrEqual(0);
+      expect(startingColumn).toBeLessThanOrEqual(9);
+    }
+  });
+
+  test('should handle ships of size 1 correctly', () => {
+    for (let i = 0; i < 100; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'cruiser', size: 1 }, 'vertical');
+
+      expect(startingRow).toBeGreaterThanOrEqual(0);
+      expect(startingRow).toBeLessThan(10);
+      expect(startingColumn).toBeGreaterThanOrEqual(0);
+      expect(startingColumn).toBeLessThan(10);
+    }
+  });
+
+  test('a theoretical size 10 ship should only be able to start in startingRow 0', () => {
+    for (let i = 0; i < 100; i++) {
+      const shipPosition = generateRandomPosition({ name: 'cruiser', size: 10 }, 'vertical');
+      expect(shipPosition.startingRow).toBe(0);
+    }
+  });
+
+  test('should generate random positions for the same ship size', () => {
+    const positions = new Set();
+
+    for (let i = 0; i < 100; i++) {
+      const position = generateRandomPosition({ name: 'cruiser', size: 3 }, 'vertical');
+      positions.add(`${position.startingRow}-${position.startingColumn}`);
     }
 
     expect(positions.size).toBeGreaterThan(1);
@@ -54,7 +103,7 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0 },
       shipSize: 3,
       existingPositions,
     };
@@ -67,7 +116,7 @@ describe('checkValidShipState', () => {
     existingPositions[0][1] = 'battleship';
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0 },
       shipSize: 3,
       existingPositions,
     };
@@ -79,7 +128,7 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 6 },
+      proposedPositions: { startingRow: 0, startingColumn: 6 },
       shipSize: 3,
       existingPositions,
     };
@@ -92,7 +141,7 @@ describe('checkValidShipState', () => {
     existingPositions[0][8] = 'carrier';
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 6 },
+      proposedPositions: { startingRow: 0, startingColumn: 6 },
       shipSize: 3,
       existingPositions,
     };
@@ -100,12 +149,12 @@ describe('checkValidShipState', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('returns true when no ships overlap in different rows', () => {
+  test('returns true when no ships overlap in different startingRows', () => {
     let existingPositions = initialiseShipArray();
     existingPositions[1][0] = 'submarine';
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0 },
       shipSize: 3,
       existingPositions,
     };
@@ -117,7 +166,7 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { row: 0, startingColumn: 8 },
+      proposedPositions: { startingRow: 0, startingColumn: 8 },
       shipSize: 3,
       existingPositions,
     };

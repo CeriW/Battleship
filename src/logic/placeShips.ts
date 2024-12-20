@@ -24,27 +24,27 @@ const shipTypes: ShipInfo[] = [
 // Generate a random ship position that does not go off the side of the board
 export const generateRandomPosition = (
   ship: ShipInfo,
-  alignment = Math.random() > 0.5 ? 'horizontal' : 'vertical'
-): { row: number; startingColumn: number } => {
-  let row, startingColumn;
+  alignment = Math.random() > 0.5 ? 'horizontal' : 'vertical' // For testing purposes only
+): { startingRow: number; startingColumn: number } => {
+  let startingRow, startingColumn;
 
   if (alignment === 'horizontal') {
-    row = Math.floor(Math.random() * 10);
+    startingRow = Math.floor(Math.random() * 10);
     startingColumn = Math.floor(Math.random() * ship.size);
 
     while (startingColumn > 10 - ship.size) {
       startingColumn = Math.floor(Math.random() * ship.size);
     }
   } else {
-    row = Math.floor(Math.random() * 10);
+    startingRow = Math.floor(Math.random() * 10);
     startingColumn = Math.floor(Math.random() * ship.size);
 
-    while (row > 10 - ship.size) {
-      row = Math.floor(Math.random() * 10);
+    while (startingRow > 10 - ship.size) {
+      startingRow = Math.floor(Math.random() * 10);
     }
   }
 
-  return { row, startingColumn };
+  return { startingRow, startingColumn };
 };
 
 // Check that for a proposed ship occupation, there are no overlaps with other ships
@@ -54,12 +54,12 @@ export const checkValidShipState = ({
   shipSize,
   existingPositions,
 }: {
-  proposedPositions: { row: number; startingColumn: number };
+  proposedPositions: { startingRow: number; startingColumn: number };
   shipSize: number;
   existingPositions: PositionArray;
 }): boolean => {
   for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
-    if (existingPositions[proposedPositions.row][i] || proposedPositions.startingColumn + shipSize > 9) {
+    if (existingPositions[proposedPositions.startingRow][i] || proposedPositions.startingColumn + shipSize > 9) {
       return false;
     }
   }
@@ -83,10 +83,12 @@ export const placeShips = (): PositionArray => {
 
       if (validShipState) {
         for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-          positions[proposedPositions.row][i] = ship.name;
+          positions[proposedPositions.startingRow][i] = ship.name;
         }
       }
     }
   });
+
+  console.log(positions);
   return positions;
 };
