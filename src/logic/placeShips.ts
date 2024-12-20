@@ -110,6 +110,5 @@ export const placeShips = (): PositionArray => {
     }
   });
 
-  console.log(positions);
   return positions;
 };
