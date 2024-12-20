@@ -96,8 +96,15 @@ export const placeShips = (): PositionArray => {
       });
 
       if (validShipState) {
-        for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-          positions[proposedPositions.startingRow][i] = ship.name;
+        if (proposedPositions.alignment === 'horizontal') {
+          for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
+            positions[proposedPositions.startingRow][i] = ship.name;
+          }
+        } else {
+          // vertical placement
+          for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
+            positions[i][proposedPositions.startingColumn] = ship.name;
+          }
         }
       }
     }
