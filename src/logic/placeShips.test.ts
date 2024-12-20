@@ -98,12 +98,12 @@ describe('generateRandomShipPosition - vertical', () => {
   });
 });
 
-describe('checkValidShipState', () => {
+describe('checkValidShipState - horizontal', () => {
   test('returns true when there are no overlaps with other ships', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
@@ -116,7 +116,7 @@ describe('checkValidShipState', () => {
     existingPositions[0][1] = 'battleship';
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
@@ -128,7 +128,7 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 6 },
+      proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
@@ -141,7 +141,7 @@ describe('checkValidShipState', () => {
     existingPositions[0][8] = 'carrier';
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 6 },
+      proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
@@ -154,7 +154,7 @@ describe('checkValidShipState', () => {
     existingPositions[1][0] = 'submarine';
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 0 },
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
@@ -166,7 +166,85 @@ describe('checkValidShipState', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 8 },
+      proposedPositions: { startingRow: 0, startingColumn: 8, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    const result = checkValidShipState(props);
+    expect(result).toBe(false);
+  });
+});
+
+describe('checkValidShipState - vertical', () => {
+  test('returns true when there are no overlaps with other ships', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('returns false when the proposed positions overlap with existing ships', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'battleship';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('returns true when a ship is placed at the edge of the board without overlap', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('returns false when a ship overlaps another ship at the edge of the board', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][6] = 'carrier';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('returns true when no ships overlap in different startingColumns', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][3] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('returns false when ship size exceeds board boundaries', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 8, alignment: 'vertical' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
