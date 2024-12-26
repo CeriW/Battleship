@@ -1,0 +1,28 @@
+.board {
+  border: 1px solid black;
+  max-width: 500px;
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(11, (500px / 11));
+
+  .column-marker,
+  .row-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .column-marker:not(:first-child) {
+    border-bottom: 1px solid black;
+  }
+
+  .row-marker {
+    border-right: 1px solid black;
+  }
+
+  .cell {
+    border: 1px solid lightgrey;
+    border-right: none;
+    border-bottom: none;
+  }
+}
