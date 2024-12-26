@@ -1,7 +1,13 @@
 import React from 'react';
+// import { PositionArray } from '../types';
+
 type PositionArray = (string | null)[][]; // TODO - this is replicated in placeShips.ts on another branch
 
-export default function Board() {
+interface BoardProps {
+  positions: PositionArray;
+}
+
+const Board: React.FC<BoardProps> = ({ positions }) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -17,7 +23,7 @@ export default function Board() {
   for (let i = 0; i < letters.length; i++) {
     const cells = [];
     for (let j = 0; j < 10; j++) {
-      cells.push(<div key={`${letters[i]}-${j}`} className="cell"></div>);
+      cells.push(<div key={`${letters[i]}-${j}`} className={`cell ${positions[i][j] ?? ''}`}></div>);
     }
 
     rows.push(
@@ -34,4 +40,6 @@ export default function Board() {
       {rows}
     </div>
   );
-}
+};
+
+export default Board;
