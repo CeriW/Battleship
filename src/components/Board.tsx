@@ -1,5 +1,4 @@
 import React from 'react';
-// import { PositionArray } from '../types';
 
 type PositionArray = (string | null)[][]; // TODO - this is replicated in placeShips.ts on another branch
 
