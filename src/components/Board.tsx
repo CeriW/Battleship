@@ -28,12 +28,12 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
     }
 
     rows.push(
-      <>
+      <div className="row" key={`row-${i}`}>
         <div className="row-marker" key={`row-marker-${i}`} data-testid="row-marker">
           {letters[i]}
         </div>
         {cells}
-      </>
+      </div>
     );
   }
 

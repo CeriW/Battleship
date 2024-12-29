@@ -99,6 +99,11 @@ describe('generateRandomShipPosition - vertical', () => {
 });
 
 describe('checkValidShipState - horizontal', () => {
+  afterEach(() => {
+    // Reset the module registry after each test
+    jest.resetModules();
+  });
+
   test('returns true when there are no overlaps with other ships', () => {
     let existingPositions = initialiseShipArray();
 
@@ -149,19 +154,6 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('returns true when no ships overlap in different startingRows', () => {
-    let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = 'submarine';
-
-    const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
-      shipSize: 3,
-      existingPositions,
-    };
-
-    expect(checkValidShipState(props)).toBe(true);
-  });
-
   test('returns false when ship size exceeds board boundaries', () => {
     let existingPositions = initialiseShipArray();
 
@@ -173,6 +165,118 @@ describe('checkValidShipState - horizontal', () => {
 
     const result = checkValidShipState(props);
     expect(result).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row below', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row below', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row above', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row above', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to left', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in column to left', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to right', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in column to right', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
   });
 });
 
@@ -227,19 +331,6 @@ describe('checkValidShipState - vertical', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('returns true when no ships overlap in different startingColumns', () => {
-    let existingPositions = initialiseShipArray();
-    existingPositions[0][3] = 'submarine';
-
-    const props = {
-      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
-      shipSize: 3,
-      existingPositions,
-    };
-
-    expect(checkValidShipState(props)).toBe(true);
-  });
-
   test('returns false when ship size exceeds board boundaries', () => {
     let existingPositions = initialiseShipArray();
 
@@ -251,6 +342,118 @@ describe('checkValidShipState - vertical', () => {
 
     const result = checkValidShipState(props);
     expect(result).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row below', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[3][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row below', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[3][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row above', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row above', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to left', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in column to left', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to right', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when adjacent ships are not allowed, returns false when a different ship is already in column to right', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+      adjacentShipModifier: 0,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
   });
 });
 

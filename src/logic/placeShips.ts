@@ -1,3 +1,5 @@
+import { ai } from '../ai-behaviour';
+
 export type PositionArray = (string | null)[][];
 
 export function initialiseShipArray(): PositionArray {
@@ -46,26 +48,50 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
+  adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
+  adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
-  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
-  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 10) return false;
+  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 9) return false;
+  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 9) return false;
 
-  // Then check for overlaps
+  // Make a list of all the cells that this ship could occupy
+  const potentialCoordinates = [];
   if (proposedPositions.alignment === 'horizontal') {
-    for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
-      if (existingPositions[proposedPositions.startingRow][i]) return false;
+    for (let i = 0; i < shipSize; i++) {
+      potentialCoordinates.push({
+        x: proposedPositions.startingColumn + i,
+        y: proposedPositions.startingRow,
+      });
     }
   } else {
-    for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + shipSize; i++) {
-      if (existingPositions[i][proposedPositions.startingColumn]) return false;
+    // alignment === 'vertical'
+    for (let i = 0; i < shipSize; i++) {
+      potentialCoordinates.push({
+        x: proposedPositions.startingColumn,
+        y: proposedPositions.startingRow + i,
+      });
     }
   }
-  return true;
+
+  // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
+  let valid = true;
+
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
+
+  potentialCoordinates.forEach(({ x, y }) => {
+    if (existingPositions[y][x]) valid = false; // Check this specific spot
+    if (!adjacentShipsAllowable && existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
+    if (!adjacentShipsAllowable && existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
+    if (!adjacentShipsAllowable && existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
+    if (!adjacentShipsAllowable && existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+  });
+
+  return valid;
 };
 
 export const placeShips = (): PositionArray => {
