@@ -1,4 +1,4 @@
-import { ai, difficultyClass } from '../ai-behaviour';
+import { ai } from '../ai-behaviour';
 
 export type PositionArray = (string | null)[][];
 
