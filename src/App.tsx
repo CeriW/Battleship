@@ -1,18 +1,15 @@
+import React from 'react';
 import './index.scss';
 import Board from './components/Board';
 
-import { initialiseShipArray, placeShips } from './logic/placeShips';
+import { placeShips } from './logic/placeShips';
 
 export function App() {
-  const computerShips = initialiseShipArray();
-  placeShips();
-  // console.log(computerShips);
+  const computerShips = placeShips();
 
   return (
     <>
-      <Board />
-      {/* <Board />
-      <Board /> */}
+      <Board positions={computerShips} />
     </>
   );
 }

@@ -24,24 +24,17 @@ const shipTypes: ShipInfo[] = [
 // Generate a random ship position that does not go off the side of the board
 export const generateRandomPosition = (
   ship: ShipInfo,
-  alignment = (Math.random() > 0.5 ? 'horizontal' : 'vertical') as 'horizontal' | 'vertical' // For testing purposes only
+  alignment = (Math.random() > 0.5 ? 'horizontal' : 'vertical') as 'horizontal' | 'vertical'
 ): { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' } => {
   let startingRow, startingColumn;
 
   if (alignment === 'horizontal') {
     startingRow = Math.floor(Math.random() * 10);
-    startingColumn = Math.floor(Math.random() * ship.size);
-
-    while (startingColumn > 10 - ship.size) {
-      startingColumn = Math.floor(Math.random() * ship.size);
-    }
+    startingColumn = Math.floor(Math.random() * (11 - ship.size));
   } else {
-    startingRow = Math.floor(Math.random() * 10);
-    startingColumn = Math.floor(Math.random() * ship.size);
-
-    while (startingRow > 10 - ship.size) {
-      startingRow = Math.floor(Math.random() * 10);
-    }
+    // vertical
+    startingRow = Math.floor(Math.random() * (11 - ship.size));
+    startingColumn = Math.floor(Math.random() * 10);
   }
 
   return { startingRow, startingColumn, alignment };
@@ -58,23 +51,18 @@ export const checkValidShipState = ({
   shipSize: number;
   existingPositions: PositionArray;
 }): boolean => {
-  if (proposedPositions.alignment === 'horizontal') {
-    // Starting at the initial column and looping until it reaches the end,
-    // If there's something in that cell, or i goes outside of the board bounds, return false
-    for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
-      if (existingPositions[proposedPositions.startingRow][i] || proposedPositions.startingColumn + shipSize > 9) {
-        return false;
-      }
-    }
-    return true;
-  }
+  // First check if ship would go out of bounds
+  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
+  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 10) return false;
 
-  // alignment === 'vertical
-  // Starting at the initial row and looping until it reaches the end,
-  // If there's something in that cell, or i goes outside of the board bounds, return false
-  for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + shipSize; i++) {
-    if (existingPositions[i][proposedPositions.startingColumn] || proposedPositions.startingColumn + shipSize > 9) {
-      return false;
+  // Then check for overlaps
+  if (proposedPositions.alignment === 'horizontal') {
+    for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
+      if (existingPositions[proposedPositions.startingRow][i]) return false;
+    }
+  } else {
+    for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + shipSize; i++) {
+      if (existingPositions[i][proposedPositions.startingColumn]) return false;
     }
   }
   return true;

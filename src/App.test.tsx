@@ -1,15 +1,12 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Board from './components/Board';
+import { App } from './App';
 
-// Test suite for the 'Board' component
-describe('Board Component', () => {
+describe('App Component', () => {
   test('should render the board', () => {
-    render(<Board />);
-
-    // Check if an element with the class 'board' exists in the DOM
-    // const boardElement = document.body.querySelector('.board');
-    // expect(boardElement).toBeInTheDocument();
+    render(<App />);
+    const boardElement = screen.getByTestId('board');
+    expect(boardElement).toBeInTheDocument();
   });
 });

@@ -1,41 +1,48 @@
 import React from 'react';
 
-export default function Board() {
-  const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+type PositionArray = (string | null)[][]; // TODO - this is replicated in placeShips.ts on another branch
 
-  return (
-    <div className="board" data-testid="board">
-      <div className="column-marker">
-        <BoardColumns row={'X'} startNum={0} />
-      </div>
-      {rows.map((row) => {
-        return (
-          <div key={row} className="row">
-            <span className="row-marker">{row}</span>
-            <BoardColumns row={row} />
-          </div>
-        );
-      })}
-    </div>
-  );
+interface BoardProps {
+  positions: PositionArray;
 }
 
-interface BoardColumnsProps {
-  row: string;
-  startNum?: number;
-  endNum?: number;
-}
-
-function BoardColumns({ row, startNum = 1, endNum = 10 }: BoardColumnsProps) {
-  const numbers = [];
-
-  for (let i = startNum; i <= endNum; i++) {
-    numbers.push(
-      <div key={i} className="cell" data-column={i} data-row={row}>
-        {i}
+export const Board: React.FC<BoardProps> = ({ positions }) => {
+  const columnMarkers = [];
+  for (let i = 0; i <= 10; i++) {
+    columnMarkers.push(
+      <div key={`column-marker-${i}`} className="column-marker" data-testid="column-marker">
+        {i === 0 ? '' : i}
       </div>
     );
   }
 
-  return <>{numbers}</>;
-}
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+  const rows = [];
+
+  for (let i = 0; i < letters.length; i++) {
+    const cells = [];
+    for (let j = 0; j < 10; j++) {
+      cells.push(
+        <div key={`cell-${letters[i]}-${j}`} className={`cell ${positions[i][j] ?? ''}`} data-testid="cell"></div>
+      );
+    }
+
+    rows.push(
+      <>
+        <div className="row-marker" key={`row-marker-${i}`} data-testid="row-marker">
+          {letters[i]}
+        </div>
+        {cells}
+      </>
+    );
+  }
+
+  return (
+    <div className="board" data-testid="board">
+      {columnMarkers}
+      {rows}
+    </div>
+  );
+};
+
+export default Board;
