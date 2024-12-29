@@ -244,7 +244,7 @@ describe('checkValidShipState - vertical', () => {
     let existingPositions = initialiseShipArray();
 
     const props = {
-      proposedPositions: { startingRow: 8, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
+      proposedPositions: { startingRow: 0, startingColumn: 8, alignment: 'vertical' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };
