@@ -14,10 +14,13 @@ export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips, setUserShips] = useState<PositionArray>(placeShips());
 
-  userShips[1][1] = { name: 'test', hit: true };
+  // userShips[1][1] = { name: 'test', hit: true };
   userShips[1][2] = { name: 'test', hit: true };
-  userShips[3][2] = { name: 'test', hit: true };
-  userShips[2][0] = { name: 'test', hit: true };
+  userShips[1][3] = { name: 'test', hit: true };
+  userShips[2][3] = { name: 'test', hit: true };
+
+  // userShips[3][2] = { name: 'test', hit: true };
+  // userShips[2][0] = { name: 'test', hit: true };
 
   const heatMap = initialiseHeatMap(userShips);
 
