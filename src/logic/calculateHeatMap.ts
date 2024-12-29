@@ -53,7 +53,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
 
       // Is the cell to the left also a hit?
       if (x > 0 && heatMap[y][x - 1] === -1) {
-        // If it is, we're going to keep going left until we find an empty space and mark it as extra hot
+        // If it is, we're going to keep going left until we find an empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
@@ -65,11 +65,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           }
         }
       }
-      // TODO - shouldn't go 5 steps along if the 5 long ship has already gone, for example
 
       // Is the cell to the right also a hit?
       if (x < 10 && heatMap[y][x + 1] === -1) {
-        // If it is, we're going to keep going right until we find an empty space and mark it as extra hot
+        // If it is, we're going to keep going right until we find an empty space and make it even hotter
         for (let i = x; i < 9; i++) {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
@@ -82,13 +81,11 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         }
       }
 
-      // TODO - shouldn't go 5 steps along if the 5 long ship has already gone, for example
-
       // GO ALONG THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
       if (y > 0 && heatMap[y - 1][x] === -1) {
-        // If it is, we're going to keep going up until we find an empty space and mark it as extra hot
+        // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
           if (heatMap[i][x] !== -1) {
             heatMap[i][x] += 1;
@@ -100,11 +97,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           }
         }
       }
-      // TODO - shouldn't go 5 steps along if the 5 long ship has already gone, for example
 
       // Is the cell below also a hit?
       if (y < 9 && heatMap[y + 1][x] === -1) {
-        // If it is, we're going to keep going up until we find an empty space and mark it as extra hot
+        // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i < 10; i++) {
           if (heatMap[i][x] !== -1) {
             heatMap[i][x] += 1;
@@ -116,7 +112,6 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           }
         }
       }
-      // TODO - shouldn't go 5 steps along if the 5 long ship has already gone, for example
     }
   }
 
