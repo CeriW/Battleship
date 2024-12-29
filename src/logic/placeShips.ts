@@ -59,7 +59,7 @@ export const checkValidShipState = ({
 
   // Then check for overlaps
   if (proposedPositions.alignment === 'horizontal') {
-    // Ensure start and end stay within array bounds (0-9)
+    // Whether to check adjacent spots, depending on AI difficulty
     const start = Math.max(
       ai.willPlaceShipsNextToEachOther ? proposedPositions.startingColumn : proposedPositions.startingColumn - 1,
       0
@@ -72,10 +72,27 @@ export const checkValidShipState = ({
     );
 
     for (let i = start; i < end; i++) {
+      // Check for existing ship in this specific spot
       if (existingPositions[proposedPositions.startingRow][i]) return false;
+
+      //  Check row above (if difficulty allows)
+      if (
+        !ai.willPlaceShipsNextToEachOther &&
+        proposedPositions.startingRow > 0 &&
+        existingPositions[proposedPositions.startingRow - 1][i]
+      )
+        return false;
+
+      //  Check row below (if difficulty allows)
+      if (
+        !ai.willPlaceShipsNextToEachOther &&
+        proposedPositions.startingRow < 9 &&
+        existingPositions[proposedPositions.startingRow + 1][i]
+      )
+        return false;
     }
   } else {
-    // Ensure start and end stay within array bounds (0-9)
+    // Whether to check adjacent spots, depending on AI difficulty
     const start = Math.max(
       ai.willPlaceShipsNextToEachOther ? proposedPositions.startingRow : proposedPositions.startingRow - 1,
       0
@@ -87,8 +104,17 @@ export const checkValidShipState = ({
       10
     );
 
+    //  Check for existing ships in these spots.
     for (let i = start; i < end; i++) {
       if (existingPositions[i][proposedPositions.startingColumn]) return false;
+
+      // Ensure column index is within bounds
+      if (
+        !ai.willPlaceShipsNextToEachOther &&
+        proposedPositions.startingColumn > 0 &&
+        existingPositions[i][proposedPositions.startingColumn - 1]
+      )
+        return false;
     }
   }
   return true;

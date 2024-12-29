@@ -99,6 +99,11 @@ describe('generateRandomShipPosition - vertical', () => {
 });
 
 describe('checkValidShipState - horizontal', () => {
+  afterEach(() => {
+    // Reset the module registry after each test
+    jest.resetModules();
+  });
+
   test('returns true when there are no overlaps with other ships', () => {
     let existingPositions = initialiseShipArray();
 
@@ -149,7 +154,15 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('returns true when no ships overlap in different startingRows', () => {
+  test('when willPlaceShipsNextToEachOther is true, returns true when a different ship is already in row below', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsNextToEachOther: true,
+      },
+    }));
+
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
     let existingPositions = initialiseShipArray();
     existingPositions[1][0] = 'submarine';
 
@@ -160,6 +173,70 @@ describe('checkValidShipState - horizontal', () => {
     };
 
     expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when willPlaceShipsNextToEachOther is false, returns false when a different ship is already in row below', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsNextToEachOther: false,
+      },
+    }));
+
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when willPlaceShipsNextToEachOther is true, returns true when a different ship is already in row above', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsNextToEachOther: true,
+      },
+    }));
+
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when willPlaceShipsNextToEachOther is false, returns false when a different ship is already in row above', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsNextToEachOther: false,
+      },
+    }));
+
+    // Re-import the module after setting up the mock
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
   });
 
   test('returns false when ship size exceeds board boundaries', () => {
