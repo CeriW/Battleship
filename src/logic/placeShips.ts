@@ -1,6 +1,5 @@
 import { ai } from '../ai-behaviour';
-
-export type PositionArray = ({ name: string; hit: boolean } | null)[][];
+import { PositionArray, ShipInfo } from '../types';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -9,11 +8,6 @@ export function initialiseShipArray(): PositionArray {
   }
   return array;
 }
-
-type ShipInfo = {
-  name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
-  size: number;
-};
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },

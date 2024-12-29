@@ -1,6 +1,5 @@
 import React from 'react';
-import { PositionArray } from '../logic/placeShips';
-import { HeatMapArray } from '../logic/guess';
+import { PositionArray, HeatMapArray } from '../types';
 
 interface BoardProps {
   positions: PositionArray;

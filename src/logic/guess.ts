@@ -1,6 +1,4 @@
-import { initialiseShipArray, PositionArray, shipTypes, checkValidShipState } from './placeShips';
-
-export type HeatMapArray = number[][];
+import { HeatMapArray, PositionArray } from '../types';
 
 export function initialiseHeatMapArray(): HeatMapArray {
   let array = [];
@@ -10,23 +8,8 @@ export function initialiseHeatMapArray(): HeatMapArray {
   return array;
 }
 
-const makeGuess = (existingBoard: PositionArray) => {
-  // console.log(existingBoard);
-
-  const x = Math.floor(Math.random() * 10);
-  const y = Math.floor(Math.random() * 10);
-
-  console.log(existingBoard[y][x]);
-  // heatMap(existingBoard);
-  return !!existingBoard[y][x];
-};
-
-export const initialiseHeatMap = (existingBoard: PositionArray) => {
+export const calculateHeatMap = (existingBoard: PositionArray) => {
   const heatMap = initialiseHeatMapArray();
-
-  console.log('existingBoard', existingBoard);
-
-  // console.log(shipTypes);
 
   for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 10; y++) {
@@ -123,29 +106,5 @@ export const initialiseHeatMap = (existingBoard: PositionArray) => {
     }
   }
 
-  //  For each type of ship...
-  shipTypes.forEach((ship) => {});
-
-  console.log('heatMap', heatMap);
-
   return heatMap;
 };
-
-// const heatMap = (existingBoard: PositionArray) => {
-//   const heatMap = initialiseHeatMap();
-//   // console.log('heatMap', heatMap);
-
-//   // Let's figure out how likely it is that the carrier (5 tiles long) is in any given square
-
-//   for (let x = 0; x < 10; x++) {
-//     for (let y = 0; y < 10; y++) {
-//       if (existingBoard[x][y]) {
-//         heatMap[y][x] = 'possible';
-//       }
-//     }
-//   }
-
-//   console.log('heatMap', heatMap);
-// };
-
-export default makeGuess;

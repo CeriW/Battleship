@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { PositionArray } from './logic/placeShips';
+import { PositionArray, ShipInfo } from './types';
 import Board, { HeatMapBoard } from './components/Board';
 
 import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
 // import makeGuess from './logic/guess';
 
-import { initialiseHeatMap } from './logic/guess';
+import { calculateHeatMap } from './logic/guess';
 
 export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
@@ -22,7 +22,7 @@ export function App() {
   // userShips[3][2] = { name: 'test', hit: true };
   // userShips[2][0] = { name: 'test', hit: true };
 
-  const heatMap = initialiseHeatMap(userShips);
+  const heatMap = calculateHeatMap(userShips);
 
   // console.log(computerShips);
 
