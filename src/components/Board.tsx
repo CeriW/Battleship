@@ -6,11 +6,11 @@ interface BoardProps {
   positions: PositionArray;
 }
 
-const Board: React.FC<BoardProps> = ({ positions }) => {
+export const Board: React.FC<BoardProps> = ({ positions }) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
-      <div key={i} className="column-marker">
+      <div key={i} className="column-marker" data-testid="column-marker">
         {i === 0 ? '' : i}
       </div>
     );
@@ -22,19 +22,21 @@ const Board: React.FC<BoardProps> = ({ positions }) => {
   for (let i = 0; i < letters.length; i++) {
     const cells = [];
     for (let j = 0; j < 10; j++) {
-      cells.push(<div key={`${letters[i]}-${j}`} className={`cell ${positions[i][j] ?? ''}`}></div>);
+      cells.push(<div key={`${letters[i]}-${j}`} className={`cell ${positions[i][j] ?? ''}`} data-testid="cell"></div>);
     }
 
     rows.push(
       <>
-        <div className="row-marker">{letters[i]}</div>
+        <div className="row-marker" data-testid="row-marker">
+          {letters[i]}
+        </div>
         {cells}
       </>
     );
   }
 
   return (
-    <div className="board">
+    <div className="board" data-testid="board">
       {columnMarkers}
       {rows}
     </div>
