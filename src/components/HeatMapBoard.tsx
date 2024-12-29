@@ -37,7 +37,7 @@ export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
   }
 
   return (
-    <div className="board heat-map" data-testid="heat-mapboard">
+    <div className="board heat-map" data-testid="heatmap-board">
       {columnMarkers}
       {rows}
     </div>
