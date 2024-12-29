@@ -154,10 +154,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in row below', () => {
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row below', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: true,
+        adjacentShipModifier: 1,
       },
     }));
 
@@ -175,10 +175,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(true);
   });
 
-  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in row below', () => {
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row below', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: false,
+        adjacentShipModifier: 0,
       },
     }));
 
@@ -196,10 +196,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in row above', () => {
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in row above', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: true,
+        adjacentShipModifier: 1,
       },
     }));
 
@@ -217,14 +217,13 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(true);
   });
 
-  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in row above', () => {
+  test('when adjacent ships are not allowed, returns false when a different ship is already in row above', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: false,
+        adjacentShipModifier: 0,
       },
     }));
 
-    // Re-import the module after setting up the mock
     const { checkValidShipState, initialiseShipArray } = require('./placeShips');
 
     let existingPositions = initialiseShipArray();
@@ -239,10 +238,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in column to left', () => {
+  test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to left', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: true,
+        adjacentShipModifier: 1,
       },
     }));
 
@@ -260,10 +259,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(true);
   });
 
-  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in column to left', () => {
+  test('when adjacent ships are not allowed, returns false when a different ship is already in column to left', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: false,
+        adjacentShipModifier: 0,
       },
     }));
 
@@ -284,7 +283,7 @@ describe('checkValidShipState - horizontal', () => {
   test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in column to right', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: true,
+        adjacentShipModifier: 1,
       },
     }));
 
@@ -305,7 +304,7 @@ describe('checkValidShipState - horizontal', () => {
   test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in column to right', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsAdjacent: false,
+        adjacentShipModifier: 0,
       },
     }));
 

@@ -1,4 +1,4 @@
-import { ai } from '../ai-behaviour';
+import { ai, difficultyClass } from '../ai-behaviour';
 
 export type PositionArray = (string | null)[][];
 
@@ -78,12 +78,16 @@ export const checkValidShipState = ({
 
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
+
+  const adjacentShipsAllowable = Math.random() + ai.adjacentShipModifier > 1;
+  console.log('adjacentShipsAllowable', adjacentShipsAllowable);
+
   potentialCoordinates.forEach(({ x, y }) => {
     if (existingPositions[y][x]) valid = false; // Check this specific spot
-    if (!ai.willPlaceShipsAdjacent && existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
-    if (!ai.willPlaceShipsAdjacent && existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
-    if (!ai.willPlaceShipsAdjacent && existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
-    if (!ai.willPlaceShipsAdjacent && existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+    if (!adjacentShipsAllowable && existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
+    if (!adjacentShipsAllowable && existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
+    if (!adjacentShipsAllowable && existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
+    if (!adjacentShipsAllowable && existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
   });
 
   return valid;
