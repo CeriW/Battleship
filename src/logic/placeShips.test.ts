@@ -267,7 +267,6 @@ describe('checkValidShipState - horizontal', () => {
       },
     }));
 
-    // Re-import the module after setting up the mock
     const { checkValidShipState, initialiseShipArray } = require('./placeShips');
 
     let existingPositions = initialiseShipArray();
@@ -310,7 +309,6 @@ describe('checkValidShipState - horizontal', () => {
       },
     }));
 
-    // Re-import the module after setting up the mock
     const { checkValidShipState, initialiseShipArray } = require('./placeShips');
 
     let existingPositions = initialiseShipArray();

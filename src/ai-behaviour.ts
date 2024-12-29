@@ -5,5 +5,7 @@ export const ai = {
   // Whether the AI will place ships touching each other.
   // This is not advised for strategy reasons - it is easy for a player to
   // accidentally get two ships in streak, hence the low number
-  willPlaceShipsAdjacent: difficultyClass < 4,
+  // Despite the positioning being random, it is surprising how often it will
+  // place ships touching each other when this is true
+  willPlaceShipsAdjacent: difficultyClass < 3,
 };
