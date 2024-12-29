@@ -14,10 +14,9 @@ export function App() {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips());
 
   // userShips[1][1] = { name: 'test', hit: true };
-  userShips[5][2] = { name: 'test', hit: true };
-  userShips[5][3] = { name: 'test', hit: true };
-  userShips[6][3] = { name: 'test', hit: true };
-  userShips[9][0] = { name: 'test', hit: true };
+  userShips[4][5] = { name: 'test', hit: true };
+  userShips[5][4] = { name: 'test', hit: true };
+  userShips[5][6] = { name: 'test', hit: true };
 
   // userShips[3][2] = { name: 'test', hit: true };
   // userShips[2][0] = { name: 'test', hit: true };

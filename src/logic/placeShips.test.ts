@@ -1,11 +1,5 @@
 import { generateRandomPosition, checkValidShipState, initialiseShipArray, placeShips } from './placeShips';
 
-describe('placeholder-test', () => {
-  test('test', () => {
-    expect(true).toBe(true);
-  });
-});
-
 describe('generateRandomShipPosition - horizontal', () => {
   test('should ensure the startingColumn leaves enough space for the ship', () => {
     for (let i = 0; i < 100; i++) {

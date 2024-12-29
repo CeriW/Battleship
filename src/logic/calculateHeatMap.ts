@@ -44,7 +44,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         heatMap[y][x + 1] += 1;
       }
 
-      // If we're not in the last column, and the cell to the left is not a hit, then it's hot
+      // If we're not in the first column, and the cell to the left is not a hit, then it's hot
       if (x > 0 && heatMap[y][x - 1] !== -1) {
         heatMap[y][x - 1] += 1;
       }
