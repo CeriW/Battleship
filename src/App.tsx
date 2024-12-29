@@ -6,7 +6,6 @@ import { placeShips } from './logic/placeShips';
 
 export function App() {
   const computerShips = placeShips();
-  console.log(computerShips);
 
   return (
     <>
