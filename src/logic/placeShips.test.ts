@@ -154,10 +154,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('when willPlaceShipsNextToEachOther is true, returns true when a different ship is already in row below', () => {
+  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in row below', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsNextToEachOther: true,
+        willPlaceShipsAdjacent: true,
       },
     }));
 
@@ -175,10 +175,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(true);
   });
 
-  test('when willPlaceShipsNextToEachOther is false, returns false when a different ship is already in row below', () => {
+  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in row below', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsNextToEachOther: false,
+        willPlaceShipsAdjacent: false,
       },
     }));
 
@@ -196,10 +196,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(false);
   });
 
-  test('when willPlaceShipsNextToEachOther is true, returns true when a different ship is already in row above', () => {
+  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in row above', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsNextToEachOther: true,
+        willPlaceShipsAdjacent: true,
       },
     }));
 
@@ -217,10 +217,10 @@ describe('checkValidShipState - horizontal', () => {
     expect(checkValidShipState(props)).toBe(true);
   });
 
-  test('when willPlaceShipsNextToEachOther is false, returns false when a different ship is already in row above', () => {
+  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in row above', () => {
     jest.doMock('../ai-behaviour', () => ({
       ai: {
-        willPlaceShipsNextToEachOther: false,
+        willPlaceShipsAdjacent: false,
       },
     }));
 
@@ -232,6 +232,92 @@ describe('checkValidShipState - horizontal', () => {
 
     const props = {
       proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in column to left', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsAdjacent: true,
+      },
+    }));
+
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in column to left', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsAdjacent: false,
+      },
+    }));
+
+    // Re-import the module after setting up the mock
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][0] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('when willPlaceShipsAdjacent is true, returns true when a different ship is already in column to right', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsAdjacent: true,
+      },
+    }));
+
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 3,
+      existingPositions,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('when willPlaceShipsAdjacent is false, returns false when a different ship is already in column to right', () => {
+    jest.doMock('../ai-behaviour', () => ({
+      ai: {
+        willPlaceShipsAdjacent: false,
+      },
+    }));
+
+    // Re-import the module after setting up the mock
+    const { checkValidShipState, initialiseShipArray } = require('./placeShips');
+
+    let existingPositions = initialiseShipArray();
+    existingPositions[1][4] = 'submarine';
+
+    const props = {
+      proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
       shipSize: 3,
       existingPositions,
     };

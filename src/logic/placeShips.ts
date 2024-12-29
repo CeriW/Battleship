@@ -59,13 +59,13 @@ export const checkValidShipState = ({
 
   // Then check for overlaps
   if (proposedPositions.alignment === 'horizontal') {
-    // Whether to check adjacent spots, depending on AI difficulty
+    // Whether to check adjacent columns, depending on AI difficulty
     const start = Math.max(
-      ai.willPlaceShipsNextToEachOther ? proposedPositions.startingColumn : proposedPositions.startingColumn - 1,
+      ai.willPlaceShipsAdjacent ? proposedPositions.startingColumn : proposedPositions.startingColumn - 1,
       0
     );
     const end = Math.min(
-      ai.willPlaceShipsNextToEachOther
+      ai.willPlaceShipsAdjacent
         ? proposedPositions.startingColumn + shipSize
         : proposedPositions.startingColumn + shipSize + 1,
       10
@@ -77,7 +77,7 @@ export const checkValidShipState = ({
 
       //  Check row above (if difficulty allows)
       if (
-        !ai.willPlaceShipsNextToEachOther &&
+        !ai.willPlaceShipsAdjacent &&
         proposedPositions.startingRow > 0 &&
         existingPositions[proposedPositions.startingRow - 1][i]
       )
@@ -85,7 +85,7 @@ export const checkValidShipState = ({
 
       //  Check row below (if difficulty allows)
       if (
-        !ai.willPlaceShipsNextToEachOther &&
+        !ai.willPlaceShipsAdjacent &&
         proposedPositions.startingRow < 9 &&
         existingPositions[proposedPositions.startingRow + 1][i]
       )
@@ -94,11 +94,11 @@ export const checkValidShipState = ({
   } else {
     // Whether to check adjacent spots, depending on AI difficulty
     const start = Math.max(
-      ai.willPlaceShipsNextToEachOther ? proposedPositions.startingRow : proposedPositions.startingRow - 1,
+      ai.willPlaceShipsAdjacent ? proposedPositions.startingRow : proposedPositions.startingRow - 1,
       0
     );
     const end = Math.min(
-      ai.willPlaceShipsNextToEachOther
+      ai.willPlaceShipsAdjacent
         ? proposedPositions.startingRow + shipSize
         : proposedPositions.startingRow + shipSize + 1,
       10
@@ -110,7 +110,7 @@ export const checkValidShipState = ({
 
       // Ensure column index is within bounds
       if (
-        !ai.willPlaceShipsNextToEachOther &&
+        !ai.willPlaceShipsAdjacent &&
         proposedPositions.startingColumn > 0 &&
         existingPositions[i][proposedPositions.startingColumn - 1]
       )
