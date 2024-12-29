@@ -57,6 +57,11 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         for (let i = x; i >= 0; i--) {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
+
+            if (i - 1 >= 0) {
+              heatMap[y][i - 1] += 1;
+            }
+            break;
           }
         }
       }
@@ -68,7 +73,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         for (let i = x; i < 9; i++) {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
-            heatMap[y][i + 1] += 1;
+
+            if (i + 1 < 10) {
+              heatMap[y][i + 1] += 1;
+            }
             break;
           }
         }
@@ -84,7 +92,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         for (let i = y; i >= 0; i--) {
           if (heatMap[i][x] !== -1) {
             heatMap[i][x] += 1;
-            heatMap[i - 1][x] += 1;
+
+            if (i - 1 >= 0) {
+              heatMap[i - 1][x] += 1;
+            }
             break;
           }
         }
@@ -97,7 +108,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         for (let i = y; i < 10; i++) {
           if (heatMap[i][x] !== -1) {
             heatMap[i][x] += 1;
-            heatMap[i + 1][x] += 1;
+
+            if (i + 1 < 10) {
+              heatMap[i + 1][x] += 1;
+            }
             break;
           }
         }
