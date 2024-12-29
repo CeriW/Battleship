@@ -1,6 +1,5 @@
 import React from 'react';
-
-type PositionArray = (string | null)[][]; // TODO - this is replicated in placeShips.ts on another branch
+import { PositionArray } from '../logic/placeShips';
 
 interface BoardProps {
   positions: PositionArray;
@@ -23,7 +22,7 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
     const cells = [];
     for (let j = 0; j < 10; j++) {
       cells.push(
-        <div key={`cell-${letters[i]}-${j}`} className={`cell ${positions[i][j] ?? ''}`} data-testid="cell"></div>
+        <div key={`cell-${letters[i]}-${j}`} className={`cell ${positions[i][j]?.name ?? ''}`} data-testid="cell"></div>
       );
     }
 
