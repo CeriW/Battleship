@@ -43,9 +43,7 @@ export const initialiseHeatMap = (existingBoard: PositionArray) => {
     let x = i % 10;
 
     //  If this cell is a hit...
-    if (heatMap[y][x] == -1) {
-      // console.log(heatMap[y][x]);
-
+    if (heatMap[y][x] === -1) {
       // If we're not in the first row, and the cell above is not a hit, then it's hot
       if (y > 0 && heatMap[y - 1][x] !== -1) {
         heatMap[y - 1][x] += 1;
@@ -56,8 +54,8 @@ export const initialiseHeatMap = (existingBoard: PositionArray) => {
         heatMap[y + 1][x] += 1;
       }
 
-      // If we're not in the first column, and the cell to the right is not a hit, then it's hot
-      if (x > 0 && heatMap[y][x + 1] !== -1) {
+      // If we're not in the last column, and the cell to the right is not a hit, then it's hot
+      if (x < 10 && heatMap[y][x + 1] !== -1) {
         heatMap[y][x + 1] += 1;
       }
 
@@ -73,7 +71,7 @@ export const initialiseHeatMap = (existingBoard: PositionArray) => {
 
   console.log('heatMap', heatMap);
 
-  // return heatMap;
+  return heatMap;
 };
 
 // const heatMap = (existingBoard: PositionArray) => {

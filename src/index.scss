@@ -17,3 +17,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.board.heat-map {
+  border: 1px solid red;
+
+  .heat--1 {
+    background: black;
+  }
+
+  .heat-0 {
+    background: rgba(red, 0.04);
+  }
+
+  .heat-1 {
+    background: rgba(red, 0.4);
+  }
+
+  .heat-2 {
+    background: rgba(red, 1);
+  }
+}
