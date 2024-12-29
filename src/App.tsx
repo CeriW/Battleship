@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { PositionArray, ShipInfo } from './types';
-import Board, { HeatMapBoard } from './components/Board';
+import { PositionArray } from './types';
+import Board from './components/Board';
+import HeatMapBoard from './components/HeatMapBoard';
 
 import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
-// import makeGuess from './logic/guess';
-
-import { calculateHeatMap } from './logic/guess';
+import { calculateHeatMap } from './logic/calculateHeatMap';
 
 export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
