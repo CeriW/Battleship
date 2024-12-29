@@ -48,10 +48,12 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
+  adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
+  adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
   if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 9) return false;
@@ -79,8 +81,7 @@ export const checkValidShipState = ({
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
 
-  const adjacentShipsAllowable = Math.random() + ai.adjacentShipModifier > 1;
-  console.log('adjacentShipsAllowable', adjacentShipsAllowable);
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
 
   potentialCoordinates.forEach(({ x, y }) => {
     if (existingPositions[y][x]) valid = false; // Check this specific spot
