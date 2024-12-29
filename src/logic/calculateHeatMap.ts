@@ -58,7 +58,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
 
-            if (i - 1 >= 0) {
+            if (i - 1 >= 0 && heatMap[y][i - 1] !== -1) {
               heatMap[y][i - 1] += 1;
             }
             break;
@@ -74,7 +74,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           if (heatMap[y][i] !== -1) {
             heatMap[y][i] += 1;
 
-            if (i + 1 < 10) {
+            if (i + 1 < 10 && heatMap[y][i + 1] !== -1) {
               heatMap[y][i + 1] += 1;
             }
             break;

@@ -27,7 +27,7 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: 'test', hit: true }; // Above
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[5][5]).toBe(-1);
+    expect(heatMap[4][5]).toBe(-1);
   });
 
   test('squares adjacent to a single hit square have a heat of 1', () => {
