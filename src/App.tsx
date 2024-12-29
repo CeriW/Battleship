@@ -3,6 +3,7 @@ import './index.scss';
 import Board from './components/Board';
 
 import { placeShips } from './logic/placeShips';
+import { difficultyClass } from './ai-behaviour';
 
 export function App() {
   const computerShips = placeShips();
@@ -10,6 +11,7 @@ export function App() {
   return (
     <>
       <Board positions={computerShips} />
+      <div>Difficulty: {difficultyClass}</div>
     </>
   );
 }

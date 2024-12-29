@@ -1,3 +1,5 @@
+import { ai } from '../ai-behaviour';
+
 export type PositionArray = (string | null)[][];
 
 export function initialiseShipArray(): PositionArray {
@@ -57,11 +59,35 @@ export const checkValidShipState = ({
 
   // Then check for overlaps
   if (proposedPositions.alignment === 'horizontal') {
-    for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + shipSize; i++) {
+    // Ensure start and end stay within array bounds (0-9)
+    const start = Math.max(
+      ai.willPlaceShipsNextToEachOther ? proposedPositions.startingColumn : proposedPositions.startingColumn - 1,
+      0
+    );
+    const end = Math.min(
+      ai.willPlaceShipsNextToEachOther
+        ? proposedPositions.startingColumn + shipSize
+        : proposedPositions.startingColumn + shipSize + 1,
+      10
+    );
+
+    for (let i = start; i < end; i++) {
       if (existingPositions[proposedPositions.startingRow][i]) return false;
     }
   } else {
-    for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + shipSize; i++) {
+    // Ensure start and end stay within array bounds (0-9)
+    const start = Math.max(
+      ai.willPlaceShipsNextToEachOther ? proposedPositions.startingRow : proposedPositions.startingRow - 1,
+      0
+    );
+    const end = Math.min(
+      ai.willPlaceShipsNextToEachOther
+        ? proposedPositions.startingRow + shipSize
+        : proposedPositions.startingRow + shipSize + 1,
+      10
+    );
+
+    for (let i = start; i < end; i++) {
       if (existingPositions[i][proposedPositions.startingColumn]) return false;
     }
   }
