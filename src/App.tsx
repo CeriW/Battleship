@@ -3,7 +3,7 @@ import './index.scss';
 import Board from './components/Board';
 
 import { placeShips } from './logic/placeShips';
-import { difficultyClass } from './ai-behaviour';
+import { difficultyClass, ai } from './ai-behaviour';
 
 export function App() {
   const computerShips = placeShips();
@@ -12,6 +12,7 @@ export function App() {
     <>
       <Board positions={computerShips} />
       <div>Difficulty: {difficultyClass}</div>
+      <div>{JSON.stringify(ai, null, 2)}</div>
     </>
   );
 }
