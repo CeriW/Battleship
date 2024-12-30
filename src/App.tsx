@@ -18,8 +18,8 @@ export function App() {
   userShips[5][4] = { name: 'test', hit: true };
   // userShips[5][6] = { name: 'test', hit: true };
 
-  // userShips[3][2] = { name: 'test', hit: true };
-  // userShips[2][0] = { name: 'test', hit: true };
+  userShips[3][3] = { name: 'test', hit: true };
+  userShips[2][3] = { name: 'test', hit: true };
 
   const heatMap = calculateHeatMap(userShips);
 
