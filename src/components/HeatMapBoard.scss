@@ -5,13 +5,21 @@
     border-color: transparent;
   }
 
+  .heat--1,
   .heat--2 {
-    background: blue;
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .heat--1 {
-    background: black;
-    border-color: black;
+  .heat--2:after {
+    content: '❌';
+  }
+
+  .heat--1:after {
+    content: '✔️';
   }
 
   .heat-0 {

@@ -14,6 +14,9 @@ export function App() {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips());
 
   userShips[1][1] = { name: 'test', hit: CellStates.miss };
+
+  userShips[2][4] = { name: 'test', hit: CellStates.miss };
+
   userShips[5][5] = { name: 'test', hit: CellStates.hit };
   userShips[5][4] = { name: 'test', hit: CellStates.hit };
   userShips[5][6] = { name: 'test', hit: CellStates.hit };
