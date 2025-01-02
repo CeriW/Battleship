@@ -22,7 +22,11 @@ export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
     const cells = [];
     for (let j = 0; j < 10; j++) {
       cells.push(
-        <div key={`cell-${letters[i]}-${j}`} className={`cell heat-${positions[i][j] ?? ''}`} data-testid="cell"></div>
+        <div
+          key={`cell-${letters[i]}-${j}`}
+          className={`cell heat-${positions[i][j].heat ?? ''}`}
+          data-testid="cell"
+        ></div>
       );
     }
 

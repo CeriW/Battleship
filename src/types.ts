@@ -1,4 +1,5 @@
-export type HeatMapArray = number[][];
+// export type HeatMapArray = number[][];
+export type HeatMapArray = any[][];
 
 export type ShipInfo = {
   name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
