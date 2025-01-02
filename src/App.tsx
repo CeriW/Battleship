@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { PositionArray } from './types';
+import { CellStates, PositionArray } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 
@@ -13,13 +13,13 @@ export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips, setUserShips] = useState<PositionArray>(placeShips());
 
-  // userShips[1][1] = { name: 'test', hit: true };
-  userShips[5][5] = { name: 'test', hit: true };
-  userShips[5][4] = { name: 'test', hit: true };
-  // userShips[5][6] = { name: 'test', hit: true };
+  userShips[1][1] = { name: 'test', hit: CellStates.miss };
+  userShips[5][5] = { name: 'test', hit: CellStates.hit };
+  userShips[5][4] = { name: 'test', hit: CellStates.hit };
+  userShips[5][6] = { name: 'test', hit: CellStates.hit };
 
-  userShips[3][3] = { name: 'test', hit: true };
-  userShips[2][3] = { name: 'test', hit: true };
+  userShips[3][3] = { name: 'test', hit: CellStates.hit };
+  userShips[2][3] = { name: 'test', hit: CellStates.hit };
 
   const heatMap = calculateHeatMap(userShips);
 

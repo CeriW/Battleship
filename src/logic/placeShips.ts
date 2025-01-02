@@ -1,8 +1,10 @@
 import { ai } from '../ai-behaviour';
-import { PositionArray, ShipInfo } from '../types';
+import { CellStates, PositionArray, ShipInfo } from '../types';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
+  let blank = { name: null, hit: CellStates.unguessed };
+
   for (let i = 0; i < 10; i++) {
     array[i] = new Array(10).fill(null);
   }
@@ -106,12 +108,12 @@ export const placeShips = (): PositionArray => {
       if (validShipState) {
         if (proposedPositions.alignment === 'horizontal') {
           for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-            positions[proposedPositions.startingRow][i] = { name: ship.name, hit: false };
+            positions[proposedPositions.startingRow][i] = { name: ship.name, hit: CellStates.unguessed };
           }
         } else {
           // vertical placement
           for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
-            positions[i][proposedPositions.startingColumn] = { name: ship.name, hit: false };
+            positions[i][proposedPositions.startingColumn] = { name: ship.name, hit: CellStates.unguessed };
           }
         }
       }
