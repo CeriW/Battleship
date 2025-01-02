@@ -1,11 +1,11 @@
 import React from 'react';
-import { PositionArray } from '../types';
+import { HeatMapArray } from '../types';
 
-interface BoardProps {
-  positions: PositionArray;
+interface HeatMapBoardProps {
+  positions: HeatMapArray;
 }
 
-export const Board: React.FC<BoardProps> = ({ positions }) => {
+export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -22,7 +22,7 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
     const cells = [];
     for (let j = 0; j < 10; j++) {
       cells.push(
-        <div key={`cell-${letters[i]}-${j}`} className={`cell ${positions[i][j]?.name ?? ''}`} data-testid="cell"></div>
+        <div key={`cell-${letters[i]}-${j}`} className={`cell heat-${positions[i][j] ?? ''}`} data-testid="cell"></div>
       );
     }
 
@@ -37,11 +37,11 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
   }
 
   return (
-    <div className="board" data-testid="board">
+    <div className="board heat-map" data-testid="heatmap-board">
       {columnMarkers}
       {rows}
     </div>
   );
 };
 
-export default Board;
+export default HeatMapBoard;

@@ -6,10 +6,10 @@ $carrier: purple;
 
 .board {
   border: 1px solid black;
-  max-width: 500px;
+  max-width: 300px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, (500px / 11));
+  grid-template-rows: repeat(11, (300px / 11));
 
   .column-marker,
   .row-marker {

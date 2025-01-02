@@ -1,6 +1,5 @@
 import { ai } from '../ai-behaviour';
-
-export type PositionArray = (string | null)[][];
+import { PositionArray, ShipInfo } from '../types';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -10,12 +9,7 @@ export function initialiseShipArray(): PositionArray {
   return array;
 }
 
-type ShipInfo = {
-  name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
-  size: number;
-};
-
-const shipTypes: ShipInfo[] = [
+export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
   { name: 'battleship', size: 4 },
   { name: 'cruiser', size: 3 },
@@ -112,12 +106,12 @@ export const placeShips = (): PositionArray => {
       if (validShipState) {
         if (proposedPositions.alignment === 'horizontal') {
           for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-            positions[proposedPositions.startingRow][i] = ship.name;
+            positions[proposedPositions.startingRow][i] = { name: ship.name, hit: false };
           }
         } else {
           // vertical placement
           for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
-            positions[i][proposedPositions.startingColumn] = ship.name;
+            positions[i][proposedPositions.startingColumn] = { name: ship.name, hit: false };
           }
         }
       }
