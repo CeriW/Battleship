@@ -38,6 +38,20 @@ describe('generateRandomShipPosition - horizontal', () => {
     }
   });
 
+  test('Ships can reach bottom right corner', () => {
+    const rowPositions = new Set();
+    const colPositions = new Set();
+
+    for (let i = 0; i < 1000; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'destroyer', size: 1 }, 'horizontal');
+      rowPositions.add(startingRow);
+      colPositions.add(startingColumn);
+    }
+
+    expect(rowPositions.has(9)).toBe(true);
+    expect(colPositions.has(9)).toBe(true);
+  });
+
   test('should generate random positions for the same ship size', () => {
     const positions = new Set();
 

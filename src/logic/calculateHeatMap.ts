@@ -61,7 +61,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
         // If it is, we're going to keep going left until we find an empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
-          if (heatMap[y][i].heat !== -1) {
+          if (heatMap[y][i].heat !== CellStates.hit) {
             heatMap[y][i].heat += 1;
 
             if (i - 1 >= 0 && isHeatable(heatMap[y][i - 1])) {
@@ -76,7 +76,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       if (x < 10 && isHeatable(heatMap[y][x + 1])) {
         // If it is, we're going to keep going right until we find an empty space and make it even hotter
         for (let i = x; i < 9; i++) {
-          if (heatMap[y][i].heat !== -1) {
+          if (heatMap[y][i].heat !== CellStates.hit) {
             heatMap[y][i].heat += 1;
 
             if (i + 1 < 10 && isHeatable(heatMap[y][i + 1])) {
@@ -90,7 +90,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // GO ALONG THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
-      if (y > 0 && heatMap[y - 1][x].heat === -1) {
+      if (y > 0 && heatMap[y - 1][x].heat === CellStates.hit) {
         // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
           if (isHeatable(heatMap[i][x])) {
@@ -105,7 +105,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && heatMap[y + 1][x].heat === -1) {
+      if (y < 9 && heatMap[y + 1][x].heat === CellStates.hit) {
         // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i < 10; i++) {
           if (isHeatable(heatMap[i][x])) {
@@ -122,12 +122,11 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   }
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
-
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
     let x = i % 10;
 
-    let heatMultiplier = 1;
+    let heatMultiplier = 0;
 
     if (!existingBoard[y][x] || existingBoard[y][x].hit === CellStates.unguessed) {
       shipTypes.forEach((ship) => {

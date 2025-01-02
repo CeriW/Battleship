@@ -1,5 +1,6 @@
 import { ai } from '../ai-behaviour';
 import { CellStates, PositionArray, ShipInfo } from '../types';
+import { shipTypes } from '../App';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -10,14 +11,6 @@ export function initialiseShipArray(): PositionArray {
   }
   return array;
 }
-
-export const shipTypes: ShipInfo[] = [
-  { name: 'carrier', size: 5 },
-  { name: 'battleship', size: 4 },
-  { name: 'cruiser', size: 3 },
-  { name: 'submarine', size: 3 },
-  { name: 'destroyer', size: 2 },
-];
 
 // Generate a random ship position that does not go off the side of the board
 export const generateRandomPosition = (
