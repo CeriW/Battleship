@@ -1,5 +1,9 @@
-// export type HeatMapArray = number[][];
-export type HeatMapArray = any[][];
+export type HeatMapCell = {
+  heat: number;
+  heatMultiplier: number;
+};
+
+export type HeatMapArray = HeatMapCell[][];
 
 export type ShipInfo = {
   name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
