@@ -45,8 +45,8 @@ export const checkValidShipState = ({
   adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
-  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 9) return false;
-  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 9) return false;
+  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
+  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 10) return false;
 
   // Make a list of all the cells that this ship could occupy
   const potentialCoordinates = [];

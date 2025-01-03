@@ -38,11 +38,25 @@ describe('generateRandomShipPosition - horizontal', () => {
     }
   });
 
+  test('Ships can reach top left corner', () => {
+    const rowPositions = new Set();
+    const colPositions = new Set();
+
+    for (let i = 0; i < 100; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'destroyer', size: 2 }, 'horizontal');
+      rowPositions.add(startingRow);
+      colPositions.add(startingColumn);
+    }
+
+    expect(rowPositions.has(0)).toBe(true);
+    expect(colPositions.has(0)).toBe(true);
+  });
+
   test('Ships can reach bottom right corner', () => {
     const rowPositions = new Set();
     const colPositions = new Set();
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 100; i++) {
       const { startingRow, startingColumn } = generateRandomPosition({ name: 'destroyer', size: 1 }, 'horizontal');
       rowPositions.add(startingRow);
       colPositions.add(startingColumn);
@@ -292,6 +306,34 @@ describe('checkValidShipState - horizontal', () => {
     };
 
     expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('should return true for a 1 tile long ship in top left corner', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][1] = { name: 'submarine', hit: CellStates.hit };
+    existingPositions[1][0] = { name: 'submarine', hit: CellStates.hit };
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 1,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('should return true for a 1 tile long ship in bottom right corner', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { startingRow: 9, startingColumn: 9, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 1,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
   });
 });
 

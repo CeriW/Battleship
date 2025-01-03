@@ -5,7 +5,7 @@ import { CellStates, PositionArray, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 
-import { placeShips } from './logic/placeShips';
+import { placeShips, initialiseShipArray } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 
@@ -19,18 +19,21 @@ export const shipTypes: ShipInfo[] = [
 
 export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
-  const [userShips, setUserShips] = useState<PositionArray>(placeShips());
+  const [userShips, setUserShips] = useState<PositionArray>(initialiseShipArray());
 
-  userShips[1][1] = { name: 'test', hit: CellStates.miss };
+  userShips[0][1] = { name: 'test', hit: CellStates.hit };
+  userShips[1][0] = { name: 'test', hit: CellStates.hit };
 
-  userShips[2][4] = { name: 'test', hit: CellStates.miss };
+  // userShips[1][1] = { name: 'test', hit: CellStates.miss };
 
-  userShips[5][5] = { name: 'test', hit: CellStates.hit };
-  userShips[5][4] = { name: 'test', hit: CellStates.hit };
-  userShips[5][6] = { name: 'test', hit: CellStates.hit };
+  // userShips[2][4] = { name: 'test', hit: CellStates.miss };
 
-  userShips[3][3] = { name: 'test', hit: CellStates.hit };
-  userShips[2][3] = { name: 'test', hit: CellStates.hit };
+  // userShips[5][5] = { name: 'test', hit: CellStates.hit };
+  // userShips[5][4] = { name: 'test', hit: CellStates.hit };
+  // userShips[5][6] = { name: 'test', hit: CellStates.hit };
+
+  // userShips[3][3] = { name: 'test', hit: CellStates.hit };
+  // userShips[2][3] = { name: 'test', hit: CellStates.hit };
 
   const heatMap = calculateHeatMap(userShips);
 

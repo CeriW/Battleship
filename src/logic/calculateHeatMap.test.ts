@@ -138,8 +138,215 @@ describe('calculateHeatMap - heatMultiplier', () => {
     expect(heatMap).toBeDefined();
     heatMap.forEach((row) => {
       expect(row).toHaveLength(10);
-      // expect(row.every((value) => value.heatMultiplier > 0)).toBe(true);
     });
+
+    expect(heatMap).toEqual([
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 10 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 9 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 7 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 4 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 8 },
+        { heat: 0, heatMultiplier: 7 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 4 },
+        { heat: 0, heatMultiplier: 3 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 6 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 4 },
+        { heat: 0, heatMultiplier: 2 },
+        { heat: 0, heatMultiplier: 1 },
+      ],
+      [
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 5 },
+        { heat: 0, heatMultiplier: 4 },
+        { heat: 0, heatMultiplier: 3 },
+        { heat: 0, heatMultiplier: 1 },
+        { heat: 0, heatMultiplier: 0 },
+      ],
+    ]);
+  });
+
+  test('cells that are a hit have a heatMultiplier of 0', () => {
+    const board = initialiseShipArray();
+    board[0][0] = { name: 'test', hit: CellStates.hit };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(0);
+  });
+
+  test('cells that are a miss have a heatMultiplier of 0', () => {
+    const board = initialiseShipArray();
+    board[0][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(0);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 10 on an empty board', () => {
+    const board = initialiseShipArray();
+    // board[0][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(10);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 5 when cell to right is a miss', () => {
+    // No ships can start in top left corner horizontally in this scenario
+    // |  ?  | miss |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(10);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 10 when cell to right is a hit', () => {
+    // All ships could feasibly be in the top left corner both horizontally and vertically
+    // |  ?  | hit |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.hit };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(5);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 10 when cell to right and below are hits', () => {
+    // All ships could feasibly be in the top left corner both horizontally and vertically
+    // |   ?  | hit |
+    // |  hit |     |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.hit };
+    board[1][0] = { name: 'test', hit: CellStates.hit };
+
+    const heatMap = calculateHeatMap(board);
+
+    // TODO - THIS TESTS FAILS BUT IT SHOULD PASS
+    // LOGIC NEEDS UPDATING
+
+    expect(heatMap[0][0].heatMultiplier).toBe(10);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 10 when cell to right and below are misses', () => {
+    // No ships could feasibly be in the top left corner in any alignment
+    // |   ?   | miss |
+    // |  miss |      |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[1][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    // TODO - THIS TESTS FAILS BUT IT SHOULD PASS
+    // LOGIC NEEDS UPDATING
+
+    expect(heatMap[0][0].heatMultiplier).toBe(0);
   });
 
   // test('hit squares have a heat of -1', () => {

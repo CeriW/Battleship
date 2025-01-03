@@ -17,6 +17,8 @@ const isHeatable = (cell: HeatMapCell): boolean => {
 };
 
 export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => {
+  console.log('existingBoard', existingBoard);
+
   const heatMap = initialiseHeatMapArray();
 
   for (let x = 0; x < 10; x++) {
@@ -51,7 +53,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
-        console.log(heatMap[y][x - 1]);
         heatMap[y][x - 1].heat += 1;
       }
 
@@ -128,33 +129,33 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
     let heatMultiplier = 0;
 
-    if (!existingBoard[y][x] || existingBoard[y][x].hit === CellStates.unguessed) {
-      shipTypes.forEach((ship) => {
-        if (
-          checkValidShipState({
-            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
-            shipSize: ship.size,
-            existingPositions: existingBoard,
-            adjacentShipModifier: 1,
-          })
-        ) {
-          heatMultiplier += 1;
-        }
+    shipTypes.forEach((ship) => {
+      if (
+        checkValidShipState({
+          proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
+          shipSize: ship.size,
+          existingPositions: existingBoard,
+          adjacentShipModifier: 1,
+          mayOverlapHits: true,
+        })
+      ) {
+        heatMultiplier += 1;
+      }
 
-        if (
-          checkValidShipState({
-            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
-            shipSize: ship.size,
-            existingPositions: existingBoard,
-            adjacentShipModifier: 1,
-          })
-        ) {
-          heatMultiplier += 1;
-        }
-      });
+      if (
+        checkValidShipState({
+          proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
+          shipSize: ship.size,
+          existingPositions: existingBoard,
+          adjacentShipModifier: 1,
+          mayOverlapHits: true,
+        })
+      ) {
+        heatMultiplier += 1;
+      }
+    });
 
-      heatMap[y][x].heatMultiplier = heatMultiplier;
-    }
+    heatMap[y][x].heatMultiplier = heatMultiplier;
   }
 
   console.log(heatMap);
