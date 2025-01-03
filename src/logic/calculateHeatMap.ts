@@ -17,8 +17,6 @@ const isHeatable = (cell: HeatMapCell): boolean => {
 };
 
 export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => {
-  console.log('existingBoard', existingBoard);
-
   const heatMap = initialiseHeatMapArray();
 
   for (let x = 0; x < 10; x++) {
@@ -26,6 +24,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       heatMap[y][x] = { heat: existingBoard[y][x]?.hit ?? 0, heatMultiplier: 1 };
     }
   }
+
+  console.log(isHeatable(heatMap[6][5]));
+
+  // console.log(heatMap);
 
   // Now we've figured out where all the hits are, we can mark the adjacent cells as possible hits
   for (let i = 0; i < 100; i++) {
@@ -91,13 +93,13 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // GO ALONG THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
-      if (y > 0 && heatMap[y - 1][x].heat === CellStates.hit) {
+      if (y > 0 && isHeatable(heatMap[y - 1][x])) {
         // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x].heat += 1;
 
-            if (i - 1 >= 0) {
+            if (i - 1 >= 0 && isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x].heat += 1;
             }
             break;
@@ -106,13 +108,13 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && heatMap[y + 1][x].heat === CellStates.hit) {
+      if (y < 9 && isHeatable(heatMap[y + 1][x])) {
         // If it is, we're going to keep going up until we find an empty space and make it even hotter
         for (let i = y; i < 10; i++) {
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x].heat += 1;
 
-            if (i + 1 < 10) {
+            if (i + 1 < 10 && isHeatable(heatMap[i + 1][x])) {
               heatMap[i + 1][x].heat += 1;
             }
             break;
@@ -156,7 +158,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
     heatMap[y][x].heatMultiplier = heatMultiplier;
   }
 
-  console.log(heatMap);
+  // console.log(heatMap);
 
   return heatMap;
 };

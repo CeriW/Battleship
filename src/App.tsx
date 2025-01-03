@@ -21,8 +21,16 @@ export function App() {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips, setUserShips] = useState<PositionArray>(initialiseShipArray());
 
-  userShips[0][1] = { name: 'test', hit: CellStates.hit };
-  userShips[1][0] = { name: 'test', hit: CellStates.hit };
+  userShips[4][5] = { name: 'test', hit: CellStates.hit }; // Above
+  userShips[5][4] = { name: 'test', hit: CellStates.hit }; // Left
+  userShips[5][6] = { name: 'test', hit: CellStates.hit }; // Right
+  userShips[6][5] = { name: 'test', hit: CellStates.hit }; // Below
+
+  userShips[8][3] = { name: 'test', hit: CellStates.hit }; // Below
+
+  console.log(userShips[6][5]);
+
+  // userShips[1][0] = { name: 'test', hit: CellStates.hit };
 
   // userShips[1][1] = { name: 'test', hit: CellStates.miss };
 
