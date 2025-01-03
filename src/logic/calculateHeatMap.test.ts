@@ -73,62 +73,68 @@ describe('calculateHeatMap - heat', () => {
 
   test('two horizontally adjacent hits should return appropriate heat for adjacent squares', () => {
     const board = initialiseShipArray();
-    board[5][4] = { name: 'test', hit: CellStates.hit };
-    board[5][5] = { name: 'test', hit: CellStates.hit };
+    const x = 5;
+    const y = 5;
+
+    board[y][x] = { name: 'test', hit: CellStates.hit };
+    board[y][x + 1] = { name: 'test', hit: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
     // The hits
-    expect(heatMap[5][4].heat).toBe(-1);
-    expect(heatMap[5][5].heat).toBe(-1);
+    expect(heatMap[y][x].heat).toBe(-1);
+    expect(heatMap[y][x + 1].heat).toBe(-1);
 
     // Squares above
-    expect(heatMap[4][4].heat).toBe(1);
-    expect(heatMap[4][5].heat).toBe(1);
+    expect(heatMap[y - 1][x].heat).toBe(1);
+    expect(heatMap[y - 1][x + 1].heat).toBe(1);
 
     // Squares below
-    expect(heatMap[6][4].heat).toBe(1);
-    expect(heatMap[6][5].heat).toBe(1);
+    expect(heatMap[y + 1][x].heat).toBe(1);
+    expect(heatMap[y + 1][x + 1].heat).toBe(1);
 
     // Squares to left
-    expect(heatMap[5][3].heat).toBe(2);
-    expect(heatMap[5][2].heat).toBe(1);
-    expect(heatMap[5][1].heat).toBe(0);
+    expect(heatMap[y][x - 1].heat).toBe(2);
+    expect(heatMap[y][x - 2].heat).toBe(1);
+    expect(heatMap[y][x - 3].heat).toBe(0);
 
     // Squares to right
-    expect(heatMap[5][6].heat).toBe(2);
-    expect(heatMap[5][7].heat).toBe(1);
-    expect(heatMap[5][8].heat).toBe(0);
+    expect(heatMap[y][x + 2].heat).toBe(2);
+    expect(heatMap[y][x + 3].heat).toBe(1);
+    expect(heatMap[y][x + 4].heat).toBe(0);
   });
 
   test('two vertically adjacent hits should return appropriate heat for adjacent squares', () => {
     const board = initialiseShipArray();
-    board[5][5] = { name: 'test', hit: CellStates.hit };
-    board[6][5] = { name: 'test', hit: CellStates.hit };
+    const x = 5;
+    const y = 5;
+
+    board[y][x] = { name: 'test', hit: CellStates.hit };
+    board[y + 1][x] = { name: 'test', hit: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
     // The hits
-    expect(heatMap[5][5].heat).toBe(-1);
-    expect(heatMap[6][5].heat).toBe(-1);
+    expect(heatMap[y][x].heat).toBe(-1);
+    expect(heatMap[y + 1][x].heat).toBe(-1);
 
     // Squares above
-    expect(heatMap[4][5].heat).toBe(2);
-    expect(heatMap[3][5].heat).toBe(1);
-    expect(heatMap[2][5].heat).toBe(0);
+    expect(heatMap[y - 1][x].heat).toBe(2);
+    expect(heatMap[y - 2][x].heat).toBe(1);
+    expect(heatMap[y - 3][x].heat).toBe(0);
 
     // Squares below
-    expect(heatMap[7][5].heat).toBe(2);
-    expect(heatMap[8][5].heat).toBe(1);
-    expect(heatMap[9][5].heat).toBe(0);
+    expect(heatMap[y + 2][x].heat).toBe(2);
+    expect(heatMap[y + 3][x].heat).toBe(1);
+    expect(heatMap[y + 4][x].heat).toBe(0);
 
     // Squares to left
-    expect(heatMap[5][4].heat).toBe(1);
-    expect(heatMap[5][3].heat).toBe(0);
+    expect(heatMap[y][x - 1].heat).toBe(2);
+    expect(heatMap[y][x - 2].heat).toBe(1);
 
     // Squares to right
-    expect(heatMap[5][6].heat).toBe(1);
-    expect(heatMap[6][6].heat).toBe(1);
+    expect(heatMap[y][x + 1].heat).toBe(2);
+    expect(heatMap[y + 1][x + 1].heat).toBe(2);
   });
 });
 
@@ -325,10 +331,6 @@ describe('calculateHeatMap - heatMultiplier', () => {
     board[1][0] = { name: 'test', hit: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
-
-    // TODO - THIS TESTS FAILS BUT IT SHOULD PASS
-    // LOGIC NEEDS UPDATING
-
     expect(heatMap[0][0].heatMultiplier).toBe(10);
   });
 
@@ -342,9 +344,6 @@ describe('calculateHeatMap - heatMultiplier', () => {
     board[1][0] = { name: 'test', hit: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
-
-    // TODO - THIS TESTS FAILS BUT IT SHOULD PASS
-    // LOGIC NEEDS UPDATING
 
     expect(heatMap[0][0].heatMultiplier).toBe(0);
   });
@@ -410,63 +409,69 @@ describe('calculateHeatMap - heatMultiplier', () => {
     expect(heatMap[y][x].heat).toBe(8);
   });
 
-  // test('two horizontally adjacent hits should return appropriate heat for adjacent squares', () => {
-  //   const board = initialiseShipArray();
-  //   board[5][4] = { name: 'test', hit: CellStates.hit };
-  //   board[5][5] = { name: 'test', hit: CellStates.hit };
+  test('two horizontally adjacent hits should return appropriate heat for adjacent squares', () => {
+    const board = initialiseShipArray();
+    const x = 5;
+    const y = 5;
 
-  //   const heatMap = calculateHeatMap(board);
+    board[y][x] = { name: 'test', hit: CellStates.hit };
+    board[y][x + 1] = { name: 'test', hit: CellStates.hit };
 
-  //   // The hits
-  //   expect(heatMap[5][4].heat).toBe(-1);
-  //   expect(heatMap[5][5].heat).toBe(-1);
+    const heatMap = calculateHeatMap(board);
 
-  //   // Squares above
-  //   expect(heatMap[4][4].heat).toBe(1);
-  //   expect(heatMap[4][5].heat).toBe(1);
+    // The hits
+    expect(heatMap[y][x].heat).toBe(-1);
+    expect(heatMap[y][x + 1].heat).toBe(-1);
 
-  //   // Squares below
-  //   expect(heatMap[6][4].heat).toBe(1);
-  //   expect(heatMap[6][5].heat).toBe(1);
+    // Squares above
+    expect(heatMap[y - 1][x].heat).toBe(1);
+    expect(heatMap[y - 1][x + 1].heat).toBe(1);
 
-  //   // Squares to left
-  //   expect(heatMap[5][3].heat).toBe(2);
-  //   expect(heatMap[5][2].heat).toBe(1);
-  //   expect(heatMap[5][1].heat).toBe(0);
+    // Squares below
+    expect(heatMap[y + 1][x].heat).toBe(1);
+    expect(heatMap[y + 1][x + 1].heat).toBe(1);
 
-  //   // Squares to right
-  //   expect(heatMap[5][6].heat).toBe(2);
-  //   expect(heatMap[5][7].heat).toBe(1);
-  //   expect(heatMap[5][8].heat).toBe(0);
-  // });
+    // Squares to left
+    expect(heatMap[y][x - 1].heat).toBe(2);
+    expect(heatMap[y][x - 2].heat).toBe(1);
+    expect(heatMap[y][x - 3].heat).toBe(0);
 
-  // test('two vertically adjacent hits should return appropriate heat for adjacent squares', () => {
-  //   const board = initialiseShipArray();
-  //   board[5][5] = { name: 'test', hit: CellStates.hit };
-  //   board[6][5] = { name: 'test', hit: CellStates.hit };
+    // Squares to right
+    expect(heatMap[y][x + 2].heat).toBe(2);
+    expect(heatMap[y][x + 3].heat).toBe(1);
+    expect(heatMap[y][x + 4].heat).toBe(0);
+  });
 
-  //   const heatMap = calculateHeatMap(board);
+  test('two vertically adjacent hits should return appropriate heat for adjacent squares', () => {
+    const board = initialiseShipArray();
+    const x = 5;
+    const y = 5;
 
-  //   // The hits
-  //   expect(heatMap[5][5].heat).toBe(-1);
-  //   expect(heatMap[6][5].heat).toBe(-1);
+    board[y][x] = { name: 'test', hit: CellStates.hit };
+    board[y + 1][x] = { name: 'test', hit: CellStates.hit };
 
-  //   // Squares above
-  //   expect(heatMap[4][5].heat).toBe(2);
-  //   expect(heatMap[3][5].heat).toBe(1);
-  //   expect(heatMap[2][5].heat).toBe(0);
+    const heatMap = calculateHeatMap(board);
 
-  //   // Squares below
-  //   expect(heatMap[7][5].heat).toBe(2);
-  //   expect(heatMap[8][5].heat).toBe(1);
-  //   expect(heatMap[9][5].heat).toBe(0);
+    // The hits
+    expect(heatMap[y][x].heat).toBe(-1);
+    expect(heatMap[y + 1][x].heat).toBe(-1);
 
-  //   // Squares to left
-  //   expect(heatMap[5][4].heat).toBe(1);
-  //   expect(heatMap[5][3].heat).toBe(0);
+    // Squares above
+    expect(heatMap[y - 1][x].heat).toBe(2);
+    expect(heatMap[y - 2][x].heat).toBe(1);
+    expect(heatMap[y - 3][x].heat).toBe(0);
 
-  //   // Squares to right
-  //   expect(heatMap[5][6].heat).toBe(1);
-  //   expect(heatMap[6][6].heat).toBe(1);
-  // });
+    // Squares below
+    expect(heatMap[y + 2][x].heat).toBe(2);
+    expect(heatMap[y + 3][x].heat).toBe(1);
+    expect(heatMap[y + 4][x].heat).toBe(0);
+
+    // Squares to left
+    expect(heatMap[y][x - 1].heat).toBe(2);
+    expect(heatMap[y][x - 2].heat).toBe(1);
+
+    // Squares to right
+    expect(heatMap[y][x + 1].heat).toBe(2);
+    expect(heatMap[y + 1][x + 1].heat).toBe(2);
+  });
 });
