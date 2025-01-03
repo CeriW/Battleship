@@ -28,8 +28,6 @@ export function App() {
 
   userShips[8][3] = { name: 'test', hit: CellStates.hit }; // Below
 
-  console.log(userShips[6][5]);
-
   // userShips[1][0] = { name: 'test', hit: CellStates.hit };
 
   // userShips[1][1] = { name: 'test', hit: CellStates.miss };

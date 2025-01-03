@@ -360,4 +360,177 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
     expect(heatMap[0][0].heatMultiplier).toBe(0);
   });
+
+  test('top left corner of the board has a heatMultiplier of 10 when a 2x2 gap is available', () => {
+    // Only a 2 tile long ship could fit here, and it could be horizontal or vertical
+    // |   ?   |        |  miss  |
+    // |       |        |  miss  |
+    // |  miss |  miss  |        |
+
+    const board = initialiseShipArray();
+    board[0][2] = { name: 'test', hit: CellStates.miss };
+    board[1][2] = { name: 'test', hit: CellStates.miss };
+    board[2][0] = { name: 'test', hit: CellStates.miss };
+    board[2][1] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(2);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 1 when a 2x1 gap is available', () => {
+    // Only a 2 tile long ship could fit here, only horizontally
+    // |   ?   |        |  miss  |
+    // |  miss |  miss  |        |
+
+    const board = initialiseShipArray();
+    board[0][2] = { name: 'test', hit: CellStates.miss };
+    board[1][0] = { name: 'test', hit: CellStates.miss };
+    board[1][1] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(1);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 3 when a 3x1 gap is available', () => {
+    // The single 2 tile long ship and both 3 tile long ships could fit here horizontally
+    // |   ?   |        |        | miss  |
+    // |  miss |  N/A   |  N/A   |
+
+    const board = initialiseShipArray();
+    board[0][3] = { name: 'test', hit: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(3);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 4 when a 4x1 gap is available', () => {
+    // The single 2 tile long ship, the two 3 tile long ships, and the 4 tile long ship could fit here horizontally but not vertically
+    // |   ?   |        |        |        | miss  |
+    // |  miss |  N/A   |  N/A   |  N/A   |
+
+    const board = initialiseShipArray();
+    board[0][4] = { name: 'test', hit: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(4);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 5 when a 5x1 gap is available', () => {
+    // The single 2 tile long ship, the two 3 tile long ships, the 4 tile long ship, and the 5 tile long ship could fit here horizontally but not vertically
+    // |   ?   |        |        |        |        |        | miss  |
+    // |  miss |  N/A   |  N/A   |  N/A   |  N/A   |  N/A   |
+
+    const board = initialiseShipArray();
+    board[0][5] = { name: 'test', hit: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(5);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 1 when a 1x2 gap is available', () => {
+    // Only a 2 tile long ship could fit here, only vertically
+    // |   ?   |  miss  |
+    // |       |  miss  |
+    // |  miss |        |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[1][1] = { name: 'test', hit: CellStates.miss };
+    board[2][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(1);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 3 when a 1x3 gap is available', () => {
+    // The single two tile long ship and the two 3 tile long ships could fit here
+    // |   ?   |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |  miss |        |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[1][1] = { name: 'test', hit: CellStates.miss };
+    board[2][1] = { name: 'test', hit: CellStates.miss };
+    board[3][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(3);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 4 when a 1x4 gap is available', () => {
+    // The single two tile long ship, the two 3 tile long ships, and the 4 tile long ship could fit here
+    // |   ?   |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |  miss |        |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[1][1] = { name: 'test', hit: CellStates.miss };
+    board[2][1] = { name: 'test', hit: CellStates.miss };
+    board[3][1] = { name: 'test', hit: CellStates.miss };
+    board[4][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(4);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 5 when a 1x5 gap is available', () => {
+    // All five ships could fit here vertically
+    // |   ?   |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |       |  miss  |
+    // |  miss |        |
+
+    const board = initialiseShipArray();
+    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[1][1] = { name: 'test', hit: CellStates.miss };
+    board[2][1] = { name: 'test', hit: CellStates.miss };
+    board[3][1] = { name: 'test', hit: CellStates.miss };
+    board[4][1] = { name: 'test', hit: CellStates.miss };
+    board[5][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(5);
+  });
+
+  test('top left corner of the board has a heatMultiplier of 10 when a 5x5 gap is available', () => {
+    // All five ships could fit here both horizontally and vertically
+    // |   ?   |        |        |        |        |   miss  |
+    // |   ?   |        |        |        |        |   miss  |
+    // |   ?   |        |        |        |        |   miss  |
+    // |   ?   |        |        |        |        |   miss  |
+    // |   ?   |        |        |        |        |   miss  |
+    // |   ?   |        |        |        |        |   miss  |
+    // |  miss |  N/A   |  N/A   |  N/A   |  N/A   |  N/A   |
+
+    const board = initialiseShipArray();
+    board[0][5] = { name: 'test', hit: CellStates.miss };
+    board[1][5] = { name: 'test', hit: CellStates.miss };
+    board[2][5] = { name: 'test', hit: CellStates.miss };
+    board[3][5] = { name: 'test', hit: CellStates.miss };
+    board[4][5] = { name: 'test', hit: CellStates.miss };
+    board[5][0] = { name: 'test', hit: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+
+    expect(heatMap[0][0].heatMultiplier).toBe(10);
+  });
 });
