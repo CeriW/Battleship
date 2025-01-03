@@ -1,4 +1,5 @@
 import { generateRandomPosition, checkValidShipState, initialiseShipArray, placeShips } from './placeShips';
+import { CellStates } from '../types';
 
 describe('generateRandomShipPosition - horizontal', () => {
   test('should ensure the startingColumn leaves enough space for the ship', () => {
@@ -35,6 +36,34 @@ describe('generateRandomShipPosition - horizontal', () => {
       const shipPosition = generateRandomPosition({ name: 'cruiser', size: 10 }, 'horizontal');
       expect(shipPosition.startingColumn).toBe(0);
     }
+  });
+
+  test('Ships can reach top left corner', () => {
+    const rowPositions = new Set();
+    const colPositions = new Set();
+
+    for (let i = 0; i < 100; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'destroyer', size: 2 }, 'horizontal');
+      rowPositions.add(startingRow);
+      colPositions.add(startingColumn);
+    }
+
+    expect(rowPositions.has(0)).toBe(true);
+    expect(colPositions.has(0)).toBe(true);
+  });
+
+  test('Ships can reach bottom right corner', () => {
+    const rowPositions = new Set();
+    const colPositions = new Set();
+
+    for (let i = 0; i < 100; i++) {
+      const { startingRow, startingColumn } = generateRandomPosition({ name: 'destroyer', size: 1 }, 'horizontal');
+      rowPositions.add(startingRow);
+      colPositions.add(startingColumn);
+    }
+
+    expect(rowPositions.has(9)).toBe(true);
+    expect(colPositions.has(9)).toBe(true);
   });
 
   test('should generate random positions for the same ship size', () => {
@@ -118,7 +147,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('returns false when the proposed positions overlap with existing ships', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[0][1] = { name: 'battleship', hit: false };
+    existingPositions[0][1] = { name: 'battleship', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -143,7 +172,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('returns false when a ship overlaps another ship at the edge of the board', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[0][8] = { name: 'carrier', hit: false };
+    existingPositions[0][8] = { name: 'carrier', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -169,7 +198,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in row below', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -183,7 +212,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in row below', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -197,7 +226,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in row above', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -211,7 +240,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in row above', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 2, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -225,7 +254,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to left', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -239,7 +268,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in column to left', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -253,7 +282,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to right', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][4] = { name: 'submarine', hit: false };
+    existingPositions[1][4] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -267,7 +296,7 @@ describe('checkValidShipState - horizontal', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in column to right', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][4] = { name: 'submarine', hit: false };
+    existingPositions[1][4] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -277,6 +306,34 @@ describe('checkValidShipState - horizontal', () => {
     };
 
     expect(checkValidShipState(props)).toBe(false);
+  });
+
+  test('should return true for a 1 tile long ship in top left corner', () => {
+    let existingPositions = initialiseShipArray();
+    existingPositions[0][1] = { name: 'submarine', status: CellStates.hit };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.hit };
+
+    const props = {
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 1,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
+  });
+
+  test('should return true for a 1 tile long ship in bottom right corner', () => {
+    let existingPositions = initialiseShipArray();
+
+    const props = {
+      proposedPositions: { startingRow: 9, startingColumn: 9, alignment: 'horizontal' as 'horizontal' | 'vertical' },
+      shipSize: 1,
+      existingPositions,
+      adjacentShipModifier: 1,
+    };
+
+    expect(checkValidShipState(props)).toBe(true);
   });
 });
 
@@ -295,7 +352,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('returns false when the proposed positions overlap with existing ships', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'battleship', hit: false };
+    existingPositions[1][0] = { name: 'battleship', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -320,7 +377,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('returns false when a ship overlaps another ship at the edge of the board', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[0][6] = { name: 'carrier', hit: false };
+    existingPositions[0][6] = { name: 'carrier', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 6, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -346,7 +403,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in row below', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[3][0] = { name: 'submarine', hit: false };
+    existingPositions[3][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -360,7 +417,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in row below', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[3][0] = { name: 'submarine', hit: false };
+    existingPositions[3][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -374,7 +431,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in row above', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[0][0] = { name: 'submarine', hit: false };
+    existingPositions[0][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -388,7 +445,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in row above', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[0][0] = { name: 'submarine', hit: false };
+    existingPositions[0][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 0, alignment: 'vertical' as 'horizontal' | 'vertical' },
@@ -402,7 +459,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to left', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -416,7 +473,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in column to left', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][0] = { name: 'submarine', hit: false };
+    existingPositions[1][0] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -430,7 +487,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are 100% allowed, returns true when a different ship is already in column to right', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][4] = { name: 'submarine', hit: false };
+    existingPositions[1][4] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },
@@ -444,7 +501,7 @@ describe('checkValidShipState - vertical', () => {
 
   test('when adjacent ships are not allowed, returns false when a different ship is already in column to right', () => {
     let existingPositions = initialiseShipArray();
-    existingPositions[1][4] = { name: 'submarine', hit: false };
+    existingPositions[1][4] = { name: 'submarine', status: CellStates.miss };
 
     const props = {
       proposedPositions: { startingRow: 1, startingColumn: 1, alignment: 'horizontal' as 'horizontal' | 'vertical' },

@@ -1,5 +1,6 @@
 import { ai } from '../ai-behaviour';
-import { PositionArray, ShipInfo } from '../types';
+import { CellStates, PositionArray, ShipInfo } from '../types';
+import { shipTypes } from '../App';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -8,14 +9,6 @@ export function initialiseShipArray(): PositionArray {
   }
   return array;
 }
-
-export const shipTypes: ShipInfo[] = [
-  { name: 'carrier', size: 5 },
-  { name: 'battleship', size: 4 },
-  { name: 'cruiser', size: 3 },
-  { name: 'submarine', size: 3 },
-  { name: 'destroyer', size: 2 },
-];
 
 // Generate a random ship position that does not go off the side of the board
 export const generateRandomPosition = (
@@ -42,16 +35,18 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
+  mayOverlapHits = false,
   adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
+  mayOverlapHits?: boolean;
   adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
-  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 9) return false;
-  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 9) return false;
+  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
+  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 10) return false;
 
   // Make a list of all the cells that this ship could occupy
   const potentialCoordinates = [];
@@ -75,14 +70,22 @@ export const checkValidShipState = ({
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
 
-  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1 || mayOverlapHits;
 
   potentialCoordinates.forEach(({ x, y }) => {
-    if (existingPositions[y][x]) valid = false; // Check this specific spot
-    if (!adjacentShipsAllowable && existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
-    if (!adjacentShipsAllowable && existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
-    if (!adjacentShipsAllowable && existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
-    if (!adjacentShipsAllowable && existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+    let thisCell = existingPositions[y][x];
+    if (mayOverlapHits) {
+      if (thisCell && thisCell.status === CellStates.miss) valid = false;
+    } else {
+      if (thisCell) valid = false;
+    }
+
+    if (!adjacentShipsAllowable) {
+      if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
+      if (existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
+      if (existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
+      if (existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+    }
   });
 
   return valid;
@@ -106,12 +109,12 @@ export const placeShips = (): PositionArray => {
       if (validShipState) {
         if (proposedPositions.alignment === 'horizontal') {
           for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-            positions[proposedPositions.startingRow][i] = { name: ship.name, hit: false };
+            positions[proposedPositions.startingRow][i] = { name: ship.name, status: CellStates.unguessed };
           }
         } else {
           // vertical placement
           for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
-            positions[i][proposedPositions.startingColumn] = { name: ship.name, hit: false };
+            positions[i][proposedPositions.startingColumn] = { name: ship.name, status: CellStates.unguessed };
           }
         }
       }
