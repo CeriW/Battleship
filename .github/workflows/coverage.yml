@@ -22,12 +22,10 @@ jobs:
         run: npm ci
       - name: Run tests with coverage
         run: |
-          npm test -- --coverage --watchAll=false --ci --json --outputFile=jest-results.json || true
-          cat jest-results.json
+          npm test -- --coverage --watchAll=false --ci --json --outputFile=jest-results.json --coverageReporters json-summary text lcov || true
           ls -la coverage/
-          cat coverage/coverage-final.json
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          skip-step: all
-          coverage-file: ./coverage/coverage-final.json
+          coverage-file: ./coverage/coverage-summary.json
+          base-coverage-file: ./coverage/coverage-summary.json
