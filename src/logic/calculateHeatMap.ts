@@ -135,7 +135,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
           shipSize: ship.size,
           existingPositions: existingBoard,
-          adjacentShipModifier: 1,
           mayOverlapHits: true,
         })
       ) {
@@ -147,7 +146,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
           shipSize: ship.size,
           existingPositions: existingBoard,
-          adjacentShipModifier: 1,
           mayOverlapHits: true,
         })
       ) {

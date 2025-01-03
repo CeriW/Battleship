@@ -300,7 +300,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
     const heatMap = calculateHeatMap(board);
 
-    expect(heatMap[0][0].heatMultiplier).toBe(10);
+    expect(heatMap[0][0].heatMultiplier).toBe(5);
   });
 
   test('top left corner of the board has a heatMultiplier of 10 when cell to right is a hit', () => {
@@ -312,7 +312,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
     const heatMap = calculateHeatMap(board);
 
-    expect(heatMap[0][0].heatMultiplier).toBe(5);
+    expect(heatMap[0][0].heatMultiplier).toBe(10);
   });
 
   test('top left corner of the board has a heatMultiplier of 10 when cell to right and below are hits', () => {

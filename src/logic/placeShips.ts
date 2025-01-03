@@ -38,11 +38,13 @@ export const checkValidShipState = ({
   shipSize,
   existingPositions,
   adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
+  mayOverlapHits = false,
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
   adjacentShipModifier?: number;
+  mayOverlapHits?: boolean;
 }): boolean => {
   // First check if ship would go out of bounds
   if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
@@ -70,14 +72,22 @@ export const checkValidShipState = ({
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
 
-  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1 || mayOverlapHits;
 
   potentialCoordinates.forEach(({ x, y }) => {
-    if (existingPositions[y][x]) valid = false; // Check this specific spot
-    if (!adjacentShipsAllowable && existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
-    if (!adjacentShipsAllowable && existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
-    if (!adjacentShipsAllowable && existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
-    if (!adjacentShipsAllowable && existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+    let thisCell = existingPositions[y][x];
+    if (mayOverlapHits) {
+      if (thisCell && thisCell.hit === CellStates.miss) valid = false;
+    } else {
+      if (thisCell) valid = false;
+    }
+
+    if (!adjacentShipsAllowable) {
+      if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
+      if (existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below
+      if (existingPositions[y][Math.max(0, x - 1)]) valid = false; // Check column to left
+      if (existingPositions[y][Math.min(9, x + 1)]) valid = false; // Check column to right
+    }
   });
 
   return valid;
