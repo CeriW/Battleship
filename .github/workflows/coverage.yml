@@ -16,45 +16,16 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      - name: Update workflow name with coverage
+      - name: Get Coverage
+        id: get_coverage
         run: |
           COVERAGE=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-          echo "name=Test Coverage: ${COVERAGE}%" >> $GITHUB_ENV
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
 
-      - name: Generate coverage badge
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8'));
-            const percentage = coverage.total.lines.pct;
+      - name: Create Job Summary
+        run: |
+          echo "## Test Coverage: ${{ steps.get_coverage.outputs.percentage }}%" >> $GITHUB_STEP_SUMMARY
 
-            let color;
-            if (percentage >= 90) color = 'brightgreen';
-            else if (percentage >= 80) color = 'green';
-            else if (percentage >= 70) color = 'yellowgreen';
-            else if (percentage >= 60) color = 'yellow';
-            else color = 'red';
-
-            const badge = {
-              schemaVersion: 1,
-              label: 'coverage',
-              message: percentage + '%',
-              color: color
-            };
-
-            fs.writeFileSync('./coverage/badge.json', JSON.stringify(badge));
-
-      - name: Upload coverage badge
-        uses: actions/upload-artifact@v3
-        with:
-          name: badge
-          path: coverage/badge.json
-
-      - name: Deploy badge
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: coverage
-          target-folder: coverage
-          branch: gh-pages
+      - name: Rename Workflow Run
+        run: |
+          echo "GITHUB_WORKFLOW_NAME=Test Coverage (${{ steps.get_coverage.outputs.percentage }}%)" >> $GITHUB_ENV
