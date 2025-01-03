@@ -24,9 +24,10 @@ jobs:
         run: |
           npm test -- --coverage --watchAll=false --ci --json --outputFile=jest-results.json || true
           cat jest-results.json
+          ls -la coverage/
+          cat coverage/coverage-final.json
       - name: Generate coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           skip-step: all
           coverage-file: ./coverage/coverage-final.json
-          base-coverage-file: ./coverage/coverage-final.json
