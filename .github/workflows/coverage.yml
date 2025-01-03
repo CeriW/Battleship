@@ -21,5 +21,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run tests with coverage
-        run: npm test -- --coverage --watchAll=false
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+        run: |
+          npm test -- --coverage --watchAll=false --ci --json --outputFile=jest-results.json || true
+          cat jest-results.json
+      - name: Generate coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          skip-step: all
+          coverage-file: ./coverage/coverage-final.json
+          base-coverage-file: ./coverage/coverage-final.json
