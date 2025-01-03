@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { CellStates, PositionArray, ShipInfo } from './types';
+import { PositionArray, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 
-import { placeShips, initialiseShipArray } from './logic/placeShips';
+import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 
@@ -18,32 +18,9 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 export function App() {
-  const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
-  const [userShips, setUserShips] = useState<PositionArray>(initialiseShipArray());
-
-  userShips[4][5] = { name: 'test', hit: CellStates.hit }; // Above
-  userShips[5][4] = { name: 'test', hit: CellStates.hit }; // Left
-  userShips[5][6] = { name: 'test', hit: CellStates.hit }; // Right
-  userShips[6][5] = { name: 'test', hit: CellStates.hit }; // Below
-
-  userShips[8][3] = { name: 'test', hit: CellStates.hit }; // Below
-
-  // userShips[1][0] = { name: 'test', hit: CellStates.hit };
-
-  // userShips[1][1] = { name: 'test', hit: CellStates.miss };
-
-  // userShips[2][4] = { name: 'test', hit: CellStates.miss };
-
-  // userShips[5][5] = { name: 'test', hit: CellStates.hit };
-  // userShips[5][4] = { name: 'test', hit: CellStates.hit };
-  // userShips[5][6] = { name: 'test', hit: CellStates.hit };
-
-  // userShips[3][3] = { name: 'test', hit: CellStates.hit };
-  // userShips[2][3] = { name: 'test', hit: CellStates.hit };
-
+  // const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
+  const [userShips] = useState<PositionArray>(placeShips());
   const heatMap = calculateHeatMap(userShips);
-
-  // console.log(computerShips);
 
   return (
     <>

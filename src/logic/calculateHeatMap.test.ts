@@ -25,7 +25,7 @@ describe('calculateHeatMap - heat', () => {
 
   test('hit squares have a heat of -1', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'test', hit: CellStates.hit }; // Above
+    board[4][5] = { name: 'test', status: CellStates.hit }; // Above
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5].heat).toBe(-1);
@@ -37,7 +37,7 @@ describe('calculateHeatMap - heat', () => {
     const y = 5;
     const x = 5;
 
-    board[y][x] = { name: 'test', hit: CellStates.hit };
+    board[y][x] = { name: 'test', status: CellStates.hit };
     const heatMap = calculateHeatMap(board);
     expect(heatMap[y - 1][x].heat).toBe(2); // above
     expect(heatMap[y + 1][x].heat).toBe(2); // below
@@ -52,8 +52,8 @@ describe('calculateHeatMap - heat', () => {
 
   test('a square adjacent to two hit squares has a heat of 4', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'test', hit: CellStates.hit }; // Above
-    board[5][4] = { name: 'test', hit: CellStates.hit }; // Left
+    board[4][5] = { name: 'test', status: CellStates.hit }; // Above
+    board[5][4] = { name: 'test', status: CellStates.hit }; // Left
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[5][5].heat).toBe(4);
@@ -61,9 +61,9 @@ describe('calculateHeatMap - heat', () => {
 
   test('squares adjacent three separate hit squares have a heat of 6', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'test', hit: CellStates.hit }; // Above
-    board[5][4] = { name: 'test', hit: CellStates.hit }; // Left
-    board[5][6] = { name: 'test', hit: CellStates.hit }; // Right
+    board[4][5] = { name: 'test', status: CellStates.hit }; // Above
+    board[5][4] = { name: 'test', status: CellStates.hit }; // Left
+    board[5][6] = { name: 'test', status: CellStates.hit }; // Right
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[5][5].heat).toBe(6);
@@ -75,10 +75,10 @@ describe('calculateHeatMap - heat', () => {
     const x = 5;
     const y = 5;
 
-    board[y - 1][x] = { name: 'test', hit: CellStates.hit }; // Above
-    board[y + 1][x] = { name: 'test', hit: CellStates.hit }; // Below
-    board[y][x - 1] = { name: 'test', hit: CellStates.hit }; // Left
-    board[y][x + 1] = { name: 'test', hit: CellStates.hit }; // Right
+    board[y - 1][x] = { name: 'test', status: CellStates.hit }; // Above
+    board[y + 1][x] = { name: 'test', status: CellStates.hit }; // Below
+    board[y][x - 1] = { name: 'test', status: CellStates.hit }; // Left
+    board[y][x + 1] = { name: 'test', status: CellStates.hit }; // Right
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[y][x].heat).toBe(8);
@@ -89,8 +89,8 @@ describe('calculateHeatMap - heat', () => {
     const x = 5;
     const y = 5;
 
-    board[y][x] = { name: 'test', hit: CellStates.hit };
-    board[y][x + 1] = { name: 'test', hit: CellStates.hit };
+    board[y][x] = { name: 'test', status: CellStates.hit };
+    board[y][x + 1] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
@@ -122,8 +122,8 @@ describe('calculateHeatMap - heat', () => {
     const x = 5;
     const y = 5;
 
-    board[y][x] = { name: 'test', hit: CellStates.hit };
-    board[y + 1][x] = { name: 'test', hit: CellStates.hit };
+    board[y][x] = { name: 'test', status: CellStates.hit };
+    board[y + 1][x] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
@@ -285,7 +285,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
   test('cells that are a hit have a heatMultiplier of 0', () => {
     const board = initialiseShipArray();
-    board[0][0] = { name: 'test', hit: CellStates.hit };
+    board[0][0] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
@@ -294,7 +294,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
   test('cells that are a miss have a heatMultiplier of 0', () => {
     const board = initialiseShipArray();
-    board[0][0] = { name: 'test', hit: CellStates.miss };
+    board[0][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -303,7 +303,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
 
   test('top left corner of the board has a heatMultiplier of 10 on an empty board', () => {
     const board = initialiseShipArray();
-    // board[0][0] = { name: 'test', hit: CellStates.miss };
+    // board[0][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -315,7 +315,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  ?  | miss |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -327,7 +327,7 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  ?  | hit |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.hit };
+    board[0][1] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
 
@@ -340,8 +340,8 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  hit |     |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.hit };
-    board[1][0] = { name: 'test', hit: CellStates.hit };
+    board[0][1] = { name: 'test', status: CellStates.hit };
+    board[1][0] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[0][0].heatMultiplier).toBe(10);
@@ -353,8 +353,8 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |      |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
-    board[1][0] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
+    board[1][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -368,10 +368,10 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  miss  |        |
 
     const board = initialiseShipArray();
-    board[0][2] = { name: 'test', hit: CellStates.miss };
-    board[1][2] = { name: 'test', hit: CellStates.miss };
-    board[2][0] = { name: 'test', hit: CellStates.miss };
-    board[2][1] = { name: 'test', hit: CellStates.miss };
+    board[0][2] = { name: 'test', status: CellStates.miss };
+    board[1][2] = { name: 'test', status: CellStates.miss };
+    board[2][0] = { name: 'test', status: CellStates.miss };
+    board[2][1] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -384,9 +384,9 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  miss  |        |
 
     const board = initialiseShipArray();
-    board[0][2] = { name: 'test', hit: CellStates.miss };
-    board[1][0] = { name: 'test', hit: CellStates.miss };
-    board[1][1] = { name: 'test', hit: CellStates.miss };
+    board[0][2] = { name: 'test', status: CellStates.miss };
+    board[1][0] = { name: 'test', status: CellStates.miss };
+    board[1][1] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -399,8 +399,8 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  N/A   |  N/A   |
 
     const board = initialiseShipArray();
-    board[0][3] = { name: 'test', hit: CellStates.miss }; // miss to right
-    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+    board[0][3] = { name: 'test', status: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', status: CellStates.miss }; // row below
 
     const heatMap = calculateHeatMap(board);
 
@@ -413,8 +413,8 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  N/A   |  N/A   |  N/A   |
 
     const board = initialiseShipArray();
-    board[0][4] = { name: 'test', hit: CellStates.miss }; // miss to right
-    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+    board[0][4] = { name: 'test', status: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', status: CellStates.miss }; // row below
 
     const heatMap = calculateHeatMap(board);
 
@@ -427,8 +427,8 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  N/A   |  N/A   |  N/A   |  N/A   |  N/A   |
 
     const board = initialiseShipArray();
-    board[0][5] = { name: 'test', hit: CellStates.miss }; // miss to right
-    board[1][0] = { name: 'test', hit: CellStates.miss }; // row below
+    board[0][5] = { name: 'test', status: CellStates.miss }; // miss to right
+    board[1][0] = { name: 'test', status: CellStates.miss }; // row below
 
     const heatMap = calculateHeatMap(board);
 
@@ -442,9 +442,9 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |        |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
-    board[1][1] = { name: 'test', hit: CellStates.miss };
-    board[2][0] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
+    board[1][1] = { name: 'test', status: CellStates.miss };
+    board[2][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -459,10 +459,10 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |        |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
-    board[1][1] = { name: 'test', hit: CellStates.miss };
-    board[2][1] = { name: 'test', hit: CellStates.miss };
-    board[3][0] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
+    board[1][1] = { name: 'test', status: CellStates.miss };
+    board[2][1] = { name: 'test', status: CellStates.miss };
+    board[3][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -478,11 +478,11 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |        |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
-    board[1][1] = { name: 'test', hit: CellStates.miss };
-    board[2][1] = { name: 'test', hit: CellStates.miss };
-    board[3][1] = { name: 'test', hit: CellStates.miss };
-    board[4][0] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
+    board[1][1] = { name: 'test', status: CellStates.miss };
+    board[2][1] = { name: 'test', status: CellStates.miss };
+    board[3][1] = { name: 'test', status: CellStates.miss };
+    board[4][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -499,12 +499,12 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |        |
 
     const board = initialiseShipArray();
-    board[0][1] = { name: 'test', hit: CellStates.miss };
-    board[1][1] = { name: 'test', hit: CellStates.miss };
-    board[2][1] = { name: 'test', hit: CellStates.miss };
-    board[3][1] = { name: 'test', hit: CellStates.miss };
-    board[4][1] = { name: 'test', hit: CellStates.miss };
-    board[5][0] = { name: 'test', hit: CellStates.miss };
+    board[0][1] = { name: 'test', status: CellStates.miss };
+    board[1][1] = { name: 'test', status: CellStates.miss };
+    board[2][1] = { name: 'test', status: CellStates.miss };
+    board[3][1] = { name: 'test', status: CellStates.miss };
+    board[4][1] = { name: 'test', status: CellStates.miss };
+    board[5][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 
@@ -522,12 +522,12 @@ describe('calculateHeatMap - heatMultiplier', () => {
     // |  miss |  N/A   |  N/A   |  N/A   |  N/A   |  N/A   |
 
     const board = initialiseShipArray();
-    board[0][5] = { name: 'test', hit: CellStates.miss };
-    board[1][5] = { name: 'test', hit: CellStates.miss };
-    board[2][5] = { name: 'test', hit: CellStates.miss };
-    board[3][5] = { name: 'test', hit: CellStates.miss };
-    board[4][5] = { name: 'test', hit: CellStates.miss };
-    board[5][0] = { name: 'test', hit: CellStates.miss };
+    board[0][5] = { name: 'test', status: CellStates.miss };
+    board[1][5] = { name: 'test', status: CellStates.miss };
+    board[2][5] = { name: 'test', status: CellStates.miss };
+    board[3][5] = { name: 'test', status: CellStates.miss };
+    board[4][5] = { name: 'test', status: CellStates.miss };
+    board[5][0] = { name: 'test', status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
 

@@ -4,8 +4,6 @@ import { shipTypes } from '../App';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
-  let blank = { name: null, hit: CellStates.unguessed };
-
   for (let i = 0; i < 10; i++) {
     array[i] = new Array(10).fill(null);
   }
@@ -37,14 +35,14 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
-  adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
   mayOverlapHits = false,
+  adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
-  adjacentShipModifier?: number;
   mayOverlapHits?: boolean;
+  adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
   if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
@@ -77,7 +75,7 @@ export const checkValidShipState = ({
   potentialCoordinates.forEach(({ x, y }) => {
     let thisCell = existingPositions[y][x];
     if (mayOverlapHits) {
-      if (thisCell && thisCell.hit === CellStates.miss) valid = false;
+      if (thisCell && thisCell.status === CellStates.miss) valid = false;
     } else {
       if (thisCell) valid = false;
     }
@@ -111,12 +109,12 @@ export const placeShips = (): PositionArray => {
       if (validShipState) {
         if (proposedPositions.alignment === 'horizontal') {
           for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-            positions[proposedPositions.startingRow][i] = { name: ship.name, hit: CellStates.unguessed };
+            positions[proposedPositions.startingRow][i] = { name: ship.name, status: CellStates.unguessed };
           }
         } else {
           // vertical placement
           for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
-            positions[i][proposedPositions.startingColumn] = { name: ship.name, hit: CellStates.unguessed };
+            positions[i][proposedPositions.startingColumn] = { name: ship.name, status: CellStates.unguessed };
           }
         }
       }

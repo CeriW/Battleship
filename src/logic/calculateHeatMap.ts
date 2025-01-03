@@ -21,11 +21,9 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
   for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 10; y++) {
-      heatMap[y][x] = { heat: existingBoard[y][x]?.hit ?? 0, heatMultiplier: 1 };
+      heatMap[y][x] = { heat: existingBoard[y][x]?.status ?? 0, heatMultiplier: 1 };
     }
   }
-
-  // console.log(heatMap);
 
   // Now we've figured out where all the hits are, we can mark the adjacent cells as possible hits
   for (let i = 0; i < 100; i++) {
