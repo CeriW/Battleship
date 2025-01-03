@@ -27,6 +27,3 @@ jobs:
         with:
           lcov-file: ./coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          fail-below: 80
-          delete-old-comments: true
-          create-new-comment: true
