@@ -131,29 +131,31 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
     let heatMultiplier = 0;
 
-    shipTypes.forEach((ship) => {
-      if (
-        checkValidShipState({
-          proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
-          shipSize: ship.size,
-          existingPositions: existingBoard,
-          mayOverlapHits: true,
-        })
-      ) {
-        heatMultiplier += 1;
-      }
+    if (heatMap[y][x].heat !== CellStates.hit) {
+      shipTypes.forEach((ship) => {
+        if (
+          checkValidShipState({
+            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
+            shipSize: ship.size,
+            existingPositions: existingBoard,
+            mayOverlapHits: true,
+          })
+        ) {
+          heatMultiplier += 1;
+        }
 
-      if (
-        checkValidShipState({
-          proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
-          shipSize: ship.size,
-          existingPositions: existingBoard,
-          mayOverlapHits: true,
-        })
-      ) {
-        heatMultiplier += 1;
-      }
-    });
+        if (
+          checkValidShipState({
+            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
+            shipSize: ship.size,
+            existingPositions: existingBoard,
+            mayOverlapHits: true,
+          })
+        ) {
+          heatMultiplier += 1;
+        }
+      });
+    }
 
     heatMap[y][x].heatMultiplier = heatMultiplier;
   }

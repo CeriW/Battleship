@@ -424,12 +424,12 @@ describe('calculateHeatMap - heatMultiplier', () => {
     expect(heatMap[y][x + 1].heat).toBe(-1);
 
     // Squares above
-    expect(heatMap[y - 1][x].heat).toBe(1);
-    expect(heatMap[y - 1][x + 1].heat).toBe(1);
+    expect(heatMap[y - 1][x].heat).toBe(2);
+    expect(heatMap[y - 1][x + 1].heat).toBe(2);
 
     // Squares below
-    expect(heatMap[y + 1][x].heat).toBe(1);
-    expect(heatMap[y + 1][x + 1].heat).toBe(1);
+    expect(heatMap[y + 1][x].heat).toBe(2);
+    expect(heatMap[y + 1][x + 1].heat).toBe(2);
 
     // Squares to left
     expect(heatMap[y][x - 1].heat).toBe(2);
