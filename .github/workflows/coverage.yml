@@ -15,26 +15,46 @@ jobs:
         run: npm install
       - name: Run tests with coverage
         run: npm run test:coverage
-      - name: Generate coverage badge
+
+      - name: Update workflow name with coverage
         run: |
           COVERAGE=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+          echo "name=Test Coverage: ${COVERAGE}%" >> $GITHUB_ENV
 
-          if (( $(echo "$COVERAGE >= 90" | bc -l) )); then
-            COLOR=brightgreen
-          elif (( $(echo "$COVERAGE >= 80" | bc -l) )); then
-            COLOR=green
-          elif (( $(echo "$COVERAGE >= 70" | bc -l) )); then
-            COLOR=yellowgreen
-          else
-            COLOR=red
-          fi
-          echo "COLOR=$COLOR" >> $GITHUB_ENV
-      - name: Create badge
-        run: |
-          echo "{\"schemaVersion\":1,\"label\":\"coverage\",\"message\":\"${COVERAGE}%\",\"color\":\"${COLOR}\"}" > coverage-badge.json
-      - name: Upload badge
+      - name: Generate coverage badge
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8'));
+            const percentage = coverage.total.lines.pct;
+
+            let color;
+            if (percentage >= 90) color = 'brightgreen';
+            else if (percentage >= 80) color = 'green';
+            else if (percentage >= 70) color = 'yellowgreen';
+            else if (percentage >= 60) color = 'yellow';
+            else color = 'red';
+
+            const badge = {
+              schemaVersion: 1,
+              label: 'coverage',
+              message: percentage + '%',
+              color: color
+            };
+
+            fs.writeFileSync('./coverage/badge.json', JSON.stringify(badge));
+
+      - name: Upload coverage badge
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-badge
-          path: coverage-badge.json
+          name: badge
+          path: coverage/badge.json
+
+      - name: Deploy badge
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: coverage
+          target-folder: coverage
+          branch: gh-pages
