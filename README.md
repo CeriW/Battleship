@@ -1,4 +1,4 @@
-![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/<your-username>/<your-gist-id>/raw/coverage.json)
+![Coverage](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/coverage.yml/badge.svg)
 
 # About Battleship
 
