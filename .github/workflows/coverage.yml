@@ -1,30 +1,40 @@
-# name: 'coverage'
-# on:
-#   pull_request:
-#     branches:
-#       - master
-#       - main
+name: Test Coverage
 
-# permissions:
-#   checks: write
-#   contents: read
-#   pull-requests: write
+on: [push, pull_request]
 
-# jobs:
-#   coverage:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: actions/setup-node@v3
-#         with:
-#           node-version: '18'
-#       - name: Install dependencies
-#         run: npm ci
-#       - name: Run tests with coverage
-#         run: npm test -- --coverage --watchAll=false --ci
-#       - name: Report Coverage
-#         uses: romeovs/lcov-reporter-action@v0.3.1
-#         with:
-#           lcov-file: ./coverage/lcov.info
-#           github-token: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests with coverage
+        run: npm run test:coverage
+      - name: Generate coverage badge
+        run: |
+          COVERAGE=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
 
+          if (( $(echo "$COVERAGE >= 90" | bc -l) )); then
+            COLOR=brightgreen
+          elif (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+            COLOR=green
+          elif (( $(echo "$COVERAGE >= 70" | bc -l) )); then
+            COLOR=yellowgreen
+          else
+            COLOR=red
+          fi
+          echo "COLOR=$COLOR" >> $GITHUB_ENV
+      - name: Create badge
+        run: |
+          echo "{\"schemaVersion\":1,\"label\":\"coverage\",\"message\":\"${COVERAGE}%\",\"color\":\"${COLOR}\"}" > coverage-badge.json
+      - name: Upload badge
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-badge
+          path: coverage-badge.json

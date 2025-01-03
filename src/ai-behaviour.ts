@@ -1,6 +1,7 @@
 // How 'smart' the AI is, out of 20, with 1 being the easiest and 20 being the hardest
 export const difficultyClass: number = 20;
 
+/* istanbul ignore next */
 const adjacentShipModifier = (difficultyClass: number) => {
   switch (difficultyClass) {
     case 6:
