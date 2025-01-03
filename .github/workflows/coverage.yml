@@ -21,11 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run tests with coverage
-        run: |
-          npm test -- --coverage --watchAll=false --ci --json --outputFile=jest-results.json --coverageReporters json-summary text lcov || true
-          ls -la coverage/
-      - name: Generate coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          coverage-file: ./coverage/coverage-summary.json
-          base-coverage-file: ./coverage/coverage-summary.json
+        run: npm test -- --coverage --watchAll=false --ci
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
