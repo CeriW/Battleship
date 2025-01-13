@@ -1,6 +1,8 @@
 import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, HeatMapCell } from '../types';
-import { checkValidShipState } from './placeShips';
+import { initialiseShipArray } from './placeShips';
+import { ShipInfo } from '../types';
+import { doesShipFit, generatePotentialPositions, generateRandomAlignment } from './helpers';
 
 export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
@@ -160,6 +162,145 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
     }
 
     heatMap[y][x].heatMultiplier = heatMultiplier;
+  }
+
+  return heatMap;
+};
+
+// Given an existingBoard of hits and misses, generate a board with ships that match
+export const generateMatchingBoard = (existingBoard: PositionArray): PositionArray => {
+  const positions = initialiseShipArray();
+  const unplacedShips = [...shipTypes];
+
+  // First, try to place ships on confirmed hits
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      if (existingBoard[y][x]?.status === CellStates.hit) {
+        // Try both horizontal and vertical alignments
+        const alignments = ['horizontal', 'vertical'] as const;
+
+        for (const alignment of alignments) {
+          // Try each remaining ship
+          for (let shipIndex = 0; shipIndex < unplacedShips.length; shipIndex++) {
+            const ship = unplacedShips[shipIndex];
+
+            if (
+              checkValidShipState({
+                proposedPositions: { startingRow: y, startingColumn: x, alignment },
+                shipSize: ship.size,
+                existingPositions: positions,
+                mayOverlapHits: true,
+                existingBoard, // Pass the existing board to check against misses
+              })
+            ) {
+              // Place the ship
+              if (alignment === 'horizontal') {
+                for (let i = x; i < x + ship.size; i++) {
+                  positions[y][i] = { name: ship.name, status: CellStates.unguessed };
+                }
+              } else {
+                for (let i = y; i < y + ship.size; i++) {
+                  positions[i][x] = { name: ship.name, status: CellStates.unguessed };
+                }
+              }
+
+              // Remove the placed ship from unplaced ships
+              unplacedShips.splice(shipIndex, 1);
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Place remaining ships randomly, avoiding misses
+  while (unplacedShips.length > 0) {
+    const ship = unplacedShips[0];
+    let placed = false;
+
+    while (!placed) {
+      const proposedPositions = {
+        startingRow: Math.floor(Math.random() * 10),
+        startingColumn: Math.floor(Math.random() * 10),
+        alignment: generateRandomAlignment(),
+      } as const;
+
+      if (
+        checkValidShipState({
+          proposedPositions,
+          shipSize: ship.size,
+          existingPositions: positions,
+          existingBoard,
+        })
+      ) {
+        // Place the ship
+        if (proposedPositions.alignment === 'horizontal') {
+          for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
+            positions[proposedPositions.startingRow][i] = { name: ship.name, status: CellStates.unguessed };
+          }
+        } else {
+          for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
+            positions[i][proposedPositions.startingColumn] = { name: ship.name, status: CellStates.unguessed };
+          }
+        }
+        placed = true;
+        unplacedShips.shift();
+      }
+    }
+  }
+
+  console.log('positions', positions);
+  return positions;
+};
+
+export const checkValidShipState = ({
+  proposedPositions,
+  shipSize,
+  existingPositions,
+  mayOverlapHits = false,
+  existingBoard,
+}: {
+  proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
+  shipSize: number;
+  existingPositions: PositionArray;
+  mayOverlapHits?: boolean;
+  existingBoard?: PositionArray;
+}): boolean => {
+  // First check if ship would go out of bounds
+  if (!doesShipFit(proposedPositions, shipSize)) return false;
+
+  const potentialCoordinates = generatePotentialPositions(proposedPositions, shipSize);
+
+  // Figure out whether the spaces are occupied by other ships
+  let valid = true;
+
+  potentialCoordinates.forEach(({ x, y }) => {
+    let thisCell = existingPositions[y][x];
+    if (thisCell) valid = false;
+
+    // Check against existing board
+    if (existingBoard) {
+      const existingCell = existingBoard[y][x];
+      if (existingCell?.status === CellStates.miss) valid = false;
+      if (!mayOverlapHits && existingCell?.status === CellStates.hit) valid = false;
+    }
+  });
+
+  return valid;
+};
+
+export const calculateHeatMapV2 = (existingBoard: PositionArray): HeatMapArray => {
+  const heatMap = initialiseHeatMapArray();
+  console.log('existingBoard', existingBoard);
+
+  for (let i = 0; i < 100; i++) {
+    let y = Math.floor(i / 10);
+    let x = i % 10;
+
+    if (existingBoard[y][x]?.status === CellStates.hit) {
+      heatMap[y][x] = { ...heatMap[y][x], heat: CellStates.hit };
+    }
   }
 
   return heatMap;

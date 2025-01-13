@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { PositionArray, ShipInfo } from './types';
+import { CellStates, PositionArray, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 
 import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
-import { calculateHeatMap } from './logic/calculateHeatMap';
+import { calculateHeatMap, calculateHeatMapV2, generateMatchingBoard } from './logic/calculateHeatMap';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -20,7 +20,14 @@ export const shipTypes: ShipInfo[] = [
 export function App() {
   // const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips] = useState<PositionArray>(placeShips());
+
+  userShips[5][5] = { name: null, status: CellStates.hit };
+  userShips[1][1] = { name: null, status: CellStates.hit };
+
   const heatMap = calculateHeatMap(userShips);
+  // console.log('heatMap', heatMap);
+  console.log('placeShipsV2', generateMatchingBoard(userShips));
+  calculateHeatMapV2(userShips);
 
   return (
     <>
