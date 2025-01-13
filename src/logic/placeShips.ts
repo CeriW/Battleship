@@ -1,7 +1,7 @@
 import { ai } from '../ai-behaviour';
 import { CellStates, PositionArray, ShipInfo } from '../types';
 import { shipTypes } from '../App';
-import { doesShipFit, generatePotentialPositions } from './helpers';
+import { doesShipFit, generatePotentialCoordinates } from './helpers';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -36,13 +36,11 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
-  // mayOverlapHits = false,
   adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
-  mayOverlapHits?: boolean;
   adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
@@ -50,7 +48,7 @@ export const checkValidShipState = ({
   if (!doesShipFit(proposedPositions, shipSize)) return false;
 
   // Generate a list of all the cells that this ship could occupy
-  const potentialCoordinates = generatePotentialPositions(proposedPositions, shipSize);
+  const potentialCoordinates = generatePotentialCoordinates(proposedPositions, shipSize);
 
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;

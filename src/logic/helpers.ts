@@ -2,7 +2,7 @@ import { Alignment } from '../types';
 
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
-// Return a boolean to confirm whether the ship can fit or would go off the side of the board at the proposed position
+// Return a boolean to confirm whether the ship can fit or whether it would go off the side of the board at the proposed position
 export const doesShipFit = (
   proposedCoordinates: { startingRow: number; startingColumn: number; alignment: Alignment },
   shipSize: number
@@ -14,7 +14,7 @@ export const doesShipFit = (
 };
 
 // Given a starting position and alignment, return a an array of co-ordinates this ship would occupy
-export const generatePotentialPositions = (
+export const generatePotentialCoordinates = (
   proposedPositions: { startingRow: number; startingColumn: number; alignment: Alignment },
   shipSize: number
 ) => {
