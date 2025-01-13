@@ -22,8 +22,7 @@ export function App() {
   const [userShips] = useState<PositionArray>(placeShips());
 
   userShips[5][5] = { name: null, status: CellStates.hit };
-  // userShips[4][3] = { name: null, status: CellStates.miss };
-  // userShips[3][5] = { name: null, status: CellStates.miss };
+  userShips[5][6] = { name: null, status: CellStates.miss };
 
   // const heatMap = calculateHeatMap(userShips);
   // console.log('heatMap', heatMap);
@@ -40,7 +39,7 @@ export function App() {
         <h3>User board</h3>
         <Board positions={userShips} />
         <h3>Heat map</h3>
-        {/* <HeatMapBoard positions={heatMap} /> */}
+        <HeatMapBoard positions={calculateHeatMapV2(userShips)} />
       </div>
       <div>Difficulty: {difficultyClass}</div>
       <div>{JSON.stringify(ai, null, 2)}</div>

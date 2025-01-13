@@ -1,5 +1,5 @@
 import { shipTypes } from '../App';
-import { CellStates, HeatMapArray, PositionArray, HeatMapCell } from '../types';
+import { CellStates, HeatMapArray, PositionArray, HeatMapCell, Alignment } from '../types';
 import { initialiseShipArray } from './placeShips';
 import { ShipInfo } from '../types';
 import {
@@ -180,8 +180,8 @@ const isHeatable = (cell: HeatMapCell): boolean => cell.heat !== CellStates.hit 
 //   return heatMap;
 // };
 
-const ceriTest = (a: number, size: number, isVertical: boolean): number => {
-  if (isVertical) {
+const ceriTest = (a: number, size: number, alignment: Alignment): number => {
+  if (alignment === 'vertical') {
     // For vertical placement, randomly choose between placing up or down from the hit position
     const min = Math.max(0, a - (size - 1)); // Highest possible starting position going up
     const max = Math.min(9 - (size - 1), a); // Highest possible starting position going down
@@ -212,7 +212,6 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       if (existingBoard[y]?.[x]?.status === CellStates.hit) {
-        // Randomize alignment order to give both directions equal chance
         const alignments =
           Math.random() < 0.5 ? (['horizontal', 'vertical'] as const) : (['vertical', 'horizontal'] as const);
 
@@ -222,8 +221,8 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
 
           // Find all ships that could fit at this position
           const validShips = unplacedShips.filter((ship) => {
-            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, true);
-            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, false);
+            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, alignment);
+            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, alignment);
 
             return checkValidShipState({
               proposedPositions: { startingRow: proposedRow, startingColumn: proposedColumn, alignment },
@@ -238,8 +237,8 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
             const randomIndex = Math.floor(Math.random() * validShips.length);
             const ship = validShips[randomIndex];
 
-            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, true);
-            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, false);
+            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, alignment);
+            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, alignment);
 
             try {
               // Place the ship

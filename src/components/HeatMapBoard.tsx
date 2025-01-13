@@ -1,11 +1,11 @@
 import React from 'react';
 import { HeatMapArray } from '../types';
 
-interface HeatMapBoardProps {
-  positions: HeatMapArray;
-}
+// interface HeatMapBoardProps {
+//   positions: number[][];
+// }
 
-export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
+export const HeatMapBoard = ({ positions }: any) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -22,7 +22,14 @@ export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
     const cells = [];
     for (let j = 0; j < 10; j++) {
       cells.push(
-        <div key={`cell-${letters[i]}-${j}`} className={`cell heat-${positions[i][j].heat}`} data-testid="cell"></div>
+        <div
+          key={`cell-${letters[i]}-${j}`}
+          className="cell"
+          style={{ backgroundColor: `rgba(255, 0, 0, ${positions[i][j] / 1000})` }}
+          data-testid="cell"
+        >
+          {positions[i][j]}
+        </div>
       );
     }
 
