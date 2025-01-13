@@ -2,7 +2,21 @@ import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, HeatMapCell } from '../types';
 import { initialiseShipArray } from './placeShips';
 import { ShipInfo } from '../types';
-import { doesShipFit, generatePotentialPositions, generateRandomAlignment } from './helpers';
+import {
+  doesShipFit,
+  generatePotentialPositions as generatePotentialCoordinates,
+  generateRandomAlignment,
+} from './helpers';
+
+const generateValidPosition = (currentPos: number, shipSize: number, isVertical: boolean): number => {
+  if (isVertical) {
+    return Math.max(0, currentPos - (shipSize - 1));
+  } else {
+    const min = Math.max(0, currentPos - (shipSize - 1));
+    const max = Math.min(9, currentPos);
+    return min + Math.floor(Math.random() * (max - min + 1));
+  }
+};
 
 export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
@@ -167,6 +181,14 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   return heatMap;
 };
 
+const ceriTest = (a: number, size: number) => {
+  // For a hit at position 'a', we want to ensure the ship covers that position
+  // So if we're at position 9 with size 3, we want to start at position 7, 8, or 9
+  const min = Math.max(0, a - (size - 1)); // lowest possible starting position
+  const max = a; // highest possible starting position (ensures ship covers position 'a')
+  return min + Math.floor(Math.random() * (max - min + 1));
+};
+
 // Given an existingBoard of hits and misses, generate a board with ships that match
 export const generateMatchingBoard = (existingBoard: PositionArray): PositionArray => {
   const positions = initialiseShipArray();
@@ -176,36 +198,44 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       if (existingBoard[y][x]?.status === CellStates.hit) {
-        // Try both horizontal and vertical alignments
-        const alignments = ['horizontal', 'vertical'] as const;
+        // Randomize alignment order to give both directions equal chance
+        const alignments =
+          Math.random() < 0.5 ? (['horizontal', 'vertical'] as const) : (['vertical', 'horizontal'] as const);
 
+        // Try first alignment
+        let placed = false;
         for (const alignment of alignments) {
+          if (placed) break;
+
           // Try each remaining ship
           for (let shipIndex = 0; shipIndex < unplacedShips.length; shipIndex++) {
             const ship = unplacedShips[shipIndex];
 
+            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size);
+            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size);
+
             if (
               checkValidShipState({
-                proposedPositions: { startingRow: y, startingColumn: x, alignment },
+                proposedPositions: { startingRow: proposedRow, startingColumn: proposedColumn, alignment },
                 shipSize: ship.size,
                 existingPositions: positions,
                 mayOverlapHits: true,
-                existingBoard, // Pass the existing board to check against misses
+                existingBoard,
               })
             ) {
               // Place the ship
               if (alignment === 'horizontal') {
-                for (let i = x; i < x + ship.size; i++) {
-                  positions[y][i] = { name: ship.name, status: CellStates.unguessed };
+                for (let i = proposedColumn; i < proposedColumn + ship.size; i++) {
+                  positions[proposedRow][i] = { name: ship.name, status: CellStates.unguessed };
                 }
               } else {
-                for (let i = y; i < y + ship.size; i++) {
-                  positions[i][x] = { name: ship.name, status: CellStates.unguessed };
+                for (let i = proposedRow; i < proposedRow + ship.size; i++) {
+                  positions[i][proposedColumn] = { name: ship.name, status: CellStates.unguessed };
                 }
               }
 
-              // Remove the placed ship from unplaced ships
               unplacedShips.splice(shipIndex, 1);
+              placed = true;
               break;
             }
           }
@@ -225,6 +255,8 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
         startingColumn: Math.floor(Math.random() * 10),
         alignment: generateRandomAlignment(),
       } as const;
+
+      // console.log('proposedPositions', proposedPositions);
 
       if (
         checkValidShipState({
@@ -267,10 +299,9 @@ export const checkValidShipState = ({
   mayOverlapHits?: boolean;
   existingBoard?: PositionArray;
 }): boolean => {
-  // First check if ship would go out of bounds
   if (!doesShipFit(proposedPositions, shipSize)) return false;
 
-  const potentialCoordinates = generatePotentialPositions(proposedPositions, shipSize);
+  const potentialCoordinates = generatePotentialCoordinates(proposedPositions, shipSize);
 
   // Figure out whether the spaces are occupied by other ships
   let valid = true;
@@ -290,18 +321,29 @@ export const checkValidShipState = ({
   return valid;
 };
 
-export const calculateHeatMapV2 = (existingBoard: PositionArray): HeatMapArray => {
-  const heatMap = initialiseHeatMapArray();
-  console.log('existingBoard', existingBoard);
+export const calculateHeatMapV2 = (existingBoard: PositionArray) => {
+  // const heatMap = initialiseHeatMapArray();
+  // console.log('existingBoard', existingBoard);
 
-  for (let i = 0; i < 100; i++) {
-    let y = Math.floor(i / 10);
-    let x = i % 10;
+  let placements = [];
+  for (let i = 0; i < 10; i++) {
+    placements[i] = new Array(10).fill(0);
+  }
 
-    if (existingBoard[y][x]?.status === CellStates.hit) {
-      heatMap[y][x] = { ...heatMap[y][x], heat: CellStates.hit };
+  for (let j = 0; j < 1000; j++) {
+    let boardSimulation = generateMatchingBoard(existingBoard);
+
+    for (let i = 0; i < 100; i++) {
+      let y = Math.floor(i / 10);
+      let x = i % 10;
+
+      if (boardSimulation[y][x]?.name) {
+        placements[y][x] += 1;
+      }
     }
   }
 
-  return heatMap;
+  console.log('placements', placements);
+
+  // return heatMap;
 };

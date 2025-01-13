@@ -23,10 +23,13 @@ export function App() {
 
   userShips[5][5] = { name: null, status: CellStates.hit };
   userShips[1][1] = { name: null, status: CellStates.hit };
+  userShips[9][0] = { name: null, status: CellStates.hit };
 
   const heatMap = calculateHeatMap(userShips);
   // console.log('heatMap', heatMap);
-  console.log('placeShipsV2', generateMatchingBoard(userShips));
+  // console.log('placeShipsV2', generateMatchingBoard(userShips));
+  // console.log('placeShipsV2', generateMatchingBoard(userShips));
+
   calculateHeatMapV2(userShips);
 
   return (
