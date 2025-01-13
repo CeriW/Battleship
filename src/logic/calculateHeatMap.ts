@@ -181,62 +181,91 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   return heatMap;
 };
 
-const ceriTest = (a: number, size: number) => {
-  // For a hit at position 'a', we want to ensure the ship covers that position
-  // So if we're at position 9 with size 3, we want to start at position 7, 8, or 9
-  const min = Math.max(0, a - (size - 1)); // lowest possible starting position
-  const max = a; // highest possible starting position (ensures ship covers position 'a')
-  return min + Math.floor(Math.random() * (max - min + 1));
+const ceriTest = (a: number, size: number, isVertical: boolean): number => {
+  if (isVertical) {
+    // For vertical placement, ensure ship doesn't go past row 9
+    return Math.min(9 - (size - 1), a);
+  } else {
+    // For horizontal placement, keep existing logic
+    const min = Math.max(0, a - (size - 1));
+    const max = Math.min(9, a);
+    return min + Math.floor(Math.random() * (max - min + 1));
+  }
 };
 
 // Given an existingBoard of hits and misses, generate a board with ships that match
 export const generateMatchingBoard = (existingBoard: PositionArray): PositionArray => {
-  const positions = initialiseShipArray();
+  // Initialize the positions array properly
+  const positions: PositionArray = Array(10)
+    .fill(null)
+    .map(() => Array(10).fill(null));
+
   const unplacedShips = [...shipTypes];
 
   // First, try to place ships on confirmed hits
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
-      if (existingBoard[y][x]?.status === CellStates.hit) {
+      if (existingBoard[y]?.[x]?.status === CellStates.hit) {
         // Randomize alignment order to give both directions equal chance
         const alignments =
           Math.random() < 0.5 ? (['horizontal', 'vertical'] as const) : (['vertical', 'horizontal'] as const);
 
-        // Try first alignment
         let placed = false;
         for (const alignment of alignments) {
           if (placed) break;
 
-          // Try each remaining ship
-          for (let shipIndex = 0; shipIndex < unplacedShips.length; shipIndex++) {
-            const ship = unplacedShips[shipIndex];
+          // Find all ships that could fit at this position
+          const validShips = unplacedShips.filter((ship) => {
+            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, true);
+            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, false);
 
-            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size);
-            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size);
+            return checkValidShipState({
+              proposedPositions: { startingRow: proposedRow, startingColumn: proposedColumn, alignment },
+              shipSize: ship.size,
+              existingPositions: positions,
+              mayOverlapHits: true,
+              existingBoard,
+            });
+          });
 
-            if (
-              checkValidShipState({
-                proposedPositions: { startingRow: proposedRow, startingColumn: proposedColumn, alignment },
-                shipSize: ship.size,
-                existingPositions: positions,
-                mayOverlapHits: true,
-                existingBoard,
-              })
-            ) {
+          if (validShips.length > 0) {
+            const randomIndex = Math.floor(Math.random() * validShips.length);
+            const ship = validShips[randomIndex];
+
+            const proposedRow = alignment === 'horizontal' ? y : ceriTest(y, ship.size, true);
+            const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, false);
+
+            try {
               // Place the ship
               if (alignment === 'horizontal') {
                 for (let i = proposedColumn; i < proposedColumn + ship.size; i++) {
+                  if (!positions[proposedRow]) {
+                    console.error('Invalid proposedRow:', proposedRow);
+                    continue;
+                  }
                   positions[proposedRow][i] = { name: ship.name, status: CellStates.unguessed };
                 }
               } else {
                 for (let i = proposedRow; i < proposedRow + ship.size; i++) {
+                  if (!positions[i]) {
+                    console.error('Invalid row index:', i);
+                    continue;
+                  }
                   positions[i][proposedColumn] = { name: ship.name, status: CellStates.unguessed };
                 }
               }
 
+              const shipIndex = unplacedShips.findIndex((s) => s.name === ship.name);
               unplacedShips.splice(shipIndex, 1);
               placed = true;
-              break;
+            } catch (error) {
+              console.error('Error placing ship:', {
+                alignment,
+                proposedRow,
+                proposedColumn,
+                shipSize: ship.size,
+                error,
+              });
             }
           }
         }
