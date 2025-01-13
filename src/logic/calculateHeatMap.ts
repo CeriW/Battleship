@@ -8,15 +8,15 @@ import {
   generateRandomAlignment,
 } from './helpers';
 
-const generateValidPosition = (currentPos: number, shipSize: number, isVertical: boolean): number => {
-  if (isVertical) {
-    return Math.max(0, currentPos - (shipSize - 1));
-  } else {
-    const min = Math.max(0, currentPos - (shipSize - 1));
-    const max = Math.min(9, currentPos);
-    return min + Math.floor(Math.random() * (max - min + 1));
-  }
-};
+// const generateValidPosition = (currentPos: number, shipSize: number, isVertical: boolean): number => {
+//   if (isVertical) {
+//     return Math.max(0, currentPos - (shipSize - 1));
+//   } else {
+//     const min = Math.max(0, currentPos - (shipSize - 1));
+//     const max = Math.min(9, currentPos);
+//     return min + Math.floor(Math.random() * (max - min + 1));
+//   }
+// };
 
 export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
@@ -225,7 +225,11 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
             const proposedColumn = alignment === 'vertical' ? x : ceriTest(x, ship.size, alignment);
 
             return checkValidShipState({
-              proposedPositions: { startingRow: proposedRow, startingColumn: proposedColumn, alignment },
+              proposedPositions: {
+                startingRow: proposedRow,
+                startingColumn: proposedColumn,
+                alignment,
+              },
               shipSize: ship.size,
               existingPositions: positions,
               mayOverlapHits: true,
@@ -290,14 +294,13 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
         alignment: generateRandomAlignment(),
       } as const;
 
-      // console.log('proposedPositions', proposedPositions);
-
       if (
         checkValidShipState({
           proposedPositions,
           shipSize: ship.size,
           existingPositions: positions,
           existingBoard,
+          mayOverlapHits: false,
         })
       ) {
         // Place the ship
@@ -337,22 +340,20 @@ export const checkValidShipState = ({
 
   const potentialCoordinates = generatePotentialCoordinates(proposedPositions, shipSize);
 
-  // Figure out whether the spaces are occupied by other ships
-  let valid = true;
-
-  potentialCoordinates.forEach(({ x, y }) => {
+  // Check each coordinate - return false immediately if we find an invalid position
+  for (const { x, y } of potentialCoordinates) {
     let thisCell = existingPositions[y][x];
-    if (thisCell) valid = false;
+    if (thisCell) return false;
 
     // Check against existing board
     if (existingBoard) {
       const existingCell = existingBoard[y][x];
-      if (existingCell?.status === CellStates.miss) valid = false;
-      if (!mayOverlapHits && existingCell?.status === CellStates.hit) valid = false;
+      if (existingCell?.status === CellStates.miss) return false;
+      if (!mayOverlapHits && existingCell?.status === CellStates.hit) return false;
     }
-  });
+  }
 
-  return valid;
+  return true;
 };
 
 export const calculateHeatMapV2 = (existingBoard: PositionArray) => {
@@ -361,6 +362,15 @@ export const calculateHeatMapV2 = (existingBoard: PositionArray) => {
     .map(() => Array(10).fill(0));
   const numSimulations = 1000;
 
+  // First, mark all miss positions as 0 and they will stay 0
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      if (existingBoard[y][x]?.status === CellStates.miss) {
+        placements[y][x] = 0;
+      }
+    }
+  }
+
   // Run multiple simulations to build up a heat map
   for (let simulation = 0; simulation < numSimulations; simulation++) {
     const boardSimulation = generateMatchingBoard(existingBoard);
@@ -368,15 +378,13 @@ export const calculateHeatMapV2 = (existingBoard: PositionArray) => {
     // For each cell in the simulation
     for (let y = 0; y < 10; y++) {
       for (let x = 0; x < 10; x++) {
-        // If there's a ship in this cell, increment the placement counter
-        if (boardSimulation[y][x]?.name) {
+        // Only increment if it's not a miss position
+        if (boardSimulation[y][x]?.name && existingBoard[y][x]?.status !== CellStates.miss) {
           placements[y][x]++;
         }
       }
     }
   }
-
-  // Convert raw counts to percentages
 
   console.log('placements', placements);
   return placements;

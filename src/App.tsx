@@ -22,6 +22,7 @@ export function App() {
   const [userShips] = useState<PositionArray>(placeShips());
 
   userShips[5][5] = { name: null, status: CellStates.hit };
+  userShips[5][4] = { name: null, status: CellStates.miss };
   userShips[5][6] = { name: null, status: CellStates.miss };
 
   // const heatMap = calculateHeatMap(userShips);
