@@ -30,6 +30,14 @@ jobs:
         run: |
           echo "## Test Coverage: ${{ steps.get_coverage.outputs.percentage }}%" >> $GITHUB_STEP_SUMMARY
 
+      - name: Get Coverage Details
+        id: coverage_details
+        run: |
+          DETAILS=$(cat coverage/coverage-summary.json)
+          echo "details<<EOF" >> $GITHUB_OUTPUT
+          echo "$DETAILS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Comment PR with Coverage
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
@@ -42,7 +50,7 @@ jobs:
               <summary>Coverage Details</summary>
               
               ```json
-              ${{ toJSON(fromJSON(readFile('./coverage/coverage-summary.json'))) }}
+              ${{ steps.coverage_details.outputs.details }}
               ```
             </details>
 
