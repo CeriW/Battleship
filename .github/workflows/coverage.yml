@@ -5,6 +5,10 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      # Required for PR comments
+      pull-requests: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node
@@ -25,6 +29,22 @@ jobs:
       - name: Create Job Summary
         run: |
           echo "## Test Coverage: ${{ steps.get_coverage.outputs.percentage }}%" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment PR with Coverage
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ## Test Coverage Report
+            Total Coverage: ${{ steps.get_coverage.outputs.percentage }}%
+
+            <details>
+              <summary>Coverage Details</summary>
+              
+              ```json
+              ${{ toJSON(fromJSON(readFile('./coverage/coverage-summary.json'))) }}
+              ```
+            </details>
 
       - name: Rename Workflow Run
         run: |
