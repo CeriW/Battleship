@@ -1,10 +1,5 @@
 import React from 'react';
-import { HeatMapArray } from '../types';
 import { ai } from '../ai-behaviour';
-
-// interface HeatMapBoardProps {
-//   positions: number[][];
-// }
 
 export const HeatMapBoard = ({ positions }: any) => {
   const columnMarkers = [];
@@ -24,8 +19,6 @@ export const HeatMapBoard = ({ positions }: any) => {
     for (let j = 0; j < 10; j++) {
       const percentageDecimal = positions[i][j] / ai.heatMapSimulations;
       const percentage = (percentageDecimal * 100).toFixed(1);
-
-      // console.log(percentage);
 
       cells.push(
         <div

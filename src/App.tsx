@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './index.scss';
 
-import { CellStates, PositionArray, ShipInfo } from './types';
+import { PositionArray, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 
@@ -18,25 +18,7 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 export function App() {
-  // const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips] = useState<PositionArray>(placeShips());
-
-  userShips[5][5] = { name: null, status: CellStates.hit };
-  // userShips[5][4] = { name: null, status: CellStates.miss };
-  // userShips[5][6] = { name: null, status: CellStates.miss };
-
-  // userShips[9][0] = { name: null, status: CellStates.hit };
-  // userShips[9][1] = { name: null, status: CellStates.hit };
-
-  // userShips[1][0] = { name: null, status: CellStates.hit };
-  // userShips[1][1] = { name: null, status: CellStates.hit };
-  // userShips[1][2] = { name: null, status: CellStates.miss };
-
-  // userShips[0][0] = { name: null, status: CellStates.miss };
-
-  // calculateHeatMap(userShips);
-
-  console.log(ai.heatMapSimulations);
 
   return (
     <>

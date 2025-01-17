@@ -1,8 +1,3 @@
-// export type HeatMapCell = {
-//   heat: number; // The likelihood of a ship being in this cell based on adjacent hits/misses
-//   heatMultiplier: number; // The likelihood of a ship being in this cell, based on whether ships will fit in the spaces around it
-// };
-
 export type HeatMapArray = number[][];
 
 export type ShipInfo = {
