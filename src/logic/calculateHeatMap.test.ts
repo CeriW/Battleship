@@ -1,15 +1,48 @@
-import { calculateHeatMap, initialiseHeatMapArray } from './calculateHeatMap';
+import { calculateHeatMap, generateMatchingBoard, initialiseHeatMapArray } from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
-import { CellStates } from '../types';
+import { CellStates, PositionArray } from '../types';
 
-let heatMapSimulations = 100;
+let heatMapIterations = 100;
 
 jest.mock('../ai-behaviour', () => ({
   ai: {
-    heatMapSimulations: heatMapSimulations,
+    heatMapSimulations: heatMapIterations,
     adjacentShipModifier: 0,
   },
 }));
+
+describe('generateMatchingBoard', () => {
+  test('generates a valid board with all ships placed', () => {
+    const emptyBoard: PositionArray = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    const result = generateMatchingBoard(emptyBoard);
+
+    const shipCells = result.flat().filter((cell) => cell && cell.name);
+    expect(shipCells.length).toBe(17);
+  });
+
+  test('places ships on confirmed hits', () => {
+    const boardWithHit: PositionArray = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    boardWithHit[0][0] = { name: 'test', status: CellStates.hit };
+
+    const result = generateMatchingBoard(boardWithHit);
+    expect(result[0][0]).toBeTruthy();
+    expect(result[0][0].status).toBe(CellStates.unguessed);
+  });
+
+  test('does not place ships on confirmed misses', () => {
+    const boardWithMiss: PositionArray = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    boardWithMiss[0][0] = { name: null, status: CellStates.miss };
+
+    const result = generateMatchingBoard(boardWithMiss);
+    expect(result[0][0]).toBeFalsy();
+  });
+});
 
 describe('initialiseHeatMap', () => {
   test('should return a 10x10 array of zeroes', () => {
@@ -28,7 +61,7 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: 'test', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(heatMapSimulations);
+    expect(heatMap[4][5]).toBe(heatMapIterations);
   });
 
   test('should return 0% for cells that are misses', () => {

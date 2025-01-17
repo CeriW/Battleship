@@ -21,7 +21,7 @@ const adjacentShipModifier = (difficultyClass: number) => {
   }
 };
 
-const heatMapSimulations = (difficultyClass: number) =>
+const heatMapIterations = (difficultyClass: number) =>
   difficultyClass > 10 ? difficultyClass * difficultyClass : difficultyClass;
 
 export const ai = {
@@ -33,5 +33,5 @@ export const ai = {
 
   // How many simulations to run when calculating the heat map
   // Higher numbers will generate more accurate heat maps
-  heatMapSimulations: heatMapSimulations(difficultyClass),
+  heatMapSimulations: heatMapIterations(difficultyClass),
 };
