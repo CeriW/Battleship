@@ -21,10 +21,18 @@ const adjacentShipModifier = (difficultyClass: number) => {
   }
 };
 
+/* istanbul ignore next */
+const heatMapIterations = (difficultyClass: number) =>
+  difficultyClass > 10 ? difficultyClass * difficultyClass : difficultyClass;
+
 export const ai = {
   // How likely it is that the AI will allow ships to be placed touching each other, used in combination with Math.random()
   // Level 1 has 100% chance of allowing adjacent placement. The next few subsequent levels may still allow it, but have progressively less chance of doing so.
   // This was previously simply a boolean based on the difficulty level, but despite being random it placed ships touching each other
   // with surprising frequency. It was not uncommon to have multiple and sometimes all ships touching each other.
   adjacentShipModifier: adjacentShipModifier(difficultyClass),
+
+  // How many simulations to run when calculating the heat map
+  // Higher numbers will generate more accurate heat maps
+  heatMapSimulations: heatMapIterations(difficultyClass),
 };

@@ -1,11 +1,7 @@
 import React from 'react';
-import { HeatMapArray } from '../types';
+import { ai } from '../ai-behaviour';
 
-interface HeatMapBoardProps {
-  positions: HeatMapArray;
-}
-
-export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
+export const HeatMapBoard = ({ positions }: any) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -21,8 +17,20 @@ export const HeatMapBoard: React.FC<HeatMapBoardProps> = ({ positions }) => {
   for (let i = 0; i < letters.length; i++) {
     const cells = [];
     for (let j = 0; j < 10; j++) {
+      const percentageDecimal = positions[i][j] / ai.heatMapSimulations;
+      const percentage = (percentageDecimal * 100).toFixed(1);
+
       cells.push(
-        <div key={`cell-${letters[i]}-${j}`} className={`cell heat-${positions[i][j].heat}`} data-testid="cell"></div>
+        <div
+          key={`cell-${letters[i]}-${j}`}
+          className="cell"
+          style={{ backgroundColor: `rgba(255, 0, 0, ${percentageDecimal})` }}
+          data-testid="cell"
+        >
+          {positions[i][j] > 0 && positions[i][j] < ai.heatMapSimulations ? percentage + '%' : ''}
+          {positions[i][j] === 0 ? '❌' : ''}
+          {positions[i][j] === ai.heatMapSimulations ? '✔️' : ''}
+        </div>
       );
     }
 

@@ -18,9 +18,7 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 export function App() {
-  // const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [userShips] = useState<PositionArray>(placeShips());
-  const heatMap = calculateHeatMap(userShips);
 
   return (
     <>
@@ -30,7 +28,7 @@ export function App() {
         <h3>User board</h3>
         <Board positions={userShips} />
         <h3>Heat map</h3>
-        <HeatMapBoard positions={heatMap} />
+        <HeatMapBoard positions={calculateHeatMap(userShips)} />
       </div>
       <div>Difficulty: {difficultyClass}</div>
       <div>{JSON.stringify(ai, null, 2)}</div>

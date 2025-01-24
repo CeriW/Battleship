@@ -1,6 +1,7 @@
 import { ai } from '../ai-behaviour';
 import { CellStates, PositionArray, ShipInfo } from '../types';
 import { shipTypes } from '../App';
+import { doesShipFit, generatePotentialCoordinates } from './helpers';
 
 export function initialiseShipArray(): PositionArray {
   let array = [];
@@ -35,50 +36,28 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
-  mayOverlapHits = false,
   adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
-  mayOverlapHits?: boolean;
   adjacentShipModifier?: number;
 }): boolean => {
   // First check if ship would go out of bounds
-  if (proposedPositions.alignment === 'horizontal' && proposedPositions.startingColumn + shipSize > 10) return false;
-  if (proposedPositions.alignment === 'vertical' && proposedPositions.startingRow + shipSize > 10) return false;
 
-  // Make a list of all the cells that this ship could occupy
-  const potentialCoordinates = [];
-  if (proposedPositions.alignment === 'horizontal') {
-    for (let i = 0; i < shipSize; i++) {
-      potentialCoordinates.push({
-        x: proposedPositions.startingColumn + i,
-        y: proposedPositions.startingRow,
-      });
-    }
-  } else {
-    // alignment === 'vertical'
-    for (let i = 0; i < shipSize; i++) {
-      potentialCoordinates.push({
-        x: proposedPositions.startingColumn,
-        y: proposedPositions.startingRow + i,
-      });
-    }
-  }
+  if (!doesShipFit(proposedPositions, shipSize)) return false;
+
+  // Generate a list of all the cells that this ship could occupy
+  const potentialCoordinates = generatePotentialCoordinates(proposedPositions, shipSize);
 
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
 
-  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1 || mayOverlapHits;
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
 
   potentialCoordinates.forEach(({ x, y }) => {
     let thisCell = existingPositions[y][x];
-    if (mayOverlapHits) {
-      if (thisCell && thisCell.status === CellStates.miss) valid = false;
-    } else {
-      if (thisCell) valid = false;
-    }
+    if (thisCell) valid = false;
 
     if (!adjacentShipsAllowable) {
       if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above

@@ -5,6 +5,10 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      # Required for PR comments
+      pull-requests: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node
@@ -25,6 +29,56 @@ jobs:
       - name: Create Job Summary
         run: |
           echo "## Test Coverage: ${{ steps.get_coverage.outputs.percentage }}%" >> $GITHUB_STEP_SUMMARY
+
+      - name: Get Coverage Details
+        id: coverage_details
+        run: |
+          DETAILS=$(cat coverage/coverage-summary.json)
+          echo "details<<EOF" >> $GITHUB_OUTPUT
+          echo "$DETAILS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Process Coverage Details
+        id: process_coverage
+        run: |
+          FILES=$(node -e '
+            const coverage = require("./coverage/coverage-summary.json");
+            const files = Object.entries(coverage)
+              .filter(([key]) => key !== "total")
+              .map(([key, data]) => {
+                const file = key.replace("/home/runner/work/Battleship/Battleship/src/", "");
+                return `| ${file} | ${data.lines.pct}% | ${data.functions.pct}% | ${data.statements.pct}% | ${data.branches.pct}% |`;
+              })
+              .join("\n");
+            console.log(files);
+          ')
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with Coverage
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ## Test Coverage Report 🧪
+
+            ### Overall Coverage: ${{ steps.get_coverage.outputs.percentage }}%
+
+            | Category | Coverage | Details |
+            |----------|----------|---------|
+            | Lines | ${{ fromJson(steps.coverage_details.outputs.details).total.lines.pct }}% | ${{ fromJson(steps.coverage_details.outputs.details).total.lines.covered }}/${{ fromJson(steps.coverage_details.outputs.details).total.lines.total }} |
+            | Functions | ${{ fromJson(steps.coverage_details.outputs.details).total.functions.pct }}% | ${{ fromJson(steps.coverage_details.outputs.details).total.functions.covered }}/${{ fromJson(steps.coverage_details.outputs.details).total.functions.total }} |
+            | Statements | ${{ fromJson(steps.coverage_details.outputs.details).total.statements.pct }}% | ${{ fromJson(steps.coverage_details.outputs.details).total.statements.covered }}/${{ fromJson(steps.coverage_details.outputs.details).total.statements.total }} |
+            | Branches | ${{ fromJson(steps.coverage_details.outputs.details).total.branches.pct }}% | ${{ fromJson(steps.coverage_details.outputs.details).total.branches.covered }}/${{ fromJson(steps.coverage_details.outputs.details).total.branches.total }} |
+
+            <details>
+              <summary>📊 Coverage by File</summary>
+              
+              | File | Lines | Functions | Statements | Branches |
+              |------|--------|-----------|------------|----------|
+              ${{ steps.process_coverage.outputs.files }}
+            </details>
 
       - name: Rename Workflow Run
         run: |

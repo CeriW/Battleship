@@ -6,10 +6,10 @@ $carrier: purple;
 
 .board {
   border: 1px solid black;
-  max-width: 300px;
+  max-width: 400px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, (300px / 11));
+  grid-template-rows: repeat(11, (400px / 11));
 
   .column-marker,
   .row-marker {
@@ -26,6 +26,9 @@ $carrier: purple;
 
   .cell {
     border: 1px solid lightgrey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .battleship {
