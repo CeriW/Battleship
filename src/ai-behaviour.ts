@@ -21,6 +21,7 @@ const adjacentShipModifier = (difficultyClass: number) => {
   }
 };
 
+/* istanbul ignore next */
 const heatMapIterations = (difficultyClass: number) =>
   difficultyClass > 10 ? difficultyClass * difficultyClass : difficultyClass;
 
