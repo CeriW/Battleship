@@ -2,10 +2,10 @@ import React from 'react';
 import { PositionArray } from '../types';
 
 interface BoardProps {
-  positions: PositionArray;
+  // positions: PositionArray;
 }
 
-export const Board: React.FC<BoardProps> = ({ positions }) => {
+export const UserGuessBoard: React.FC<BoardProps> = () => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -24,7 +24,8 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
       cells.push(
         <div
           key={`cell-${letters[i]}-${j}`}
-          className={`cell ${positions[i][j]?.name ?? ''}`}
+          // className={`cell ${positions[i][j]?.name ?? ''}`}
+          className="cell"
           data-testid="cell"
           onClick={() => {
             console.log(i, j);
@@ -52,4 +53,4 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
   );
 };
 
-export default Board;
+export default UserGuessBoard;
