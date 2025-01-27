@@ -1,11 +1,13 @@
 import React from 'react';
-import { PositionArray } from '../types';
-
+import { CellStates, PositionArray } from '../types';
+import { GameContext } from '../GameContext';
 interface BoardProps {
   // positions: PositionArray;
 }
 
 export const UserGuessBoard: React.FC<BoardProps> = () => {
+  const { userShips, setUserShips, computerShips, setComputerShips } = React.useContext(GameContext);
+
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -18,27 +20,47 @@ export const UserGuessBoard: React.FC<BoardProps> = () => {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
-  for (let i = 0; i < letters.length; i++) {
+  for (let y = 0; y < letters.length; y++) {
     const cells = [];
-    for (let j = 0; j < 10; j++) {
+    for (let x = 0; x < 10; x++) {
       cells.push(
         <div
-          key={`cell-${letters[i]}-${j}`}
+          key={`cell-${letters[y]}-${x}`}
           // className={`cell ${positions[i][j]?.name ?? ''}`}
           className="cell"
           data-testid="cell"
           onClick={() => {
-            console.log(i, j);
+            console.log(y, x);
+            console.log(computerShips);
+
+            const newComputerShips = [...computerShips];
+            const shipIsHere = !!newComputerShips[y][x];
+
+            if (shipIsHere) {
+              newComputerShips[y][x].status = CellStates.hit;
+            } else {
+              newComputerShips[y][x] = { name: null, status: CellStates.miss };
+            }
+
+            setComputerShips(newComputerShips);
+            setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
+
+            // setComputerShips(newComputerShips);
+            // setComputerShips(newComputerShips);
           }}
           // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
-        ></div>
+        >
+          {computerShips[y][x]?.status === CellStates.hit && '✔️'}
+          {computerShips[y][x]?.status === CellStates.miss && '❌'}
+          {computerShips[y][x]?.status === CellStates.unguessed && ''}
+        </div>
       );
     }
 
     rows.push(
-      <div className="row" key={`row-${i}`}>
-        <div className="row-marker" key={`row-marker-${i}`} data-testid="row-marker">
-          {letters[i]}
+      <div className="row" key={`row-${y}`}>
+        <div className="row-marker" key={`row-marker-${y}`} data-testid="row-marker">
+          {letters[y]}
         </div>
         {cells}
       </div>

@@ -159,6 +159,10 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
       if (existingBoard[y][x]?.status === CellStates.miss) {
         placements[y][x] = 0;
       }
+
+      if (existingBoard[y][x]?.status === CellStates.hit) {
+        placements[y][x] = ai.heatMapSimulations;
+      }
     }
   }
 
@@ -168,7 +172,11 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
     // For each cell in the simulation
     for (let y = 0; y < 10; y++) {
       for (let x = 0; x < 10; x++) {
-        if (boardSimulation[y][x]?.name && existingBoard[y][x]?.status !== CellStates.miss) {
+        if (
+          boardSimulation[y][x]?.name &&
+          existingBoard[y][x]?.status !== CellStates.miss &&
+          existingBoard[y][x]?.status !== CellStates.hit
+        ) {
           placements[y][x]++;
         }
       }
