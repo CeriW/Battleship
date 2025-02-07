@@ -126,7 +126,8 @@ describe('UserGuessBoard', () => {
     expect(setComputerShips).toHaveBeenCalled();
   });
 
-  test('Already guessed cells cannot be clicked', () => {
+  test('Already guessed cells cannot be clicked', async () => {
+    const setComputerShips = jest.fn();
     const mockComputerShips = Array(10)
       .fill(null)
       .map(() =>
@@ -144,7 +145,7 @@ describe('UserGuessBoard', () => {
           computerShips: mockComputerShips,
           userShips: mockComputerShips,
           setUserShips: () => {},
-          setComputerShips: () => {},
+          setComputerShips: setComputerShips,
         }}
       >
         <UserGuessBoard />
@@ -152,8 +153,48 @@ describe('UserGuessBoard', () => {
     );
 
     const cell = screen.getAllByTestId('cell')[0];
-    const computedStyle = window.getComputedStyle(cell);
-    expect(computedStyle.pointerEvents).toBe('none');
-    expect(computedStyle.cursor).toBe('not-allowed');
+    expect(cell).toHaveClass('hit');
+
+    // Try to click the cell
+    await userEvent.click(cell);
+
+    // Verify that setComputerShips was not called
+    expect(setComputerShips).not.toHaveBeenCalled();
+  });
+
+  test('Displays correct row and column markers', () => {
+    const mockComputerShips = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            status: CellStates.unguessed,
+            name: null,
+          }))
+      );
+
+    render(
+      <GameContext.Provider
+        value={{
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setUserShips: () => {},
+          setComputerShips: () => {},
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    // Check row markers (A-J)
+    const rowMarkers = screen.getAllByTestId('row-marker');
+    expect(rowMarkers[0]).toHaveTextContent('A');
+    expect(rowMarkers[9]).toHaveTextContent('J');
+
+    // Check column markers (1-10)
+    const columnMarkers = screen.getAllByTestId('column-marker');
+    expect(columnMarkers[1]).toHaveTextContent('1');
+    expect(columnMarkers[10]).toHaveTextContent('10');
   });
 });
