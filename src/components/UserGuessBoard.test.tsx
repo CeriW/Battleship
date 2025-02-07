@@ -21,12 +21,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -52,12 +54,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -80,12 +84,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -109,12 +115,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -141,12 +149,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -176,12 +186,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -213,12 +225,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -254,12 +268,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -299,12 +315,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
