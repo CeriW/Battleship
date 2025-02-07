@@ -72,7 +72,7 @@ describe('UserGuessBoard', () => {
         Array(10)
           .fill(null)
           .map(() => ({
-            status: CellStates.hit,
+            status: CellStates.miss,
             name: null,
           }))
       );
