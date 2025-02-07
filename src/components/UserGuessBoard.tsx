@@ -27,15 +27,16 @@ export const UserGuessBoard: React.FC = () => {
           data-testid="cell"
           onClick={() => {
             // Jest tests are unable to detect pointer-events: none
-            if (computerShips[y][x]?.status === CellStates.hit || computerShips[y][x]?.status === CellStates.miss) {
+            const cell = computerShips[y][x];
+            if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
               return;
             }
 
             const newComputerShips = [...computerShips];
-            const shipIsHere = !!newComputerShips[y][x].name;
+            const shipIsHere = cell && cell.name;
 
             if (shipIsHere) {
-              newComputerShips[y][x].status = CellStates.hit;
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
             }

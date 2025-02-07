@@ -36,7 +36,7 @@ describe('generateMatchingBoard', () => {
 
     const result = generateMatchingBoard(boardWithHit);
     expect(result[0][0]).toBeTruthy();
-    expect(result[0][0].status).toBe(CellStates.unguessed);
+    expect(result[0][0]?.status).toBe(CellStates.unguessed);
   });
 
   test('does not place ships on confirmed misses', () => {

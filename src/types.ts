@@ -15,6 +15,6 @@ export enum CellStates {
   unguessed = 'unguessed',
 }
 
-export type PositionArray = { name: string | null; status: CellStates }[][];
+export type PositionArray = ({ name: string | null; status: CellStates } | null)[][];
 
 export type Alignment = 'horizontal' | 'vertical';
