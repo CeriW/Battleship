@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 
@@ -20,23 +20,23 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, setUserShips, setComputerShips, playerTurn, setPlayerTurn } =
-    React.useContext(GameContext);
-
-  // const handleUserGuess = (row: number, col: number) => {
-  //   const newUserShips = [...userShips];
-  //   newUserShips[row][col] = { name: null, status: CellStates.hit };
-  //   setUserShips(newUserShips);
-  //   setTurn('computer');
-  // };
+  const { userShips, computerShips, setUserShips, playerTurn, setPlayerTurn } = useContext(GameContext);
 
   const makeComputerGuess = React.useCallback(() => {
     const heatMap = calculateHeatMap(userShips);
-    const maxValue = Math.max(...heatMap.flat());
+    const flatHeatMap = heatMap.flat();
 
-    console.log('heatMap', heatMap);
+    // Find the highest value that isn't ai.heatMapSimulations
+    let maxValue = -1;
+    let maxValueIndex = -1;
 
-    const maxValueIndex = heatMap.flat().indexOf(maxValue);
+    flatHeatMap.forEach((value, index) => {
+      if (value !== ai.heatMapSimulations && value > maxValue) {
+        maxValue = value;
+        maxValueIndex = index;
+      }
+    });
+
     const y = Math.floor(maxValueIndex / 10);
     const x = maxValueIndex % 10;
 
@@ -49,21 +49,20 @@ const GameBoards = () => {
       setUserShips(newUserShips);
     }
 
+    // If there's no ship here, we've missed
     if (!userShips[y][x]) {
       const newUserShips = [...userShips];
       newUserShips[y][x] = { name: null, status: CellStates.miss };
       setUserShips(newUserShips);
     }
-
-    // console.log(userShips);
   }, [userShips, setUserShips]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (playerTurn === 'computer') {
       makeComputerGuess();
       setPlayerTurn('user');
     }
-  }, [playerTurn, makeComputerGuess]);
+  }, [playerTurn, makeComputerGuess, setPlayerTurn]);
 
   return (
     <div id="boards">
