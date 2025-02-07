@@ -20,7 +20,50 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips } = React.useContext(GameContext);
+  const { userShips, computerShips, setUserShips, setComputerShips, playerTurn, setPlayerTurn } =
+    React.useContext(GameContext);
+
+  // const handleUserGuess = (row: number, col: number) => {
+  //   const newUserShips = [...userShips];
+  //   newUserShips[row][col] = { name: null, status: CellStates.hit };
+  //   setUserShips(newUserShips);
+  //   setTurn('computer');
+  // };
+
+  const makeComputerGuess = React.useCallback(() => {
+    const heatMap = calculateHeatMap(userShips);
+    const maxValue = Math.max(...heatMap.flat());
+
+    console.log('heatMap', heatMap);
+
+    const maxValueIndex = heatMap.flat().indexOf(maxValue);
+    const y = Math.floor(maxValueIndex / 10);
+    const x = maxValueIndex % 10;
+
+    console.log('Computer making guess', 'y', y, 'x', x);
+
+    // There's a ship here and we haven't guessed it yet
+    if (userShips[y][x]?.status === CellStates.unguessed) {
+      const newUserShips = [...userShips];
+      newUserShips[y][x] = { name: userShips[y][x]?.name || null, status: CellStates.hit };
+      setUserShips(newUserShips);
+    }
+
+    if (!userShips[y][x]) {
+      const newUserShips = [...userShips];
+      newUserShips[y][x] = { name: null, status: CellStates.miss };
+      setUserShips(newUserShips);
+    }
+
+    // console.log(userShips);
+  }, [userShips, setUserShips]);
+
+  React.useEffect(() => {
+    if (playerTurn === 'computer') {
+      makeComputerGuess();
+      setPlayerTurn('user');
+    }
+  }, [playerTurn, makeComputerGuess]);
 
   return (
     <div id="boards">

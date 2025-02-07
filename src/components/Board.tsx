@@ -1,5 +1,5 @@
 import React from 'react';
-import { PositionArray } from '../types';
+import { PositionArray, CellStates } from '../types';
 
 interface BoardProps {
   positions: PositionArray;
@@ -18,26 +18,29 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
-  for (let i = 0; i < letters.length; i++) {
+  for (let y = 0; y < letters.length; y++) {
     const cells = [];
-    for (let j = 0; j < 10; j++) {
+    for (let x = 0; x < 10; x++) {
       cells.push(
         <div
-          key={`cell-${letters[i]}-${j}`}
-          className={`cell ${positions[i][j]?.name ?? ''}`}
+          key={`cell-${letters[y]}-${x}`}
+          className={`cell ${positions[y][x]?.name ?? ''} ${positions[y][x]?.status ?? ''}`}
           data-testid="cell"
           // onClick={() => {
           //   console.log(i, j);
           // }}
           // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
-        ></div>
+        >
+          {positions[y][x]?.status === CellStates.hit && '🔥'}
+          {positions[y][x]?.status === CellStates.miss && '❌'}
+        </div>
       );
     }
 
     rows.push(
-      <div className="row" key={`row-${i}`}>
-        <div className="row-marker" key={`row-marker-${i}`} data-testid="row-marker">
-          {letters[i]}
+      <div className="row" key={`row-${y}`}>
+        <div className="row-marker" key={`row-marker-${y}`} data-testid="row-marker">
+          {letters[y]}
         </div>
         {cells}
       </div>
