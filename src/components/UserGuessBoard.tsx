@@ -32,7 +32,7 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             const newComputerShips = [...computerShips];
-            const shipIsHere = !!newComputerShips[y][x];
+            const shipIsHere = !!newComputerShips[y][x].name;
 
             if (shipIsHere) {
               newComputerShips[y][x].status = CellStates.hit;

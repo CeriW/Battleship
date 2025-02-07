@@ -197,4 +197,122 @@ describe('UserGuessBoard', () => {
     expect(columnMarkers[1]).toHaveTextContent('1');
     expect(columnMarkers[10]).toHaveTextContent('10');
   });
+
+  test('Handles successful hit on ship', async () => {
+    const setComputerShips = jest.fn();
+    const mockComputerShips = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            status: CellStates.unguessed,
+            name: 'carrier',
+          }))
+      );
+
+    render(
+      <GameContext.Provider
+        value={{
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setUserShips: () => {},
+          setComputerShips: setComputerShips,
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cell = screen.getAllByTestId('cell')[0];
+    await userEvent.click(cell);
+
+    expect(setComputerShips).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.arrayContaining([
+          expect.objectContaining({
+            status: CellStates.hit,
+            name: 'carrier',
+          }),
+        ]),
+      ])
+    );
+  });
+
+  test('Handles miss when no ship present', async () => {
+    const setComputerShips = jest.fn();
+    const mockComputerShips = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            status: CellStates.unguessed,
+            name: null,
+          }))
+      );
+
+    render(
+      <GameContext.Provider
+        value={{
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setUserShips: () => {},
+          setComputerShips: setComputerShips,
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cell = screen.getAllByTestId('cell')[0];
+    await userEvent.click(cell);
+
+    expect(setComputerShips).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.arrayContaining([
+          expect.objectContaining({
+            status: CellStates.miss,
+            name: null,
+          }),
+        ]),
+      ])
+    );
+  });
+
+  test('Displays correct symbols for different cell states', () => {
+    const mockComputerShips = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            status: CellStates.unguessed,
+            name: null,
+          }))
+      );
+
+    // Set up different states in first row
+    mockComputerShips[0][0] = { status: CellStates.hit, name: null };
+    mockComputerShips[0][1] = { status: CellStates.miss, name: null };
+    mockComputerShips[0][2] = { status: CellStates.unguessed, name: null };
+
+    render(
+      <GameContext.Provider
+        value={{
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setUserShips: () => {},
+          setComputerShips: () => {},
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cells = screen.getAllByTestId('cell');
+    expect(cells[0]).toHaveTextContent('✔️');
+    expect(cells[1]).toHaveTextContent('❌');
+    expect(cells[2]).toHaveTextContent('');
+  });
 });
