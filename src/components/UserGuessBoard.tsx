@@ -1,11 +1,8 @@
 import React from 'react';
-import { CellStates, PositionArray } from '../types';
+import { CellStates } from '../types';
 import { GameContext } from '../GameContext';
-interface BoardProps {
-  // positions: PositionArray;
-}
 
-export const UserGuessBoard: React.FC<BoardProps> = () => {
+export const UserGuessBoard: React.FC = () => {
   const { userShips, setUserShips, computerShips, setComputerShips } = React.useContext(GameContext);
 
   const columnMarkers = [];
@@ -26,13 +23,9 @@ export const UserGuessBoard: React.FC<BoardProps> = () => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          // className={`cell ${positions[i][j]?.name ?? ''}`}
           className="cell"
           data-testid="cell"
           onClick={() => {
-            console.log(y, x);
-            console.log(computerShips);
-
             const newComputerShips = [...computerShips];
             const shipIsHere = !!newComputerShips[y][x];
 
@@ -44,11 +37,7 @@ export const UserGuessBoard: React.FC<BoardProps> = () => {
 
             setComputerShips(newComputerShips);
             setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
-
-            // setComputerShips(newComputerShips);
-            // setComputerShips(newComputerShips);
           }}
-          // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         >
           {computerShips[y][x]?.status === CellStates.hit && '✔️'}
           {computerShips[y][x]?.status === CellStates.miss && '❌'}
@@ -68,7 +57,7 @@ export const UserGuessBoard: React.FC<BoardProps> = () => {
   }
 
   return (
-    <div className="board" data-testid="board">
+    <div className="board" data-testid="user-guess-board">
       {columnMarkers}
       {rows}
     </div>
