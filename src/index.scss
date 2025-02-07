@@ -12,3 +12,18 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+#root {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#boards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.user-guess-board .cell.hit,
+.user-guess-board .cell.miss {
+  pointer-events: none;
+}
