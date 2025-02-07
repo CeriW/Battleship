@@ -23,7 +23,7 @@ export const UserGuessBoard: React.FC = () => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className="cell"
+          className={`cell ${computerShips[y][x]?.status || ''}`}
           data-testid="cell"
           onClick={() => {
             const newComputerShips = [...computerShips];
@@ -36,7 +36,7 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             setComputerShips(newComputerShips);
-            setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
+            // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
           }}
         >
           {computerShips[y][x]?.status === CellStates.hit && '✔️'}
@@ -57,7 +57,7 @@ export const UserGuessBoard: React.FC = () => {
   }
 
   return (
-    <div className="board" data-testid="user-guess-board">
+    <div className="board user-guess-board" data-testid="user-guess-board">
       {columnMarkers}
       {rows}
     </div>

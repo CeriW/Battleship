@@ -26,9 +26,9 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
           key={`cell-${letters[i]}-${j}`}
           className={`cell ${positions[i][j]?.name ?? ''}`}
           data-testid="cell"
-          onClick={() => {
-            console.log(i, j);
-          }}
+          // onClick={() => {
+          //   console.log(i, j);
+          // }}
           // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         ></div>
       );

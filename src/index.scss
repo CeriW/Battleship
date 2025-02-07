@@ -22,3 +22,8 @@ code {
   display: flex;
   flex-wrap: wrap;
 }
+
+.user-guess-board .cell.hit,
+.user-guess-board .cell.miss {
+  pointer-events: none;
+}
