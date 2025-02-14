@@ -3,6 +3,8 @@ import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment } from '../types';
 import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
 
+// TODO - while this file works, it does not produce logic that a human would agree with and needs a major rework.
+
 export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
 
@@ -154,17 +156,17 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
     .fill(null)
     .map(() => Array(10).fill(null));
 
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      if (existingBoard[y][x]?.status === CellStates.miss) {
-        placements[y][x] = 0;
-      }
+  // for (let y = 0; y < 10; y++) {
+  //   for (let x = 0; x < 10; x++) {
+  //     if (existingBoard[y][x]?.status === CellStates.miss) {
+  //       placements[y][x] = 0;
+  //     }
 
-      if (existingBoard[y][x]?.status === CellStates.hit) {
-        placements[y][x] = ai.heatMapSimulations;
-      }
-    }
-  }
+  //     if (existingBoard[y][x]?.status === CellStates.hit) {
+  //       placements[y][x] = ai.heatMapSimulations;
+  //     }
+  //   }
+  // }
 
   for (let simulation = 0; simulation < ai.heatMapSimulations; simulation++) {
     const boardSimulation = generateMatchingBoard(existingBoard);
@@ -178,6 +180,14 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
           existingBoard[y][x]?.status !== CellStates.hit
         ) {
           placements[y][x]++;
+        }
+
+        if (existingBoard[y][x]?.status === CellStates.miss) {
+          placements[y][x] = 0;
+        }
+
+        if (existingBoard[y][x]?.status === CellStates.hit) {
+          placements[y][x] = ai.heatMapSimulations;
         }
       }
     }

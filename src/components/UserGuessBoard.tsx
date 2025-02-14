@@ -3,7 +3,8 @@ import { CellStates } from '../types';
 import { GameContext } from '../GameContext';
 
 export const UserGuessBoard: React.FC = () => {
-  const { userShips, setUserShips, computerShips, setComputerShips } = React.useContext(GameContext);
+  const { userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn } =
+    React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -28,7 +29,10 @@ export const UserGuessBoard: React.FC = () => {
           onClick={() => {
             // Jest tests are unable to detect pointer-events: none
             const cell = computerShips[y][x];
-            if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
+            if (
+              (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) ||
+              playerTurn === 'computer'
+            ) {
               return;
             }
 
@@ -42,6 +46,7 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             setComputerShips(newComputerShips);
+            setPlayerTurn('computer');
             // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
           }}
         >

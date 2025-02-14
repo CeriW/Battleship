@@ -21,12 +21,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -52,12 +54,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -80,12 +84,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -109,12 +115,15 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+            setPlayerTurn: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -141,12 +150,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -176,12 +187,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -213,12 +226,15 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+            setPlayerTurn: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -254,12 +270,15 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: setComputerShips,
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: setComputerShips,
+            setPlayerTurn: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -299,12 +318,14 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={{
-          computerShips: mockComputerShips,
-          userShips: mockComputerShips,
-          setUserShips: () => {},
-          setComputerShips: () => {},
-        }}
+        value={
+          {
+            computerShips: mockComputerShips,
+            userShips: mockComputerShips,
+            setUserShips: () => {},
+            setComputerShips: () => {},
+          } as any
+        }
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -314,5 +335,31 @@ describe('UserGuessBoard', () => {
     expect(cells[0]).toHaveTextContent('✔️');
     expect(cells[1]).toHaveTextContent('❌');
     expect(cells[2]).toHaveTextContent('');
+  });
+
+  test('applies correct className based on cell status', () => {
+    const mockContext = {
+      computerShips: Array(10).fill(Array(10).fill(null)),
+      userShips: Array(10).fill(Array(10).fill(null)),
+      setUserShips: jest.fn(),
+      setComputerShips: jest.fn(),
+      playerTurn: 'user' as 'user' | 'computer',
+      setPlayerTurn: jest.fn(),
+    };
+
+    // Set a specific cell status to test
+    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit };
+    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss };
+
+    render(
+      <GameContext.Provider value={mockContext}>
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cells = screen.getAllByTestId('cell');
+    expect(cells[0]).toHaveClass('cell', CellStates.hit);
+    expect(cells[1]).toHaveClass('cell', CellStates.miss);
+    expect(cells[2]).toHaveClass('cell');
   });
 });

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 
 import { CellStates, PositionArray, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
+import { useMakeComputerGuess } from './logic/makeComputerGuess';
 
 import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
@@ -20,7 +21,15 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips } = React.useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn } = useContext(GameContext);
+  const makeComputerGuess = useMakeComputerGuess();
+
+  useEffect(() => {
+    if (playerTurn === 'computer') {
+      makeComputerGuess();
+      setPlayerTurn('user');
+    }
+  }, [playerTurn, makeComputerGuess, setPlayerTurn]);
 
   return (
     <div id="boards">
