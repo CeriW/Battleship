@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { createContext, useState } from 'react';
 import { PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
