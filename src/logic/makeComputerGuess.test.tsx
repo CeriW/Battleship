@@ -142,4 +142,112 @@ describe('useMakeComputerGuess', () => {
     const call = mockSetUserShips.mock.calls[0][0];
     expect(call[1][1].status).toBe(CellStates.miss);
   });
+
+  test('should not modify already guessed cells', () => {
+    const mockHeatMap = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    mockHeatMap[1][1] = 50;
+    (calculateHeatMap as jest.Mock).mockReturnValue(mockHeatMap);
+
+    const userShips: PositionArray = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            name: null,
+            status: CellStates.unguessed,
+          }))
+      );
+    userShips[1][1] = { name: 'destroyer', status: CellStates.hit }; // Already hit
+
+    const { result } = renderHook(() => useMakeComputerGuess(), {
+      wrapper: ({ children }) => (
+        <GameContext.Provider
+          value={{
+            userShips,
+            computerShips: userShips,
+            setUserShips: mockSetUserShips,
+            setComputerShips: jest.fn(),
+            playerTurn: 'computer',
+            setPlayerTurn: jest.fn(),
+          }}
+        >
+          {children}
+        </GameContext.Provider>
+      ),
+    });
+
+    result.current();
+    expect(mockSetUserShips).not.toHaveBeenCalled();
+  });
+
+  test('should handle multiple cells with same maximum heat value', () => {
+    const mockHeatMap = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    mockHeatMap[1][1] = 50;
+    mockHeatMap[2][2] = 50;
+    (calculateHeatMap as jest.Mock).mockReturnValue(mockHeatMap);
+
+    const { result } = renderHook(() => useMakeComputerGuess(), { wrapper });
+
+    result.current();
+
+    // Verify that one of the maximum value cells was chosen
+    const call = mockSetUserShips.mock.calls[0][0];
+    const wasMaxValueCellChosen = call[1][1].status === CellStates.miss || call[2][2].status === CellStates.miss;
+    expect(wasMaxValueCellChosen).toBe(true);
+  });
+
+  test('should maintain rest of board state unchanged', () => {
+    const mockHeatMap = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(0));
+    mockHeatMap[1][1] = 50;
+    (calculateHeatMap as jest.Mock).mockReturnValue(mockHeatMap);
+
+    const originalShips: PositionArray = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            name: null,
+            status: CellStates.unguessed,
+          }))
+      );
+
+    const { result } = renderHook(() => useMakeComputerGuess(), {
+      wrapper: ({ children }) => (
+        <GameContext.Provider
+          value={{
+            userShips: originalShips,
+            computerShips: originalShips,
+            setUserShips: mockSetUserShips,
+            setComputerShips: jest.fn(),
+            playerTurn: 'computer',
+            setPlayerTurn: jest.fn(),
+          }}
+        >
+          {children}
+        </GameContext.Provider>
+      ),
+    });
+
+    result.current();
+
+    const newBoard = mockSetUserShips.mock.calls[0][0];
+    // Check that only one cell was modified
+    let modifiedCells = 0;
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if (newBoard[i][j]?.status !== originalShips[i][j]?.status) {
+          modifiedCells++;
+        }
+      }
+    }
+    expect(modifiedCells).toBe(1);
+  });
 });
