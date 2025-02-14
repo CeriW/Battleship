@@ -121,6 +121,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: setComputerShips,
+            setPlayerTurn: () => {},
           } as any
         }
       >
@@ -231,6 +232,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: setComputerShips,
+            setPlayerTurn: () => {},
           } as any
         }
       >
