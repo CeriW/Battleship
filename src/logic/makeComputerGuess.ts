@@ -27,11 +27,11 @@ export const useMakeComputerGuess = () => {
     console.log('Computer making guess', 'y', y, 'x', x);
 
     const cell = userShips[y][x];
-    if (cell?.status === CellStates.unguessed) {
+    if (cell?.status === CellStates.unguessed || !cell) {
       const newUserShips = [...userShips.map((row) => [...row])];
       newUserShips[y][x] = {
-        name: cell.name,
-        status: cell.name ? CellStates.hit : CellStates.miss,
+        name: cell?.name || null,
+        status: cell?.name ? CellStates.hit : CellStates.miss,
       };
       setUserShips(newUserShips);
     }
