@@ -26,15 +26,13 @@ export const useMakeComputerGuess = () => {
 
     console.log('Computer making guess', 'y', y, 'x', x);
 
-    if (userShips[y][x]?.status === CellStates.unguessed) {
-      const newUserShips = [...userShips];
-      newUserShips[y][x] = { name: userShips[y][x]?.name || null, status: CellStates.hit };
-      setUserShips(newUserShips);
-    }
-
-    if (!userShips[y][x]) {
-      const newUserShips = [...userShips];
-      newUserShips[y][x] = { name: null, status: CellStates.miss };
+    const cell = userShips[y][x];
+    if (cell?.status === CellStates.unguessed) {
+      const newUserShips = [...userShips.map((row) => [...row])];
+      newUserShips[y][x] = {
+        name: cell.name,
+        status: cell.name ? CellStates.hit : CellStates.miss,
+      };
       setUserShips(newUserShips);
     }
   }, [userShips, setUserShips]);
