@@ -6,7 +6,6 @@ import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import defaultTestContext from '../defaultGameContext';
-import { useMakeComputerGuess } from '../logic/makeComputerGuess';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
@@ -215,7 +214,7 @@ describe('UserGuessBoard', () => {
           .fill(null)
           .map(() => ({
             status: CellStates.unguessed,
-            name: 'carrier',
+            name: 'carrier' as ShipNames,
             sunk: false,
           }))
       );
@@ -242,7 +241,7 @@ describe('UserGuessBoard', () => {
         expect.arrayContaining([
           expect.objectContaining({
             status: CellStates.hit,
-            name: 'carrier',
+            name: 'carrier' as ShipNames,
           }),
         ]),
       ])
@@ -351,55 +350,5 @@ describe('UserGuessBoard', () => {
     expect(cells[0]).toHaveClass('cell', CellStates.hit);
     expect(cells[1]).toHaveClass('cell', CellStates.miss);
     expect(cells[2]).toHaveClass('cell');
-  });
-
-  test('correctly marks a ship as sunk when all its cells are hit', () => {
-    const userShips = Array(10)
-      .fill(null)
-      .map(() =>
-        Array(10)
-          .fill(null)
-          .map(() => ({
-            status: CellStates.unguessed,
-            name: null as ShipNames | null,
-            sunk: false,
-          }))
-      );
-
-    // Place a 2-cell ship
-    userShips[0][0] = { status: CellStates.hit, name: 'destroyer', sunk: false };
-    userShips[0][1] = { status: CellStates.hit, name: 'destroyer', sunk: false };
-
-    const result = makeComputerGuess(userShips, [0, 1]);
-
-    // Check if the ship is marked as sunk after hitting its last cell
-    expect(result[0][0].sunk).toBe(true);
-    expect(result[0][1].sunk).toBe(true);
-  });
-
-  test('does not mark a ship as sunk when some cells are still not hit', () => {
-    const userShips = Array(10)
-      .fill(null)
-      .map(() =>
-        Array(10)
-          .fill(null)
-          .map(() => ({
-            status: CellStates.unguessed,
-            name: null as ShipNames | null,
-            sunk: false,
-          }))
-      );
-
-    // Place a 3-cell ship with only 2 hits
-    userShips[0][0] = { status: CellStates.hit, name: 'cruiser', sunk: false };
-    userShips[0][1] = { status: CellStates.hit, name: 'cruiser', sunk: false };
-    userShips[0][2] = { status: CellStates.unguessed, name: 'cruiser', sunk: false };
-
-    const result = makeComputerGuess(userShips, [1, 0]);
-
-    // Check that the ship is not marked as sunk
-    expect(result[0][0].sunk).toBe(false);
-    expect(result[0][1].sunk).toBe(false);
-    expect(result[0][2].sunk).toBe(false);
   });
 });

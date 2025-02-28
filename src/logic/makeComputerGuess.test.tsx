@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { useMakeComputerGuess } from './makeComputerGuess';
 import { GameContext } from '../GameContext';
-import { CellStates, PositionArray } from '../types';
+import { CellStates, PositionArray, ShipNames } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
 import defaultTestContext from '../defaultGameContext';
@@ -25,7 +25,7 @@ describe('useMakeComputerGuess', () => {
         Array(10)
           .fill(null)
           .map(() => ({
-            name: null,
+            name: null as ShipNames | null,
             status: CellStates.unguessed,
             sunk: false,
           }))
