@@ -12,6 +12,8 @@ export type GameContextType = {
   setPlayerTurn: (turn: 'user' | 'computer') => void;
   log: string[];
   addToLog: (message: string) => void;
+  gameEnded: boolean;
+  setGameEnded: (ended: boolean) => void;
 };
 
 export const GameContext = createContext<GameContextType>({} as GameContextType);
@@ -21,6 +23,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>('computer');
   const [log, setLog] = useState<string[]>([]);
+  const [gameEnded, setGameEnded] = useState<boolean>(false);
 
   const addToLog = (message: string) => {
     console.log(message);
@@ -29,7 +32,18 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <GameContext.Provider
-      value={{ userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn, log, addToLog }}
+      value={{
+        userShips,
+        setUserShips,
+        computerShips,
+        setComputerShips,
+        playerTurn,
+        setPlayerTurn,
+        log,
+        addToLog,
+        gameEnded,
+        setGameEnded,
+      }}
     >
       {children}
     </GameContext.Provider>

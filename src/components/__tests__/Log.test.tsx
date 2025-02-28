@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Log } from '../Log';
 import { GameContext } from '../../GameContext';
-import defaultTestContext from '../../defaultTestContext';
+import defaultTestContext from '../../defaultGameContext';
 describe('Log Component', () => {
   // Helper function to render Log with custom context
   const renderLog = (log: string[]) => {

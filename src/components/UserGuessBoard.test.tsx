@@ -213,11 +213,13 @@ describe('UserGuessBoard', () => {
         Array(10)
           .fill(null)
           .map(() => ({
-            status: CellStates.unguessed,
+            status: CellStates.hit,
             name: 'carrier' as ShipNames,
-            sunk: false,
+            sunk: true,
           }))
       );
+
+    mockComputerShips[0][0] = { status: CellStates.unguessed, name: 'carrier', sunk: false };
 
     render(
       <GameContext.Provider

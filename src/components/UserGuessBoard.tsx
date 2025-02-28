@@ -4,7 +4,8 @@ import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 
 export const UserGuessBoard: React.FC = () => {
-  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } = React.useContext(GameContext);
+  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
+    React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -27,6 +28,10 @@ export const UserGuessBoard: React.FC = () => {
           className={`cell ${computerShips[y][x]?.status || ''}`}
           data-testid="cell"
           onClick={() => {
+            if (gameEnded) {
+              return;
+            }
+
             // Jest tests are unable to detect pointer-events: none
             const cell = computerShips[y][x];
             if (
@@ -39,6 +44,8 @@ export const UserGuessBoard: React.FC = () => {
             const newComputerShips = [...computerShips];
             const shipIsHere = cell && cell.name;
 
+            console.log('shipIsHere', shipIsHere);
+
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: false };
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
@@ -50,7 +57,9 @@ export const UserGuessBoard: React.FC = () => {
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
-                  addToLog(declareWinner('user'));
+                  addToLog('user wins');
+                  declareWinner('user');
+                  setGameEnded(true);
                 }
               }
             } else {
