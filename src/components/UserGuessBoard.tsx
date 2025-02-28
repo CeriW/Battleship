@@ -3,7 +3,7 @@ import { CellStates } from '../types';
 import { GameContext } from '../GameContext';
 
 export const UserGuessBoard: React.FC = () => {
-  const { userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn } =
+  const { userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } =
     React.useContext(GameContext);
 
   const columnMarkers = [];
@@ -45,6 +45,7 @@ export const UserGuessBoard: React.FC = () => {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
             }
 
+            addToLog(`User guessed ${letters[y]}${x + 1}, ${shipIsHere ? 'hit' : 'miss'}`);
             setComputerShips(newComputerShips);
             setPlayerTurn('computer');
             // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map

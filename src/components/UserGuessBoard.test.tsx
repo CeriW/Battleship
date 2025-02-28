@@ -3,8 +3,9 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
-import { GameContext } from '../GameContext';
+import { GameContext, GameContextType } from '../GameContext';
 import { CellStates } from '../types';
+import defaultTestContext from '../defaultGameContext';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
@@ -21,14 +22,11 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -56,11 +54,10 @@ describe('UserGuessBoard', () => {
       <GameContext.Provider
         value={
           {
+            ...defaultTestContext,
             computerShips: mockComputerShips,
             userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -86,11 +83,10 @@ describe('UserGuessBoard', () => {
       <GameContext.Provider
         value={
           {
+            ...defaultTestContext,
             computerShips: mockComputerShips,
             userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -115,15 +111,13 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: setComputerShips,
-            setPlayerTurn: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setComputerShips: setComputerShips,
+          playerTurn: 'user',
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -150,14 +144,13 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: setComputerShips,
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setComputerShips: setComputerShips,
+          playerTurn: 'user',
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -187,14 +180,11 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -226,15 +216,13 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: setComputerShips,
-            setPlayerTurn: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setComputerShips: setComputerShips,
+          playerTurn: 'user',
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -270,15 +258,13 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: setComputerShips,
-            setPlayerTurn: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+          setComputerShips: setComputerShips,
+          playerTurn: 'user',
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -318,14 +304,11 @@ describe('UserGuessBoard', () => {
 
     render(
       <GameContext.Provider
-        value={
-          {
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-            setUserShips: () => {},
-            setComputerShips: () => {},
-          } as any
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -339,12 +322,10 @@ describe('UserGuessBoard', () => {
 
   test('applies correct className based on cell status', () => {
     const mockContext = {
+      ...defaultTestContext,
       computerShips: Array(10).fill(Array(10).fill(null)),
       userShips: Array(10).fill(Array(10).fill(null)),
-      setUserShips: jest.fn(),
-      setComputerShips: jest.fn(),
       playerTurn: 'user' as 'user' | 'computer',
-      setPlayerTurn: jest.fn(),
     };
 
     // Set a specific cell status to test
