@@ -109,7 +109,7 @@ describe('initialiseHeatMap', () => {
 describe('calculateHeatMap', () => {
   test('should return 100% for cells that are hits', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'test', status: CellStates.hit, sunk: false };
+    board[4][5] = { name: 'destroyer', status: CellStates.hit, sunk: false };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(heatMapIterations);
@@ -125,7 +125,7 @@ describe('calculateHeatMap', () => {
 
   test('miss cells should not have heat, even when adjacent to hit cells', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'test', status: CellStates.hit, sunk: false };
+    board[4][5] = { name: 'destroyer', status: CellStates.hit, sunk: false };
     board[4][6] = { name: null, status: CellStates.miss, sunk: false };
     board[4][4] = { name: null, status: CellStates.miss, sunk: false };
 

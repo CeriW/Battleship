@@ -4,8 +4,7 @@ import { GameContext } from '../GameContext';
 import { isShipSunk } from '../logic/helpers';
 
 export const UserGuessBoard: React.FC = () => {
-  const { userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } =
-    React.useContext(GameContext);
+  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } = React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {

@@ -6,7 +6,7 @@ import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import defaultTestContext from '../defaultGameContext';
-import { makeComputerGuess } from '../logic/makeComputerGuess';
+import { useMakeComputerGuess } from '../logic/makeComputerGuess';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
