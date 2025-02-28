@@ -40,9 +40,9 @@ export const UserGuessBoard: React.FC = () => {
             const shipIsHere = cell && cell.name;
 
             if (shipIsHere) {
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit }; // NEED TO DO LOGIC HERE TO DETERMINE WHETHER SUNK OR NOT
             } else {
-              newComputerShips[y][x] = { name: null, status: CellStates.miss };
+              newComputerShips[y][x] = { name: null, status: CellStates.miss, sunk: false };
             }
 
             addToLog(`User guessed ${letters[y]}${x + 1}, ${shipIsHere ? 'hit' : 'miss'}`);

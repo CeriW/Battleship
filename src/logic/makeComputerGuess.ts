@@ -32,6 +32,7 @@ export const useMakeComputerGuess = () => {
       newUserShips[y][x] = {
         name: cell?.name || null,
         status: cell?.name ? CellStates.hit : CellStates.miss,
+        sunk: Boolean(cell?.name),
       };
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${cell?.name ? 'hit' : 'miss'}`);

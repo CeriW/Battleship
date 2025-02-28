@@ -17,6 +17,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -47,6 +48,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.hit,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -76,18 +78,17 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.miss,
             name: null,
+            sunk: false,
           }))
       );
 
     render(
       <GameContext.Provider
-        value={
-          {
-            ...defaultTestContext,
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-          } as unknown as GameContextType
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -106,6 +107,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -139,6 +141,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.hit,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -175,6 +178,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -211,6 +215,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: 'carrier',
+            sunk: false,
           }))
       );
 
@@ -253,6 +258,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -279,6 +285,7 @@ describe('UserGuessBoard', () => {
           expect.objectContaining({
             status: CellStates.miss,
             name: null,
+            sunk: false,
           }),
         ]),
       ])
@@ -294,13 +301,14 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
     // Set up different states in first row
-    mockComputerShips[0][0] = { status: CellStates.hit, name: null };
-    mockComputerShips[0][1] = { status: CellStates.miss, name: null };
-    mockComputerShips[0][2] = { status: CellStates.unguessed, name: null };
+    mockComputerShips[0][0] = { status: CellStates.hit, name: null, sunk: false };
+    mockComputerShips[0][1] = { status: CellStates.miss, name: null, sunk: false };
+    mockComputerShips[0][2] = { status: CellStates.unguessed, name: null, sunk: false };
 
     render(
       <GameContext.Provider
@@ -329,8 +337,8 @@ describe('UserGuessBoard', () => {
     };
 
     // Set a specific cell status to test
-    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit };
-    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss };
+    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit, sunk: false };
+    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss, sunk: false };
 
     render(
       <GameContext.Provider value={mockContext}>
