@@ -37,5 +37,5 @@ export const useMakeComputerGuess = () => {
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${cell?.name ? 'hit' : 'miss'}`);
     }
-  }, [userShips, setUserShips]);
+  }, [userShips, setUserShips, addToLog]);
 };
