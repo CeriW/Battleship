@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { useMakeComputerGuess } from './makeComputerGuess';
-import { GameContext, GameContextType } from '../GameContext';
+import { GameContext } from '../GameContext';
 import { CellStates, PositionArray } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
