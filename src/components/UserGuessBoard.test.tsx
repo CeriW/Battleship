@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates } from '../types';
-import defaultTestContext from '../defaultGameContext.test';
+import defaultTestContext from '../defaultGameContext';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {

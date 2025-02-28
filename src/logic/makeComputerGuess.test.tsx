@@ -5,7 +5,7 @@ import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, PositionArray } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
-import defaultTestContext from '../defaultGameContext.test';
+import defaultTestContext from '../defaultGameContext';
 
 // Mock dependencies
 jest.mock('./calculateHeatMap');

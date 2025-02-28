@@ -1,3 +1,7 @@
+/* istanbul ignore file */
+
+// This is intended for test usage only, not for production
+
 import { GameContextType } from './GameContext';
 
 export const defaultTestContext: GameContextType = {
