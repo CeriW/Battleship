@@ -55,12 +55,14 @@ export const checkAllShipsSunk = (board: PositionArray) => {
   return shipCells.every((ship) => ship?.status === CellStates.hit);
 };
 
-export const declareWinner = (player: 'user' | 'computer') => {
+export const declareWinner = (player: 'user' | 'computer'): string => {
   if (player === 'user') {
     console.log('WINNER');
     window.alert('You win!');
+    return 'WINNER';
   } else {
     console.log('LOSER');
     window.alert('You lose!');
+    return 'LOSER';
   }
 };

@@ -50,7 +50,7 @@ export const UserGuessBoard: React.FC = () => {
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
-                  declareWinner('user');
+                  addToLog(declareWinner('user'));
                 }
               }
             } else {

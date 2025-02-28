@@ -53,7 +53,7 @@ export const useMakeComputerGuess = () => {
         addToLog(`Computer sunk ${cell?.name}`);
 
         if (checkAllShipsSunk(newUserShips)) {
-          declareWinner('computer');
+          addToLog(declareWinner('computer'));
         }
       }
     }
