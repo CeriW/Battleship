@@ -5,7 +5,7 @@ import {
   shipSpaceIsAvailable,
 } from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
-import { CellStates, PositionArray } from '../types';
+import { CellStates, PositionArray, ShipNames } from '../types';
 import { shipTypes } from '../App';
 
 let heatMapIterations = 100;
@@ -32,7 +32,7 @@ describe('generateMatchingBoard', () => {
     const boardWithHit: PositionArray = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
-    boardWithHit[0][0] = { name: 'test', status: CellStates.hit, sunk: false };
+    boardWithHit[0][0] = { name: 'destroyer' as ShipNames, status: CellStates.hit, sunk: false };
 
     const result = generateMatchingBoard(boardWithHit);
     expect(result[0][0]).toBeTruthy();
