@@ -1,11 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
-import defaultTestContext from '../defaultGameContext';
+import defaultTestContext from '../defaultTestContext';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
@@ -350,5 +350,96 @@ describe('UserGuessBoard', () => {
     expect(cells[0]).toHaveClass('cell', CellStates.hit);
     expect(cells[1]).toHaveClass('cell', CellStates.miss);
     expect(cells[2]).toHaveClass('cell');
+  });
+
+  test('should not allow clicking on an already hit cell', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    const computerShips = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false }));
+    computerShips[0][0] = { name: 'carrier', status: CellStates.hit, sunk: false };
+
+    render(
+      <GameContext.Provider
+        value={{
+          ...defaultTestContext,
+          computerShips,
+          setComputerShips: mockSetComputerShips,
+          playerTurn: 'user',
+          setPlayerTurn: mockSetPlayerTurn,
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const hitCell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(hitCell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+  });
+
+  test('should not allow clicking on an already missed cell', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    const computerShips = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false }));
+    computerShips[0][0] = { name: null, status: CellStates.miss, sunk: false };
+
+    render(
+      <GameContext.Provider
+        value={
+          {
+            computerShips,
+            setComputerShips: mockSetComputerShips,
+            playerTurn: 'user',
+            setPlayerTurn: mockSetPlayerTurn,
+            addToLog: jest.fn(),
+          } as any
+        }
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const missedCell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(missedCell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+  });
+
+  test('should not allow clicking when it is computers turn', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    render(
+      <GameContext.Provider
+        value={
+          {
+            computerShips: Array(10)
+              .fill(null)
+              .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false })),
+            setComputerShips: mockSetComputerShips,
+            playerTurn: 'computer',
+            setPlayerTurn: mockSetPlayerTurn,
+            addToLog: jest.fn(),
+          } as any
+        }
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(cell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
   });
 });
