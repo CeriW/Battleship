@@ -3,7 +3,6 @@ import { GameContext } from '../GameContext';
 import { CellStates } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
-import Log from '../components/Log';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
