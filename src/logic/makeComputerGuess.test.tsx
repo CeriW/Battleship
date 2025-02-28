@@ -14,6 +14,13 @@ jest.mock('../ai-behaviour', () => ({
   },
 }));
 
+const defaultTestContext = {
+  setComputerShips: jest.fn(),
+  playerTurn: 'computer',
+  setPlayerTurn: jest.fn(),
+  addToLog: jest.fn(),
+};
+
 describe('useMakeComputerGuess', () => {
   const mockSetUserShips = jest.fn();
 
@@ -33,12 +40,10 @@ describe('useMakeComputerGuess', () => {
       <GameContext.Provider
         value={
           {
+            ...defaultTestContext,
             userShips: mockShips,
             computerShips: mockShips,
             setUserShips: mockSetUserShips,
-            setComputerShips: jest.fn(),
-            playerTurn: 'computer',
-            setPlayerTurn: jest.fn(),
           } as unknown as GameContextType
         }
       >
@@ -76,12 +81,10 @@ describe('useMakeComputerGuess', () => {
         <GameContext.Provider
           value={
             {
+              ...defaultTestContext,
               userShips,
               computerShips: userShips,
               setUserShips: mockSetUserShips,
-              setComputerShips: jest.fn(),
-              playerTurn: 'computer',
-              setPlayerTurn: jest.fn(),
             } as unknown as GameContextType
           }
         >
@@ -171,12 +174,10 @@ describe('useMakeComputerGuess', () => {
         <GameContext.Provider
           value={
             {
+              ...defaultTestContext,
               userShips,
               computerShips: userShips,
               setUserShips: mockSetUserShips,
-              setComputerShips: jest.fn(),
-              playerTurn: 'computer',
-              setPlayerTurn: jest.fn(),
             } as unknown as GameContextType
           }
         >
@@ -230,12 +231,10 @@ describe('useMakeComputerGuess', () => {
         <GameContext.Provider
           value={
             {
+              ...defaultTestContext,
               userShips: originalShips,
               computerShips: originalShips,
               setUserShips: mockSetUserShips,
-              setComputerShips: jest.fn(),
-              playerTurn: 'computer',
-              setPlayerTurn: jest.fn(),
             } as unknown as GameContextType
           }
         >
