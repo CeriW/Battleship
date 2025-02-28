@@ -1,7 +1,9 @@
 export type HeatMapArray = number[][];
 
+export type ShipNames = 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+
 export type ShipInfo = {
-  name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+  name: ShipNames;
   size: number;
 };
 
@@ -15,6 +17,6 @@ export enum CellStates {
   unguessed = 'unguessed',
 }
 
-export type PositionArray = ({ name: string | null; status: CellStates } | null)[][];
+export type PositionArray = ({ name: ShipNames | null; status: CellStates; sunk: boolean } | null)[][];
 
 export type Alignment = 'horizontal' | 'vertical';

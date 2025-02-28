@@ -88,12 +88,20 @@ export const placeShips = (): PositionArray => {
       if (validShipState) {
         if (proposedPositions.alignment === 'horizontal') {
           for (let i = proposedPositions.startingColumn; i < proposedPositions.startingColumn + ship.size; i++) {
-            positions[proposedPositions.startingRow][i] = { name: ship.name, status: CellStates.unguessed };
+            positions[proposedPositions.startingRow][i] = {
+              name: ship.name,
+              status: CellStates.unguessed,
+              sunk: false,
+            };
           }
         } else {
           // vertical placement
           for (let i = proposedPositions.startingRow; i < proposedPositions.startingRow + ship.size; i++) {
-            positions[i][proposedPositions.startingColumn] = { name: ship.name, status: CellStates.unguessed };
+            positions[i][proposedPositions.startingColumn] = {
+              name: ship.name,
+              status: CellStates.unguessed,
+              sunk: false,
+            };
           }
         }
       }

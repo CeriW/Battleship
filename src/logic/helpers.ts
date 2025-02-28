@@ -1,4 +1,4 @@
-import { Alignment } from '../types';
+import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
 
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
@@ -37,4 +37,10 @@ export const generatePotentialCoordinates = (
     }
   }
   return potentialCoordinates;
+};
+
+// For a given ship name, return true if all the cells for that ship are hit
+export const isShipSunk = (shipName: ShipNames, board: PositionArray) => {
+  const shipCells = board.flat().filter((ship) => ship?.name === shipName);
+  return shipCells.every((ship) => ship?.status === CellStates.hit);
 };

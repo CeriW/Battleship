@@ -1,10 +1,10 @@
 import React from 'react';
-import { CellStates } from '../types';
+import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
+import { isShipSunk } from '../logic/helpers';
 
 export const UserGuessBoard: React.FC = () => {
-  const { userShips, setUserShips, computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } =
-    React.useContext(GameContext);
+  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } = React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -40,12 +40,19 @@ export const UserGuessBoard: React.FC = () => {
             const shipIsHere = cell && cell.name;
 
             if (shipIsHere) {
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: false };
+              const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: shipIsSunk };
+
+              addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
+              if (shipIsSunk) {
+                addToLog(`User sunk ${cell?.name}`);
+              }
             } else {
-              newComputerShips[y][x] = { name: null, status: CellStates.miss };
+              newComputerShips[y][x] = { name: null, status: CellStates.miss, sunk: false };
+              addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
             }
 
-            addToLog(`User guessed ${letters[y]}${x + 1}, ${shipIsHere ? 'hit' : 'miss'}`);
             setComputerShips(newComputerShips);
             setPlayerTurn('computer');
             // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map

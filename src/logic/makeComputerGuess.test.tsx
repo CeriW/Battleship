@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { useMakeComputerGuess } from './makeComputerGuess';
-import { GameContext, GameContextType } from '../GameContext';
-import { CellStates, PositionArray } from '../types';
+import { GameContext } from '../GameContext';
+import { CellStates, PositionArray, ShipNames } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
-import defaultTestContext from '../defaultGameContext';
+import defaultTestContext from '../defaultTestContext';
 
 // Mock dependencies
 jest.mock('./calculateHeatMap');
@@ -25,8 +25,9 @@ describe('useMakeComputerGuess', () => {
         Array(10)
           .fill(null)
           .map(() => ({
-            name: null,
+            name: null as ShipNames | null,
             status: CellStates.unguessed,
+            sunk: false,
           }))
       );
 
@@ -64,9 +65,10 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
+            sunk: false,
           }))
       );
-    userShips[2][3] = { name: 'destroyer', status: CellStates.unguessed };
+    userShips[2][3] = { name: 'destroyer', status: CellStates.unguessed, sunk: false };
 
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
@@ -155,9 +157,10 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
+            sunk: false,
           }))
       );
-    userShips[1][1] = { name: 'destroyer', status: CellStates.hit }; // Already hit
+    userShips[1][1] = { name: 'destroyer', status: CellStates.hit, sunk: false }; // Already hit
 
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
@@ -211,6 +214,7 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
+            sunk: false,
           }))
       );
 

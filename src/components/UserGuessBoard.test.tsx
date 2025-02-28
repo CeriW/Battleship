@@ -1,11 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
-import { CellStates } from '../types';
-import defaultTestContext from '../defaultGameContext';
+import { CellStates, ShipNames } from '../types';
+import defaultTestContext from '../defaultTestContext';
 
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
@@ -17,6 +17,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -47,6 +48,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.hit,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -76,18 +78,17 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.miss,
             name: null,
+            sunk: false,
           }))
       );
 
     render(
       <GameContext.Provider
-        value={
-          {
-            ...defaultTestContext,
-            computerShips: mockComputerShips,
-            userShips: mockComputerShips,
-          } as unknown as GameContextType
-        }
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
       >
         <UserGuessBoard />
       </GameContext.Provider>
@@ -106,6 +107,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -139,6 +141,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.hit,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -175,6 +178,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -210,7 +214,8 @@ describe('UserGuessBoard', () => {
           .fill(null)
           .map(() => ({
             status: CellStates.unguessed,
-            name: 'carrier',
+            name: 'carrier' as ShipNames,
+            sunk: false,
           }))
       );
 
@@ -236,7 +241,7 @@ describe('UserGuessBoard', () => {
         expect.arrayContaining([
           expect.objectContaining({
             status: CellStates.hit,
-            name: 'carrier',
+            name: 'carrier' as ShipNames,
           }),
         ]),
       ])
@@ -253,6 +258,7 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
@@ -279,6 +285,7 @@ describe('UserGuessBoard', () => {
           expect.objectContaining({
             status: CellStates.miss,
             name: null,
+            sunk: false,
           }),
         ]),
       ])
@@ -294,13 +301,14 @@ describe('UserGuessBoard', () => {
           .map(() => ({
             status: CellStates.unguessed,
             name: null,
+            sunk: false,
           }))
       );
 
     // Set up different states in first row
-    mockComputerShips[0][0] = { status: CellStates.hit, name: null };
-    mockComputerShips[0][1] = { status: CellStates.miss, name: null };
-    mockComputerShips[0][2] = { status: CellStates.unguessed, name: null };
+    mockComputerShips[0][0] = { status: CellStates.hit, name: null, sunk: false };
+    mockComputerShips[0][1] = { status: CellStates.miss, name: null, sunk: false };
+    mockComputerShips[0][2] = { status: CellStates.unguessed, name: null, sunk: false };
 
     render(
       <GameContext.Provider
@@ -329,8 +337,8 @@ describe('UserGuessBoard', () => {
     };
 
     // Set a specific cell status to test
-    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit };
-    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss };
+    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit, sunk: false };
+    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss, sunk: false };
 
     render(
       <GameContext.Provider value={mockContext}>
@@ -342,5 +350,96 @@ describe('UserGuessBoard', () => {
     expect(cells[0]).toHaveClass('cell', CellStates.hit);
     expect(cells[1]).toHaveClass('cell', CellStates.miss);
     expect(cells[2]).toHaveClass('cell');
+  });
+
+  test('should not allow clicking on an already hit cell', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    const computerShips = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false }));
+    computerShips[0][0] = { name: 'carrier', status: CellStates.hit, sunk: false };
+
+    render(
+      <GameContext.Provider
+        value={{
+          ...defaultTestContext,
+          computerShips,
+          setComputerShips: mockSetComputerShips,
+          playerTurn: 'user',
+          setPlayerTurn: mockSetPlayerTurn,
+        }}
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const hitCell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(hitCell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+  });
+
+  test('should not allow clicking on an already missed cell', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    const computerShips = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false }));
+    computerShips[0][0] = { name: null, status: CellStates.miss, sunk: false };
+
+    render(
+      <GameContext.Provider
+        value={
+          {
+            computerShips,
+            setComputerShips: mockSetComputerShips,
+            playerTurn: 'user',
+            setPlayerTurn: mockSetPlayerTurn,
+            addToLog: jest.fn(),
+          } as any
+        }
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const missedCell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(missedCell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+  });
+
+  test('should not allow clicking when it is computers turn', () => {
+    const mockSetComputerShips = jest.fn();
+    const mockSetPlayerTurn = jest.fn();
+
+    render(
+      <GameContext.Provider
+        value={
+          {
+            computerShips: Array(10)
+              .fill(null)
+              .map(() => Array(10).fill({ name: null, status: CellStates.unguessed, sunk: false })),
+            setComputerShips: mockSetComputerShips,
+            playerTurn: 'computer',
+            setPlayerTurn: mockSetPlayerTurn,
+            addToLog: jest.fn(),
+          } as any
+        }
+      >
+        <UserGuessBoard />
+      </GameContext.Provider>
+    );
+
+    const cell = screen.getAllByTestId('cell')[0];
+    fireEvent.click(cell);
+
+    expect(mockSetComputerShips).not.toHaveBeenCalled();
+    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
   });
 });
