@@ -11,6 +11,7 @@ import { placeShips } from './logic/placeShips';
 import { difficultyClass, ai } from './ai-behaviour';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
+import { Log } from './components/Log';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -53,6 +54,7 @@ export function App() {
       <GameBoards />
       <div>Difficulty: {difficultyClass}</div>
       <div>{JSON.stringify(ai, null, 2)}</div>
+      <Log />
     </GameProvider>
   );
 }

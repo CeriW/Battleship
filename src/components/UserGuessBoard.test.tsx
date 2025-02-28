@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
-import { GameContext } from '../GameContext';
+import { GameContext, GameContextType } from '../GameContext';
 import { CellStates } from '../types';
 
 describe('UserGuessBoard', () => {
@@ -27,7 +27,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -60,7 +60,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -90,7 +90,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -122,7 +122,7 @@ describe('UserGuessBoard', () => {
             setUserShips: () => {},
             setComputerShips: setComputerShips,
             setPlayerTurn: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -156,7 +156,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: setComputerShips,
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -193,7 +193,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -233,7 +233,7 @@ describe('UserGuessBoard', () => {
             setUserShips: () => {},
             setComputerShips: setComputerShips,
             setPlayerTurn: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -277,7 +277,7 @@ describe('UserGuessBoard', () => {
             setUserShips: () => {},
             setComputerShips: setComputerShips,
             setPlayerTurn: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -324,7 +324,7 @@ describe('UserGuessBoard', () => {
             userShips: mockComputerShips,
             setUserShips: () => {},
             setComputerShips: () => {},
-          } as any
+          } as unknown as GameContextType
         }
       >
         <UserGuessBoard />
@@ -345,7 +345,7 @@ describe('UserGuessBoard', () => {
       setComputerShips: jest.fn(),
       playerTurn: 'user' as 'user' | 'computer',
       setPlayerTurn: jest.fn(),
-    };
+    } as unknown as GameContextType;
 
     // Set a specific cell status to test
     mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit };

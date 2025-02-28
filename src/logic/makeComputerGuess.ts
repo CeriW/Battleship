@@ -4,6 +4,8 @@ import { CellStates } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
 
+const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
 export const useMakeComputerGuess = () => {
   const { userShips, setUserShips } = useContext(GameContext);
 
@@ -24,7 +26,7 @@ export const useMakeComputerGuess = () => {
     const y = Math.floor(maxValueIndex / 10);
     const x = maxValueIndex % 10;
 
-    console.log('Computer making guess', 'y', y, 'x', x);
+    console.log('Computer making guess', letters[y], x + 1);
 
     const cell = userShips[y][x];
     if (cell?.status === CellStates.unguessed || !cell) {
