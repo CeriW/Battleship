@@ -52,9 +52,9 @@ export function App() {
   return (
     <GameProvider>
       <GameBoards />
+      <Log />
       <div>Difficulty: {difficultyClass}</div>
       <div>{JSON.stringify(ai, null, 2)}</div>
-      <Log />
     </GameProvider>
   );
 }
