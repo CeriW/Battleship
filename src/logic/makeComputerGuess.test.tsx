@@ -5,6 +5,7 @@ import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, PositionArray } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
+import defaultTestContext from '../defaultGameContext.test';
 
 // Mock dependencies
 jest.mock('./calculateHeatMap');
@@ -13,13 +14,6 @@ jest.mock('../ai-behaviour', () => ({
     heatMapSimulations: 100,
   },
 }));
-
-const defaultTestContext = {
-  setComputerShips: jest.fn(),
-  playerTurn: 'computer',
-  setPlayerTurn: jest.fn(),
-  addToLog: jest.fn(),
-};
 
 describe('useMakeComputerGuess', () => {
   const mockSetUserShips = jest.fn();
@@ -38,14 +32,12 @@ describe('useMakeComputerGuess', () => {
 
     return (
       <GameContext.Provider
-        value={
-          {
-            ...defaultTestContext,
-            userShips: mockShips,
-            computerShips: mockShips,
-            setUserShips: mockSetUserShips,
-          } as unknown as GameContextType
-        }
+        value={{
+          ...defaultTestContext,
+          userShips: mockShips,
+          computerShips: mockShips,
+          setUserShips: mockSetUserShips,
+        }}
       >
         {children}
       </GameContext.Provider>
@@ -79,14 +71,12 @@ describe('useMakeComputerGuess', () => {
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
         <GameContext.Provider
-          value={
-            {
-              ...defaultTestContext,
-              userShips,
-              computerShips: userShips,
-              setUserShips: mockSetUserShips,
-            } as unknown as GameContextType
-          }
+          value={{
+            ...defaultTestContext,
+            userShips,
+            computerShips: userShips,
+            setUserShips: mockSetUserShips,
+          }}
         >
           {children}
         </GameContext.Provider>
@@ -172,14 +162,12 @@ describe('useMakeComputerGuess', () => {
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
         <GameContext.Provider
-          value={
-            {
-              ...defaultTestContext,
-              userShips,
-              computerShips: userShips,
-              setUserShips: mockSetUserShips,
-            } as unknown as GameContextType
-          }
+          value={{
+            ...defaultTestContext,
+            userShips,
+            computerShips: userShips,
+            setUserShips: mockSetUserShips,
+          }}
         >
           {children}
         </GameContext.Provider>
@@ -229,14 +217,12 @@ describe('useMakeComputerGuess', () => {
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
         <GameContext.Provider
-          value={
-            {
-              ...defaultTestContext,
-              userShips: originalShips,
-              computerShips: originalShips,
-              setUserShips: mockSetUserShips,
-            } as unknown as GameContextType
-          }
+          value={{
+            ...defaultTestContext,
+            userShips: originalShips,
+            computerShips: originalShips,
+            setUserShips: mockSetUserShips,
+          }}
         >
           {children}
         </GameContext.Provider>
