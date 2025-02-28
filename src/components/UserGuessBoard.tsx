@@ -1,7 +1,7 @@
 import React from 'react';
 import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
-import { isShipSunk } from '../logic/helpers';
+import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog } = React.useContext(GameContext);
@@ -47,13 +47,18 @@ export const UserGuessBoard: React.FC = () => {
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
               if (shipIsSunk) {
                 addToLog(`User sunk ${cell?.name}`);
+                setComputerShips(newComputerShips);
+
+                if (checkAllShipsSunk(newComputerShips)) {
+                  declareWinner('user');
+                }
               }
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss, sunk: false };
+              setComputerShips(newComputerShips);
               addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
             }
 
-            setComputerShips(newComputerShips);
             setPlayerTurn('computer');
             // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
           }}

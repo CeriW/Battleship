@@ -1,4 +1,6 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
+import { GameContext } from '../GameContext';
+import { useContext } from 'react';
 
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
@@ -43,4 +45,22 @@ export const generatePotentialCoordinates = (
 export const isShipSunk = (shipName: ShipNames, board: PositionArray) => {
   const shipCells = board.flat().filter((ship) => ship?.name === shipName);
   return shipCells.every((ship) => ship?.status === CellStates.hit);
+};
+
+export const checkAllShipsSunk = (board: PositionArray) => {
+  // Get all ship cells
+  const shipCells = board.flat().filter((ship) => ship?.name);
+
+  // Is every ship cell hit?
+  return shipCells.every((ship) => ship?.status === CellStates.hit);
+};
+
+export const declareWinner = (player: 'user' | 'computer') => {
+  if (player === 'user') {
+    console.log('WINNER');
+    window.alert('You win!');
+  } else {
+    console.log('LOSER');
+    window.alert('You lose!');
+  }
 };

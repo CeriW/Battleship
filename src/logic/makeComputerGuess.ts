@@ -3,7 +3,7 @@ import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
-import { isShipSunk } from './helpers';
+import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -48,8 +48,13 @@ export const useMakeComputerGuess = () => {
 
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`);
+
       if (sunk) {
         addToLog(`Computer sunk ${cell?.name}`);
+
+        if (checkAllShipsSunk(newUserShips)) {
+          declareWinner('computer');
+        }
       }
     }
   }, [userShips, setUserShips, addToLog]);
