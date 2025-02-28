@@ -1,7 +1,9 @@
 export type HeatMapArray = number[][];
 
+export type ShipNames = 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+
 export type ShipInfo = {
-  name: 'carrier' | 'battleship' | 'cruiser' | 'submarine' | 'destroyer';
+  name: ShipNames;
   size: number;
 };
 

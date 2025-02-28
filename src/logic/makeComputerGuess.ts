@@ -1,8 +1,9 @@
 import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
-import { CellStates } from '../types';
+import { CellStates, ShipNames } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
+import { isShipSunk } from './helpers';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -42,16 +43,14 @@ export const useMakeComputerGuess = () => {
 
       if (cell?.name) {
         // If there is a ship here, check whether it is now fully sunk
-        const shipCells = newUserShips.flat().filter((ship) => ship?.name === cell.name);
-        sunk = shipCells.every((ship) => ship?.status === CellStates.hit);
-
-        if (sunk) {
-          addToLog(`Computer sunk ${cell.name}`);
-        }
+        sunk = isShipSunk(cell.name as ShipNames, newUserShips);
       }
 
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`);
+      if (sunk) {
+        addToLog(`Computer sunk ${cell?.name}`);
+      }
     }
   }, [userShips, setUserShips, addToLog]);
 };
