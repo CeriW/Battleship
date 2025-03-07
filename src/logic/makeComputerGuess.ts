@@ -5,6 +5,7 @@ import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
 
+
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
@@ -55,6 +56,7 @@ export const useMakeComputerGuess = () => {
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'));
         }
+
       }
     }
   }, [userShips, setUserShips, addToLog]);
