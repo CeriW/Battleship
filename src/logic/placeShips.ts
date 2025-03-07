@@ -91,7 +91,6 @@ export const placeShips = (): PositionArray => {
             positions[proposedPositions.startingRow][i] = {
               name: ship.name,
               status: CellStates.unguessed,
-              sunk: false,
             };
           }
         } else {
@@ -100,7 +99,6 @@ export const placeShips = (): PositionArray => {
             positions[i][proposedPositions.startingColumn] = {
               name: ship.name,
               status: CellStates.unguessed,
-              sunk: false,
             };
           }
         }

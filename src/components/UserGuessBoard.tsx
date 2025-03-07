@@ -45,9 +45,9 @@ export const UserGuessBoard: React.FC = () => {
             const shipIsHere = cell && cell.name;
 
             if (shipIsHere) {
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: false };
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: shipIsSunk };
+              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
               if (shipIsSunk) {
@@ -61,7 +61,7 @@ export const UserGuessBoard: React.FC = () => {
                 }
               }
             } else {
-              newComputerShips[y][x] = { name: null, status: CellStates.miss, sunk: false };
+              newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
               addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
             }
