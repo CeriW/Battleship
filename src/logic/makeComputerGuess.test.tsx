@@ -27,7 +27,6 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null as ShipNames | null,
             status: CellStates.unguessed,
-            sunk: false,
           }))
       );
 
@@ -65,10 +64,9 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
-            sunk: false,
           }))
       );
-    userShips[2][3] = { name: 'destroyer', status: CellStates.unguessed, sunk: false };
+    userShips[2][3] = { name: 'destroyer', status: CellStates.unguessed };
 
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
@@ -157,10 +155,9 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
-            sunk: false,
           }))
       );
-    userShips[1][1] = { name: 'destroyer', status: CellStates.hit, sunk: false }; // Already hit
+    userShips[1][1] = { name: 'destroyer', status: CellStates.hit }; // Already hit
 
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
@@ -214,7 +211,6 @@ describe('useMakeComputerGuess', () => {
           .map(() => ({
             name: null,
             status: CellStates.unguessed,
-            sunk: false,
           }))
       );
 

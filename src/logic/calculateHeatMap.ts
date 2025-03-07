@@ -67,11 +67,11 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
             // Place the ship
             if (alignment === 'horizontal') {
               for (let i = proposedColumn; i < proposedColumn + ship.size; i++) {
-                positions[proposedRow][i] = { name: ship.name, status: CellStates.unguessed, sunk: false };
+                positions[proposedRow][i] = { name: ship.name, status: CellStates.unguessed };
               }
             } else {
               for (let i = proposedRow; i < proposedRow + ship.size; i++) {
-                positions[i][proposedColumn] = { name: ship.name, status: CellStates.unguessed, sunk: false };
+                positions[i][proposedColumn] = { name: ship.name, status: CellStates.unguessed };
               }
             }
 
@@ -110,7 +110,6 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
             positions[proposedPositions.startingRow][i] = {
               name: ship.name,
               status: CellStates.unguessed,
-              sunk: false,
             };
           }
         } else {
@@ -118,7 +117,6 @@ export const generateMatchingBoard = (existingBoard: PositionArray): PositionArr
             positions[i][proposedPositions.startingColumn] = {
               name: ship.name,
               status: CellStates.unguessed,
-              sunk: false,
             };
           }
         }

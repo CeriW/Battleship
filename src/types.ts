@@ -8,15 +8,11 @@ export type ShipInfo = {
 };
 
 export enum CellStates {
-  // hit = -1,
-  // miss = -2,
-  // unguessed = 0,
-
   hit = 'hit',
   miss = 'miss',
   unguessed = 'unguessed',
 }
 
-export type PositionArray = ({ name: ShipNames | null; status: CellStates; sunk: boolean } | null)[][];
+export type PositionArray = ({ name: ShipNames | null; status: CellStates } | null)[][];
 
 export type Alignment = 'horizontal' | 'vertical';

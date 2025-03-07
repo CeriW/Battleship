@@ -32,7 +32,7 @@ describe('generateMatchingBoard', () => {
     const boardWithHit: PositionArray = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
-    boardWithHit[0][0] = { name: 'destroyer' as ShipNames, status: CellStates.hit, sunk: false };
+    boardWithHit[0][0] = { name: 'destroyer' as ShipNames, status: CellStates.hit };
 
     const result = generateMatchingBoard(boardWithHit);
     expect(result[0][0]).toBeTruthy();
@@ -43,7 +43,7 @@ describe('generateMatchingBoard', () => {
     const boardWithMiss: PositionArray = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
-    boardWithMiss[0][0] = { name: null, status: CellStates.miss, sunk: false };
+    boardWithMiss[0][0] = { name: null, status: CellStates.miss };
 
     const result = generateMatchingBoard(boardWithMiss);
     expect(result[0][0]).toBeFalsy();
@@ -109,7 +109,7 @@ describe('initialiseHeatMap', () => {
 describe('calculateHeatMap', () => {
   test('should return 100% for cells that are hits', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'destroyer', status: CellStates.hit, sunk: false };
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(heatMapIterations);
@@ -117,7 +117,7 @@ describe('calculateHeatMap', () => {
 
   test('should return 0% for cells that are misses', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: null, status: CellStates.miss, sunk: false };
+    board[4][5] = { name: null, status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(0);
@@ -125,12 +125,12 @@ describe('calculateHeatMap', () => {
 
   test('miss cells should not have heat, even when adjacent to hit cells', () => {
     const board = initialiseShipArray();
-    board[4][5] = { name: 'destroyer', status: CellStates.hit, sunk: false };
-    board[4][6] = { name: null, status: CellStates.miss, sunk: false };
-    board[4][4] = { name: null, status: CellStates.miss, sunk: false };
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: null, status: CellStates.miss };
+    board[4][4] = { name: null, status: CellStates.miss };
 
-    board[3][5] = { name: null, status: CellStates.miss, sunk: false };
-    board[5][5] = { name: null, status: CellStates.miss, sunk: false };
+    board[3][5] = { name: null, status: CellStates.miss };
+    board[5][5] = { name: null, status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][6]).toBe(0);
@@ -155,11 +155,11 @@ describe('calculateHeatMap', () => {
     const x = 5;
     const y = 5;
 
-    board[y][x] = { name: null, status: CellStates.unguessed, sunk: false };
-    board[y][x + 1] = { name: null, status: CellStates.miss, sunk: false };
-    board[y][x - 1] = { name: null, status: CellStates.miss, sunk: false };
-    board[y + 1][x] = { name: null, status: CellStates.miss, sunk: false };
-    board[y - 1][x] = { name: null, status: CellStates.miss, sunk: false };
+    board[y][x] = { name: null, status: CellStates.unguessed };
+    board[y][x + 1] = { name: null, status: CellStates.miss };
+    board[y][x - 1] = { name: null, status: CellStates.miss };
+    board[y + 1][x] = { name: null, status: CellStates.miss };
+    board[y - 1][x] = { name: null, status: CellStates.miss };
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(0);
@@ -179,7 +179,7 @@ describe('calculateHeatMap', () => {
     const existingBoard = Array(10)
       .fill(null)
       .map(() => Array(10).fill(null));
-    existingBoard[5][5] = { status: CellStates.hit, sunk: false };
+    existingBoard[5][5] = { status: CellStates.hit };
 
     const result = calculateHeatMap(existingBoard);
     expect(result[5][4]).toBeGreaterThan(0);
@@ -218,7 +218,7 @@ describe('shipSpaceIsAvailable', () => {
     const existingPositions = Array(10)
       .fill(null)
       .map(() => Array(10).fill(null));
-    existingPositions[0][1] = { name: 'ship', status: CellStates.unguessed, sunk: false };
+    existingPositions[0][1] = { name: 'ship', status: CellStates.unguessed };
 
     const result = shipSpaceIsAvailable({
       proposedPositions: {
@@ -236,7 +236,7 @@ describe('shipSpaceIsAvailable', () => {
     const existingBoard = Array(10)
       .fill(null)
       .map(() => Array(10).fill(null));
-    existingBoard[0][1] = { status: CellStates.miss, sunk: false };
+    existingBoard[0][1] = { status: CellStates.miss };
 
     const result = shipSpaceIsAvailable({
       proposedPositions: {

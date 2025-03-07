@@ -2,7 +2,6 @@ import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { useContext } from 'react';
 
-
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
 // Return a boolean to confirm whether the ship can fit or whether it would go off the side of the board at the proposed position
@@ -67,4 +66,3 @@ export const declareWinner = (player: 'user' | 'computer'): string => {
     return 'LOSER';
   }
 };
-

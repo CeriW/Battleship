@@ -5,7 +5,6 @@ import { calculateHeatMap } from './calculateHeatMap';
 import { ai } from '../ai-behaviour';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
 
-
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
@@ -33,30 +32,22 @@ export const useMakeComputerGuess = () => {
     if (cell?.status === CellStates.unguessed || !cell) {
       const newUserShips = [...userShips.map((row) => [...row])];
 
-      let sunk = false;
       const status = cell?.name ? CellStates.hit : CellStates.miss;
 
       newUserShips[y][x] = {
         name: cell?.name || null,
         status,
-        sunk,
       };
-
-      if (cell?.name) {
-        // If there is a ship here, check whether it is now fully sunk
-        sunk = isShipSunk(cell.name as ShipNames, newUserShips);
-      }
 
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`);
 
-      if (sunk) {
+      if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
         addToLog(`Computer sunk ${cell?.name}`);
 
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'));
         }
-
       }
     }
   }, [userShips, setUserShips, addToLog]);
