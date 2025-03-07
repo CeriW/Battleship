@@ -7,7 +7,6 @@ export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
     React.useContext(GameContext);
 
-
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -66,7 +65,6 @@ export const UserGuessBoard: React.FC = () => {
               setComputerShips(newComputerShips);
               addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
             }
-
 
             setPlayerTurn('computer');
             // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
