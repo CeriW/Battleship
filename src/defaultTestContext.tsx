@@ -13,6 +13,8 @@ export const defaultTestContext: GameContextType = {
   playerTurn: 'computer',
   log: [],
   addToLog: () => {},
+  gameEnded: false,
+  setGameEnded: jest.fn(),
 };
 
 export default defaultTestContext;
