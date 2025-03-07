@@ -44,8 +44,6 @@ export const UserGuessBoard: React.FC = () => {
             const newComputerShips = [...computerShips];
             const shipIsHere = cell && cell.name;
 
-            console.log('shipIsHere', shipIsHere);
-
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit, sunk: false };
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);

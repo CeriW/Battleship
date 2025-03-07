@@ -21,7 +21,7 @@ export const GameContext = createContext<GameContextType>({} as GameContextType)
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips()); // TODO - have user place their own ships
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
-  const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>('computer');
+  const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>(Math.random() > 0.5 ? 'user' : 'computer');
   const [log, setLog] = useState<string[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
