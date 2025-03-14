@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useRef } from 'react';
 import { PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
 
@@ -69,19 +69,45 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
   const [heatMapSimulations, setHeatMapSimulations] = useState<number>(calculateHeatMapIterations(aiLevel));
 
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const previousAiLevelRef = useRef<number>(aiLevel);
+
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
 
     // TODO - This would ideally change when the AI level changes, but since I am reworking
     // the heatmap in the future anyway, it is not worth the fuss to figure out
     // why this breaks things so badly.
-    // setHeatMapSimulations(calculateHeatMapIterations(aiLevel));
+    setHeatMapSimulations(calculateHeatMapIterations(aiLevel));
   }, [aiLevel]);
 
   const addToLog = (message: string) => {
     console.log(message);
     setLog((prevLog) => [`${message} - ${new Date().toISOString()}`, ...prevLog]);
   };
+
+  const handleAiLevelChange = (level: number) => {
+    setAiLevel(level);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      if (previousAiLevelRef.current !== level) {
+        addToLog(`AI level changed to ${level}`);
+        previousAiLevelRef.current = level;
+      }
+    }, 500);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <GameContext.Provider
@@ -97,7 +123,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         gameEnded,
         setGameEnded,
         aiLevel,
-        setAiLevel,
+        setAiLevel: handleAiLevelChange,
         aiAdjacentShipModifier,
         setAiAdjacentShipModifier,
         heatMapSimulations,

@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { HeatMapBoard } from './HeatMapBoard';
 import { initialiseHeatMapArray } from '../logic/calculateHeatMap';
+import { GameContext } from '../GameContext';
 
-// Mock the React useContext hook
-jest.mock('react', () => {
-  const originalReact = jest.requireActual('react');
-  return {
-    ...originalReact,
-    useContext: () => ({
-      heatMapSimulations: 400,
-    }),
-  };
-});
+// Mock the GameContext
+jest.mock('../GameContext', () => ({
+  GameContext: {
+    heatMapSimulations: 400,
+  },
+}));
 
 describe('Heatmap board component', () => {
   test('should render the board structure correctly', () => {
