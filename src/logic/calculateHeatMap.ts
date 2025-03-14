@@ -2,7 +2,6 @@
 import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment } from '../types';
 import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
-import { GameContext } from '../GameContext';
 
 // TODO - while this file works, it does not produce logic that a human would agree with and needs a major rework.
 

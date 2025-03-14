@@ -1,4 +1,3 @@
-import { ai } from '../ai-behaviour';
 import { CellStates, PositionArray, ShipInfo } from '../types';
 import { shipTypes } from '../App';
 import { doesShipFit, generatePotentialCoordinates } from './helpers';
@@ -36,7 +35,7 @@ export const checkValidShipState = ({
   proposedPositions,
   shipSize,
   existingPositions,
-  adjacentShipModifier = ai.adjacentShipModifier, // for testing purposes only
+  adjacentShipModifier = 0,
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
