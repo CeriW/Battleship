@@ -15,6 +15,11 @@ export const defaultTestContext: GameContextType = {
   addToLog: () => {},
   gameEnded: false,
   setGameEnded: jest.fn(),
+  aiLevel: 20,
+  aiAdjacentShipModifier: 0,
+  setAiAdjacentShipModifier: jest.fn(),
+  heatMapSimulations: 400,
+  setHeatMapSimulations: jest.fn(),
 };
 
 export default defaultTestContext;

@@ -1,4 +1,4 @@
-import { ai } from '../ai-behaviour';
+// import { ai } from '../ai-behaviour';
 import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment } from '../types';
 import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
@@ -157,7 +157,7 @@ export const shipSpaceIsAvailable = ({
   return true;
 };
 
-export const calculateHeatMap = (existingBoard: PositionArray) => {
+export const calculateHeatMap = (existingBoard: PositionArray, heatMapSimulations: number = 400) => {
   let placements = Array(10)
     .fill(null)
     .map(() => Array(10).fill(null));
@@ -174,7 +174,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
   //   }
   // }
 
-  for (let simulation = 0; simulation < ai.heatMapSimulations; simulation++) {
+  for (let simulation = 0; simulation < heatMapSimulations; simulation++) {
     const boardSimulation = generateMatchingBoard(existingBoard);
 
     // For each cell in the simulation
@@ -193,7 +193,7 @@ export const calculateHeatMap = (existingBoard: PositionArray) => {
         }
 
         if (existingBoard[y][x]?.status === CellStates.hit) {
-          placements[y][x] = ai.heatMapSimulations;
+          placements[y][x] = heatMapSimulations;
         }
       }
     }

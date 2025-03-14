@@ -1,7 +1,9 @@
-import React from 'react';
-import { ai } from '../ai-behaviour';
+import React, { useContext } from 'react';
+import { GameContext } from '../GameContext';
 
 export const HeatMapBoard = ({ positions }: any) => {
+  const { heatMapSimulations } = useContext(GameContext) ?? 400;
+
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -25,7 +27,7 @@ export const HeatMapBoard = ({ positions }: any) => {
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
-      const percentageDecimal = positions[y][x] / ai.heatMapSimulations;
+      const percentageDecimal = positions[y][x] / heatMapSimulations;
       const percentage = (percentageDecimal * 100).toFixed(1);
 
       cells.push(
@@ -39,9 +41,9 @@ export const HeatMapBoard = ({ positions }: any) => {
           }}
           data-testid="cell"
         >
-          {positions[y][x] > 0 && positions[y][x] < ai.heatMapSimulations ? percentage + '%' : ''}
+          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? percentage + '%' : ''}
           {positions[y][x] === 0 ? '❌' : ''}
-          {positions[y][x] === ai.heatMapSimulations ? '✔️' : ''}
+          {positions[y][x] === heatMapSimulations ? '✔️' : ''}
         </div>
       );
     }

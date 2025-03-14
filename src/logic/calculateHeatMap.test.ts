@@ -8,15 +8,6 @@ import { initialiseShipArray } from './placeShips';
 import { CellStates, PositionArray, ShipNames } from '../types';
 import { shipTypes } from '../App';
 
-let heatMapIterations = 100;
-
-jest.mock('../ai-behaviour', () => ({
-  ai: {
-    heatMapSimulations: heatMapIterations,
-    adjacentShipModifier: 0,
-  },
-}));
-
 describe('generateMatchingBoard', () => {
   test('generates a valid board with all ships placed', () => {
     const emptyBoard: PositionArray = Array(10)
@@ -111,8 +102,8 @@ describe('calculateHeatMap', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
 
-    const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(heatMapIterations);
+    const heatMap = calculateHeatMap(board, 400);
+    expect(heatMap[4][5]).toBe(400);
   });
 
   test('should return 0% for cells that are misses', () => {

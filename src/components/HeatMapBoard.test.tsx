@@ -3,7 +3,17 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { HeatMapBoard } from './HeatMapBoard';
 import { initialiseHeatMapArray } from '../logic/calculateHeatMap';
-import { ai } from '../ai-behaviour';
+
+// Mock the React useContext hook
+jest.mock('react', () => {
+  const originalReact = jest.requireActual('react');
+  return {
+    ...originalReact,
+    useContext: () => ({
+      heatMapSimulations: 400,
+    }),
+  };
+});
 
 describe('Heatmap board component', () => {
   test('should render the board structure correctly', () => {
@@ -28,11 +38,13 @@ describe('Heatmap board component', () => {
     const positions = initialiseHeatMapArray();
     // Set some test values
     positions[0][0] = 0; // Should show ❌
-    positions[0][1] = ai.heatMapSimulations; // Should show ✔️
-    positions[0][2] = Math.floor(ai.heatMapSimulations / 2); // Should show percentage
+    positions[0][1] = 400; // Should show ✔️
+    positions[0][2] = Math.floor(400 / 2); // Should show percentage
 
     render(<HeatMapBoard positions={positions} />);
     const cells = screen.getAllByTestId('cell');
+
+    console.log(cells);
 
     // Test cell with 0 value
     expect(cells[0]).toHaveTextContent('❌');
@@ -41,7 +53,7 @@ describe('Heatmap board component', () => {
     expect(cells[1]).toHaveTextContent('✔️');
 
     // Test cell with intermediate value
-    const expectedPercentage = ((ai.heatMapSimulations / 2 / ai.heatMapSimulations) * 100).toFixed(1);
+    const expectedPercentage = ((400 / 2 / 400) * 100).toFixed(1);
     expect(cells[2]).toHaveTextContent(`${expectedPercentage}%`);
   });
 
