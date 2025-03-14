@@ -60,7 +60,6 @@ export function App() {
       <GameBoards />
       <Log />
       <div>Difficulty: {aiLevel}</div>
-      <div>{JSON.stringify(ai, null, 2)}</div>
     </GameProvider>
   );
 }
