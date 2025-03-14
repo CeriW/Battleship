@@ -11,7 +11,9 @@ const AiSlider = () => {
 
   return (
     <div className="ai-slider-container">
-      <label htmlFor="ai-difficulty">AI Difficulty: {aiLevel}</label>
+      <label htmlFor="ai-difficulty" id="ai-difficulty-label">
+        AI Difficulty: {aiLevel}
+      </label>
       <div className="slider-row">
         <span className="slider-label">Easy</span>
         <input
