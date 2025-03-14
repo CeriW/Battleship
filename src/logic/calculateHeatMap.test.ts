@@ -111,8 +111,8 @@ describe('calculateHeatMap', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
 
-    const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(heatMapIterations);
+    const heatMap = calculateHeatMap(board, 400);
+    expect(heatMap[4][5]).toBe(400);
   });
 
   test('should return 0% for cells that are misses', () => {

@@ -2,13 +2,11 @@ import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 
-import { CellStates, PositionArray, ShipInfo } from './types';
+import { ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
 
-import { placeShips } from './logic/placeShips';
-import { difficultyClass, ai } from './ai-behaviour';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
@@ -22,7 +20,7 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -55,11 +53,13 @@ const GameBoards = () => {
 };
 
 export function App() {
+  const { aiLevel } = useContext(GameContext);
+
   return (
     <GameProvider>
       <GameBoards />
       <Log />
-      <div>Difficulty: {difficultyClass}</div>
+      <div>Difficulty: {aiLevel}</div>
       <div>{JSON.stringify(ai, null, 2)}</div>
     </GameProvider>
   );

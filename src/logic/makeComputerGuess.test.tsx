@@ -4,16 +4,10 @@ import { useMakeComputerGuess } from './makeComputerGuess';
 import { GameContext } from '../GameContext';
 import { CellStates, PositionArray, ShipNames } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
-import { ai } from '../ai-behaviour';
 import defaultTestContext from '../defaultTestContext';
 
 // Mock dependencies
 jest.mock('./calculateHeatMap');
-jest.mock('../ai-behaviour', () => ({
-  ai: {
-    heatMapSimulations: 100,
-  },
-}));
 
 describe('useMakeComputerGuess', () => {
   const mockSetUserShips = jest.fn();
@@ -37,6 +31,7 @@ describe('useMakeComputerGuess', () => {
           userShips: mockShips,
           computerShips: mockShips,
           setUserShips: mockSetUserShips,
+          heatMapSimulations: 100,
         }}
       >
         {children}
@@ -126,7 +121,7 @@ describe('useMakeComputerGuess', () => {
     const mockHeatMap = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
-    mockHeatMap[0][0] = ai.heatMapSimulations; // This is the heatMapSimulations value, should be ignored
+    mockHeatMap[0][0] = 100; // This is the heatMapSimulations value, should be ignored
     mockHeatMap[1][1] = 50; // This should be selected
     (calculateHeatMap as jest.Mock).mockReturnValue(mockHeatMap);
 
