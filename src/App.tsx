@@ -10,7 +10,7 @@ import { useMakeComputerGuess } from './logic/makeComputerGuess';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
-import AiSlider from './components/AI-slider';
+import AiSlider from './components/AiSlider';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },

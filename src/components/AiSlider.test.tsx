@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AiSlider from './AI-slider';
+import AiSlider from './AiSlider';
 import { GameContext, GameContextType, GameProvider } from '../GameContext';
 
 // Mock the GameContext
