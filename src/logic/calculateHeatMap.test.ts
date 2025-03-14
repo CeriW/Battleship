@@ -8,15 +8,6 @@ import { initialiseShipArray } from './placeShips';
 import { CellStates, PositionArray, ShipNames } from '../types';
 import { shipTypes } from '../App';
 
-let heatMapIterations = 100;
-
-jest.mock('../ai-behaviour', () => ({
-  ai: {
-    heatMapSimulations: heatMapIterations,
-    adjacentShipModifier: 0,
-  },
-}));
-
 describe('generateMatchingBoard', () => {
   test('generates a valid board with all ships placed', () => {
     const emptyBoard: PositionArray = Array(10)
