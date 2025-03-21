@@ -10,6 +10,7 @@ import { useMakeComputerGuess } from './logic/makeComputerGuess';
 import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
+import AiSlider from './components/AiSlider';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -20,7 +21,7 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -53,13 +54,11 @@ const GameBoards = () => {
 };
 
 export function App() {
-  const { aiLevel } = useContext(GameContext);
-
   return (
     <GameProvider>
       <GameBoards />
       <Log />
-      <div>Difficulty: {aiLevel}</div>
+      <AiSlider />
     </GameProvider>
   );
 }

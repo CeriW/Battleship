@@ -16,6 +16,7 @@ export const defaultTestContext: GameContextType = {
   gameEnded: false,
   setGameEnded: jest.fn(),
   aiLevel: 20,
+  setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: jest.fn(),
   heatMapSimulations: 400,

@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useRef } from 'react';
 import { PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
 
@@ -41,6 +41,7 @@ export type GameContextType = {
 
   // How 'smart' the AI is, out of 20, with 1 being the easiest and 20 being the hardest
   aiLevel: number;
+  setAiLevel: (level: number) => void;
 
   // How likely it is that the AI will allow ships to be placed touching each other, used in combination with Math.random()
   // Level 1 has 100% chance of allowing adjacent placement. The next few subsequent levels may still allow it, but have progressively less chance of doing so.
@@ -64,12 +65,19 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [log, setLog] = useState<string[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
-  const [aiLevel] = useState<number>(20);
+  const [aiLevel, setAiLevel] = useState<number>(20);
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
   const [heatMapSimulations, setHeatMapSimulations] = useState<number>(calculateHeatMapIterations(aiLevel));
 
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const previousAiLevelRef = useRef<number>(aiLevel);
+
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
+
+    // TODO - This would ideally change when the AI level changes, but since I am reworking
+    // the heatmap in the future anyway, it is not worth the fuss to figure out
+    // why this breaks things so badly.
     setHeatMapSimulations(calculateHeatMapIterations(aiLevel));
   }, [aiLevel]);
 
@@ -77,6 +85,29 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(message);
     setLog((prevLog) => [`${message} - ${new Date().toISOString()}`, ...prevLog]);
   };
+
+  const handleAiLevelChange = (level: number) => {
+    setAiLevel(level);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      if (previousAiLevelRef.current !== level) {
+        addToLog(`AI level changed to ${level}`);
+        previousAiLevelRef.current = level;
+      }
+    }, 500);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <GameContext.Provider
@@ -92,6 +123,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         gameEnded,
         setGameEnded,
         aiLevel,
+        setAiLevel: handleAiLevelChange,
         aiAdjacentShipModifier,
         setAiAdjacentShipModifier,
         heatMapSimulations,
