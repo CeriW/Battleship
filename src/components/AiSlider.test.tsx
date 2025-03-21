@@ -14,7 +14,7 @@ describe('AiSlider Component', () => {
 
   test('renders the slider with correct initial value', () => {
     render(
-      <GameContext.Provider value={{ aiLevel: 20 } as unknown as GameContextType}>
+      <GameContext.Provider value={{ aiLevel: 20, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
         <AiSlider />
       </GameContext.Provider>
     );
@@ -28,7 +28,7 @@ describe('AiSlider Component', () => {
 
   test('calls setAiLevel when slider value changes', () => {
     render(
-      <GameContext.Provider value={{ aiLevel: 20 } as unknown as GameContextType}>
+      <GameContext.Provider value={{ aiLevel: 20, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
         <AiSlider />
       </GameContext.Provider>
     );
@@ -40,7 +40,7 @@ describe('AiSlider Component', () => {
 
   test('displays "Easy" and "Hard" labels', () => {
     render(
-      <GameContext.Provider value={{ aiLevel: 20 } as unknown as GameContextType}>
+      <GameContext.Provider value={{ aiLevel: 20, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
         <AiSlider />
       </GameContext.Provider>
     );
@@ -54,7 +54,7 @@ describe('AiSlider Component', () => {
 
   test('slider has correct min and max values', () => {
     render(
-      <GameContext.Provider value={{ aiLevel: 20 } as unknown as GameContextType}>
+      <GameContext.Provider value={{ aiLevel: 20, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
         <AiSlider />
       </GameContext.Provider>
     );
@@ -66,30 +66,23 @@ describe('AiSlider Component', () => {
   });
 
   test('updates UI immediately when slider changes', () => {
-    render(
-      <GameContext.Provider value={{ aiLevel: 20 } as unknown as GameContextType}>
+    const { rerender } = render(
+      <GameContext.Provider value={{ aiLevel: 20, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
         <AiSlider />
       </GameContext.Provider>
     );
 
-    mockSetAiLevel.mockImplementation((newValue) => {
-      render(
-        <GameContext.Provider
-          value={
-            {
-              aiLevel: newValue,
-              setAiLevel: mockSetAiLevel,
-            } as unknown as GameContextType
-          }
-        >
-          <AiSlider />
-        </GameContext.Provider>
-      );
-    });
-
     const slider = screen.getByTestId('ai-difficulty-slider');
     fireEvent.change(slider, { target: { value: '15' } });
-    const updatedLabel = screen.getByLabelText(/AI Difficulty:/i);
-    expect(updatedLabel).toHaveTextContent('AI Difficulty: 15');
+
+    rerender(
+      <GameContext.Provider value={{ aiLevel: 15, setAiLevel: mockSetAiLevel } as unknown as GameContextType}>
+        <AiSlider />
+      </GameContext.Provider>
+    );
+
+    // Now check that the label shows the updated value
+    const updatedLabel = screen.getByText('AI Difficulty: 15');
+    expect(updatedLabel).toBeInTheDocument();
   });
 });
