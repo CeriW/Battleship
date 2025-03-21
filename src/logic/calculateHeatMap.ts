@@ -291,6 +291,111 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
         }
       }
     }
+
+    // If this cell is a miss, make adjacent cells colder
+    if (thisCell?.status === CellStates.miss) {
+      // MARK ADJACENT CELLS AS HOT INDISCRIMINATELY ---------------------------
+
+      // If we're not in the first row, and the cell above is not a hit, then it's hot
+      if (y > 0 && isHeatable(heatMap[y - 1][x])) {
+        heatMap[y - 1][x] /= 2;
+      }
+
+      // If we're not in the last row, and the cell below is not a hit, then it's hot
+      if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
+        heatMap[y + 1][x] /= 2;
+      }
+
+      // If we're not in the last column, and the cell to the right is not a hit, then it's hot
+      if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
+        heatMap[y][x + 1] /= 2;
+      }
+
+      // If we're not in the first column, and the cell to the left is not a hit, then it's hot
+      if (x > 0 && isHeatable(heatMap[y][x - 1])) {
+        heatMap[y][x - 1] /= 2;
+      }
+
+      // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
+
+      // Is the cell to the left also a hit?
+      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.hit) {
+        // If it is, we're going to keep going left until we find empty space and make it even hotter
+        for (let i = x; i >= 0; i--) {
+          if (existingBoard[y][i]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[y][i])) {
+            heatMap[y][i] /= 2;
+
+            if (i > 0 && isHeatable(heatMap[y][i - 1])) {
+              heatMap[y][i - 1] /= 2;
+            }
+            break;
+          }
+        }
+      }
+
+      // Is the cell to the right also a hit?
+      if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.hit) {
+        // If it is, we're going to keep going right until we find empty space and make it even hotter
+        for (let i = x; i < existingBoard[y].length; i++) {
+          if (existingBoard[y][i]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[y][i])) {
+            heatMap[y][i] /= 2;
+
+            if (i < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
+              heatMap[y][i + 1] /= 2;
+            }
+            break;
+          }
+        }
+      }
+
+      // GO DOWN THE COLUMNS FOR EXTRA HEAT -----------------------------------
+
+      // Is the cell above also a hit?
+      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.hit) {
+        // If it is, we're going to keep going up until we find empty space and make it even hotter
+        for (let i = y; i >= 0; i--) {
+          if (existingBoard[i][x]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[i][x])) {
+            heatMap[i][x] /= 2;
+
+            if (i >= 0 && isHeatable(heatMap[i - 1][x])) {
+              heatMap[i - 1][x] /= 2;
+            }
+            break;
+          }
+        }
+      }
+
+      // Is the cell below also a hit?
+      if (y < existingBoard.length - 1 && existingBoard[y + 1][x]?.status === CellStates.hit) {
+        // If it is, we're going to keep going up until we find empty space and make it even hotter
+        for (let i = y; i < existingBoard.length; i++) {
+          if (existingBoard[i][x]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[i][x])) {
+            heatMap[i][x] /= 2;
+
+            if (i < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
+              heatMap[i + 1][x] /= 2;
+            }
+            break;
+          }
+        }
+      }
+    }
   }
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
