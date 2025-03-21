@@ -21,7 +21,9 @@ export const HeatMapBoard = ({ positions }: any) => {
   let maxValue = 0;
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
-      maxValue = Math.min(Math.max(maxValue, positions[y][x]), heatMapSimulations);
+      if (positions[y][x] !== 400) {
+        maxValue = Math.max(maxValue, positions[y][x]);
+      }
     }
   }
 

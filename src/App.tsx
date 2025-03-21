@@ -46,15 +46,15 @@ const GameBoards = () => {
   //   status: CellStates.hit,
   // };
 
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
-      if (userShips[i][j]?.name === 'carrier') {
-        userShips[i][j]!.status = CellStates.hit;
-        i = 100;
-        j = 100;
-      }
-    }
-  }
+  // for (let i = 0; i < 10; i++) {
+  //   for (let j = 0; j < 10; j++) {
+  //     if (userShips[i][j]?.name === 'carrier') {
+  //       userShips[i][j]!.status = CellStates.hit;
+  //       i = 100;
+  //       j = 100;
+  //     }
+  //   }
+  // }
 
   return (
     <div id="boards">

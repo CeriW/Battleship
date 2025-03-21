@@ -377,7 +377,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
             proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
             shipSize: ship.size,
             existingPositions: existingBoard,
-            adjacentShipModifier: 0,
+
+            // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
+            // What is the solution?
+            adjacentShipModifier: Math.random(),
             forHeatMap: true,
           })
         ) {
@@ -389,7 +392,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
             proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
             shipSize: ship.size,
             existingPositions: existingBoard,
-            adjacentShipModifier: 0,
+
+            // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
+            // What is the solution?
+            adjacentShipModifier: Math.random(),
             forHeatMap: true,
           })
         ) {
@@ -402,7 +408,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
               shipSize: ship.size,
               existingPositions: existingBoard,
-              adjacentShipModifier: 0,
+
+              // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
+              // What is the solution?
+              adjacentShipModifier: Math.random(),
               forHeatMap: true,
             })
           ) {
@@ -416,7 +425,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
               shipSize: ship.size,
               existingPositions: existingBoard,
-              adjacentShipModifier: 0,
+
+              // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
+              // What is the solution?
+              adjacentShipModifier: Math.random(),
               forHeatMap: true,
             })
           ) {
