@@ -291,6 +291,45 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   // will result in 10 for a space where every ship could fit horizontally and vertically (e.g. a 5x5 gap)
   // and everything in between
 
+  // for (let i = 0; i < 100; i++) {
+  //   let y = Math.floor(i / 10);
+  //   let x = i % 10;
+
+  //   let heatMultiplier = 0;
+
+  //   if (existingBoard[y][x]?.status !== CellStates.hit) {
+  //     shipTypes.forEach((ship) => {
+  //       if (
+  //         checkValidShipState({
+  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
+  //           shipSize: ship.size,
+  //           existingPositions: existingBoard,
+  //           adjacentShipModifier: 1,
+  //           forHeatMap: true,
+  //         })
+  //       ) {
+  //         heatMultiplier += 1;
+  //       }
+
+  //       if (
+  //         checkValidShipState({
+  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
+  //           shipSize: ship.size,
+  //           existingPositions: existingBoard,
+  //           adjacentShipModifier: 1,
+  //           forHeatMap: true,
+  //         })
+  //       ) {
+  //         heatMultiplier += 1;
+  //       }
+  //     });
+  //   }
+
+  //   heatMap[y][x] += heatMultiplier / 10;
+
+  //   // heatMap[y][x].heatMultiplier = heatMultiplier;
+  // }
+
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
     let x = i % 10;
@@ -305,7 +344,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
             shipSize: ship.size,
             existingPositions: existingBoard,
             adjacentShipModifier: 1,
-            mayOverlapHits: true,
+            forHeatMap: true,
           })
         ) {
           heatMultiplier += 1;
@@ -317,11 +356,43 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
             shipSize: ship.size,
             existingPositions: existingBoard,
             adjacentShipModifier: 1,
-            mayOverlapHits: true,
+            forHeatMap: true,
           })
         ) {
           heatMultiplier += 1;
         }
+
+        // if (
+        //   checkValidShipState({
+        //     proposedPositions: {
+        //       startingRow: y > ship.size ? y - ship.size : y,
+        //       startingColumn: x,
+        //       alignment: 'horizontal',
+        //     },
+        //     shipSize: ship.size,
+        //     existingPositions: existingBoard,
+        //     adjacentShipModifier: 1,
+        //     forHeatMap: true,
+        //   })
+        // ) {
+        //   heatMultiplier += 1;
+        // }
+
+        // if (
+        //   checkValidShipState({
+        //     proposedPositions: {
+        //       startingRow: y,
+        //       startingColumn: x > ship.size ? x - ship.size : x,
+        //       alignment: 'vertical',
+        //     },
+        //     shipSize: ship.size,
+        //     existingPositions: existingBoard,
+        //     adjacentShipModifier: 1,
+        //     forHeatMap: true,
+        //   })
+        // ) {
+        //   heatMultiplier += 1;
+        // }
       });
     }
 
