@@ -229,7 +229,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               heatMap[y][i] += 0.5;
             }
 
-            if (i - 1 >= 0 && isHeatable(heatMap[y][i - 1])) {
+            // otherwise give the cell adjacent to that one a bit of heat
+            if (isHeatable(heatMap[y][i - 1])) {
               heatMap[y][i - 1] += 1;
             }
             break;
@@ -253,7 +254,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               heatMap[y][i] += 0.5;
             }
 
-            if (i + 1 < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
+            // otherwise give the cell adjacent to that one a bit of heat
+            if (isHeatable(heatMap[y][i + 1])) {
               heatMap[y][i + 1] += 1;
             }
             break;
@@ -279,7 +281,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               heatMap[i][x] += 0.5;
             }
 
-            if (i - 1 >= 0 && isHeatable(heatMap[i - 1][x])) {
+            // otherwise give the cell adjacent to that one a bit of heat
+            if (isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x] += 1;
             }
             break;
@@ -303,7 +306,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               heatMap[i][x] += 0.5;
             }
 
-            if (i + 1 < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
+            // otherwise give the cell adjacent to that one a bit of heat
+            if (isHeatable(heatMap[i + 1][x])) {
               heatMap[i + 1][x] += 1;
             }
             break;
