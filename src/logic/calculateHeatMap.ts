@@ -10,7 +10,7 @@ export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
 
   for (let i = 0; i < 10; i++) {
-    array[i] = new Array(10).fill(0);
+    array[i] = new Array(10).fill(HeatValues.unguessed);
   }
   return array;
 }
@@ -171,8 +171,11 @@ const HeatValues = {
 };
 
 //  Cells that have been determined to be hit or miss cannot have further heat applied
-const isHeatable = (cell: number | null): boolean => cell !== HeatValues.hit && cell !== HeatValues.miss;
-// const isHeatable = (cell: number): boolean => true;
+
+const isHeatable = (cell: number | null): boolean => {
+  if (cell === HeatValues.hit || cell === HeatValues.miss) return false;
+  return true;
+};
 
 export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => {
   const heatMap = initialiseHeatMapArray();
@@ -182,10 +185,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
     let y = Math.floor(i / 10);
     let x = i % 10;
 
-    // heatMap[y][x] = { heat: existingBoard[y][x]?.status ?? 0, heatMultiplier: 1 };
-    // heatMap[y][x] = getHeat(existingBoard[y][x]?.status ?? CellStates.unguessed);
     heatMap[y][x] = HeatValues[existingBoard[y][x]?.status ?? CellStates.unguessed];
-    // console.log(heatMap[y][x]);
   }
 
   // Now we've figured out where all the hits are, we can mark the adjacent cells as possible hits
@@ -198,29 +198,29 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // MARK ADJACENT CELLS AS HOT INDISCRIMINATELY ---------------------------
 
       // If we're not in the first row, and the cell above is not a hit, then it's hot
-      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.unguessed) {
+      if (y > 0 && isHeatable(heatMap[y - 1][x])) {
         heatMap[y - 1][x] += 1;
       }
 
       // If we're not in the last row, and the cell below is not a hit, then it's hot
-      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.unguessed) {
+      if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
         heatMap[y + 1][x] += 1;
       }
 
       // If we're not in the last column, and the cell to the right is not a hit, then it's hot
-      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.unguessed) {
+      if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
         heatMap[y][x + 1] += 1;
       }
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
-      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.unguessed) {
+      if (x > 0 && isHeatable(heatMap[y][x - 1])) {
         heatMap[y][x - 1] += 1;
       }
 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
 
       // Is the cell to the left also a hit?
-      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.unguessed) {
+      if (x > 0 && isHeatable(heatMap[y][x - 1])) {
         // If it is, we're going to keep going left until we find empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
           if (existingBoard[y][i]?.status !== CellStates.hit) {
@@ -235,7 +235,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell to the right also a hit?
-      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.unguessed) {
+      if (x < 9 && isHeatable(heatMap[y][x + 1])) {
         // If it is, we're going to keep going right until we find empty space and make it even hotter
         for (let i = x; i < 9; i++) {
           if (existingBoard[y][i]?.status !== CellStates.hit) {
@@ -252,7 +252,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // GO DOWN THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
-      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.unguessed) {
+      if (y > 0 && isHeatable(heatMap[y - 1][x])) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
           if (existingBoard[i][x]?.status !== CellStates.hit) {
@@ -267,7 +267,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.unguessed) {
+      if (y < 9 && isHeatable(heatMap[y + 1][x])) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i < 10; i++) {
           if (existingBoard[i][x]?.status !== CellStates.hit) {
@@ -392,7 +392,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       });
     }
 
-    heatMap[y][x] += heatMultiplier / 10;
+    // heatMap[y][x] += heatMultiplier / 2;
 
     // heatMap[y][x].heatMultiplier = heatMultiplier;
   }

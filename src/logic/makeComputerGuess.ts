@@ -25,13 +25,18 @@ export const useMakeComputerGuess = () => {
       }
     });
 
+    // Create a list of all cells that have the most heat, and pick one at random
+    const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
+      if (value === maxValue) {
+        indices.push(index);
+      }
+      return indices;
+    }, []);
+    maxValueIndex = maxValueIndices[Math.floor(Math.random() * maxValueIndices.length)];
+
     const y = Math.floor(maxValueIndex / 10);
     const x = maxValueIndex % 10;
 
-    // if (y < 0 || x < 0) {
-    //   return;
-    // }
-    // if (y >= 0 && x >= 0) {
     const cell = userShips[y][x];
     // If this is an unguessed or empty cell
     if (cell?.status === CellStates.unguessed || !cell) {

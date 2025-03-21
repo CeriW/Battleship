@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 
-import { ShipInfo } from './types';
+import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
@@ -36,6 +36,11 @@ const GameBoards = () => {
       setPlayerTurn('user');
     }
   }, [playerTurn]);
+
+  userShips[5][5] = {
+    name: 'carrier',
+    status: CellStates.hit,
+  };
 
   return (
     <div id="boards">
