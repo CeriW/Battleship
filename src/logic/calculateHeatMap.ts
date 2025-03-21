@@ -179,7 +179,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
     let x = i % 10;
 
     heatMap[y][x] = HeatValues[existingBoard[y][x]?.status as keyof typeof HeatValues] ?? HeatValues.unguessed;
-    console.log('initial heatMap', heatMap);
   }
 
   // Now we've figured out where all the hits are, we can mark the adjacent cells as possible hits
@@ -225,6 +224,11 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
+            // If we're at the start of the row, give that cell extra heat
+            if (i === 0) {
+              heatMap[y][i] += 0.5;
+            }
+
             if (i - 1 >= 0 && isHeatable(heatMap[y][i - 1])) {
               heatMap[y][i - 1] += 1;
             }
@@ -234,9 +238,9 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell to the right also a hit?
-      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.hit) {
+      if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.hit) {
         // If it is, we're going to keep going right until we find empty space and make it even hotter
-        for (let i = x; i < 9; i++) {
+        for (let i = x; i < existingBoard[y].length; i++) {
           if (existingBoard[y][i]?.status === CellStates.miss) {
             break;
           }
@@ -244,7 +248,12 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
-            if (i + 1 < 10 && isHeatable(heatMap[y][i + 1])) {
+            // If we're at the end of the row, give that cell extra heat
+            if (i === existingBoard[y].length - 1) {
+              heatMap[y][i] += 0.5;
+            }
+
+            if (i + 1 < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
               heatMap[y][i + 1] += 1;
             }
             break;
@@ -265,6 +274,11 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
+            // If we're at the top of the column, give that cell extra heat
+            if (i === 0) {
+              heatMap[i][x] += 0.5;
+            }
+
             if (i - 1 >= 0 && isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x] += 1;
             }
@@ -274,9 +288,9 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.hit) {
+      if (y < existingBoard.length - 1 && existingBoard[y + 1][x]?.status === CellStates.hit) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
-        for (let i = y; i < 10; i++) {
+        for (let i = y; i < existingBoard.length; i++) {
           if (existingBoard[i][x]?.status === CellStates.miss) {
             break;
           }
@@ -284,7 +298,12 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            if (i + 1 < 10 && isHeatable(heatMap[i + 1][x])) {
+            // If we're at the bottom of the column, give that cell extra heat
+            if (i === existingBoard.length - 1) {
+              heatMap[i][x] += 0.5;
+            }
+
+            if (i + 1 < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
               heatMap[i + 1][x] += 1;
             }
             break;
@@ -341,72 +360,72 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   //   // heatMap[y][x].heatMultiplier = heatMultiplier;
   // }
 
-  // for (let i = 0; i < 100; i++) {
-  //   let y = Math.floor(i / 10);
-  //   let x = i % 10;
+  for (let i = 0; i < 100; i++) {
+    let y = Math.floor(i / 10);
+    let x = i % 10;
 
-  //   let heatMultiplier = 0;
+    let heatMultiplier = 0;
 
-  //   if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
-  //     shipTypes.forEach((ship) => {
-  //       if (
-  //         checkValidShipState({
-  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
-  //           shipSize: ship.size,
-  //           existingPositions: existingBoard,
-  //           adjacentShipModifier: 0,
-  //           forHeatMap: true,
-  //         })
-  //       ) {
-  //         heatMultiplier += 1;
-  //       }
+    if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
+      shipTypes.forEach((ship) => {
+        if (
+          checkValidShipState({
+            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
+            shipSize: ship.size,
+            existingPositions: existingBoard,
+            adjacentShipModifier: 0,
+            forHeatMap: true,
+          })
+        ) {
+          heatMultiplier += 1;
+        }
 
-  //       if (
-  //         checkValidShipState({
-  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
-  //           shipSize: ship.size,
-  //           existingPositions: existingBoard,
-  //           adjacentShipModifier: 0,
-  //           forHeatMap: true,
-  //         })
-  //       ) {
-  //         heatMultiplier += 1;
-  //       }
+        if (
+          checkValidShipState({
+            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
+            shipSize: ship.size,
+            existingPositions: existingBoard,
+            adjacentShipModifier: 0,
+            forHeatMap: true,
+          })
+        ) {
+          heatMultiplier += 1;
+        }
 
-  //       if (x - ship.size >= 0) {
-  //         if (
-  //           checkValidShipState({
-  //             proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
-  //             shipSize: ship.size,
-  //             existingPositions: existingBoard,
-  //             adjacentShipModifier: 0,
-  //             forHeatMap: true,
-  //           })
-  //         ) {
-  //           heatMultiplier += 1;
-  //         }
-  //       }
+        if (x - ship.size >= 0) {
+          if (
+            checkValidShipState({
+              proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
+              shipSize: ship.size,
+              existingPositions: existingBoard,
+              adjacentShipModifier: 0,
+              forHeatMap: true,
+            })
+          ) {
+            heatMultiplier += 1;
+          }
+        }
 
-  //       if (y - ship.size >= 0) {
-  //         if (
-  //           checkValidShipState({
-  //             proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
-  //             shipSize: ship.size,
-  //             existingPositions: existingBoard,
-  //             adjacentShipModifier: 0,
-  //             forHeatMap: true,
-  //           })
-  //         ) {
-  //           heatMultiplier += 1;
-  //         }
-  //       }
-  //     });
-  //   }
+        if (y - ship.size >= 0) {
+          if (
+            checkValidShipState({
+              proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
+              shipSize: ship.size,
+              existingPositions: existingBoard,
+              adjacentShipModifier: 0,
+              forHeatMap: true,
+            })
+          ) {
+            heatMultiplier += 1;
+          }
+        }
+      });
+    }
 
-  //   // heatMap[y][x] += heatMultiplier / 2;
+    heatMap[y][x] += heatMultiplier / (shipTypes.length * 4);
 
-  //   // heatMap[y][x].heatMultiplier = heatMultiplier;
-  // }
+    // heatMap[y][x].heatMultiplier = heatMultiplier;
+  }
 
   console.log(heatMap);
 
