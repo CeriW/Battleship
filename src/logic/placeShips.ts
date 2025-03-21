@@ -1,4 +1,4 @@
-import { CellStates, PositionArray, ShipInfo } from '../types';
+import { Alignment, CellStates, PositionArray, ShipInfo } from '../types';
 import { shipTypes } from '../App';
 import { doesShipFit, generatePotentialCoordinates } from './helpers';
 
@@ -36,12 +36,16 @@ export const checkValidShipState = ({
   shipSize,
   existingPositions,
   adjacentShipModifier = 0,
+  forHeatMap = false,
 }: {
-  proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
+  proposedPositions: { startingRow: number; startingColumn: number; alignment: Alignment };
   shipSize: number;
   existingPositions: PositionArray;
   adjacentShipModifier?: number;
+  forHeatMap?: boolean;
 }): boolean => {
+  const mayOverlapHits = forHeatMap;
+
   // First check if ship would go out of bounds
 
   if (!doesShipFit(proposedPositions, shipSize)) return false;
@@ -56,7 +60,7 @@ export const checkValidShipState = ({
 
   potentialCoordinates.forEach(({ x, y }) => {
     let thisCell = existingPositions[y][x];
-    if (thisCell) valid = false;
+    if (thisCell && !mayOverlapHits) valid = false;
 
     if (!adjacentShipsAllowable) {
       if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above

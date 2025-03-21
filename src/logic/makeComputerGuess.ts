@@ -13,8 +13,10 @@ export const useMakeComputerGuess = () => {
     const heatMap = calculateHeatMap(userShips);
     const flatHeatMap = heatMap.flat();
 
+    console.log(flatHeatMap);
+
     let maxValue = -1;
-    let maxValueIndex = -1;
+    let maxValueIndex = 0;
 
     flatHeatMap.forEach((value, index) => {
       if (value !== heatMapSimulations && value > maxValue) {
@@ -22,6 +24,15 @@ export const useMakeComputerGuess = () => {
         maxValueIndex = index;
       }
     });
+
+    // Create a list of all cells that have the most heat, and pick one at random
+    const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
+      if (value === maxValue) {
+        indices.push(index);
+      }
+      return indices;
+    }, []);
+    maxValueIndex = maxValueIndices[Math.floor(Math.random() * maxValueIndices.length)];
 
     const y = Math.floor(maxValueIndex / 10);
     const x = maxValueIndex % 10;
@@ -49,5 +60,6 @@ export const useMakeComputerGuess = () => {
         }
       }
     }
+    // }
   }, [userShips, setUserShips, addToLog, heatMapSimulations]);
 };
