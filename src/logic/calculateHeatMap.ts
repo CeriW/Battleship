@@ -358,6 +358,9 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
             // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
             // What is the solution?
+            // adjust the modifier based on AI which creates more randomness?
+            // Adjust makeComputerGuess to not guess in proximity to other guesses?
+
             adjacentShipModifier: Math.random(),
             forHeatMap: true,
           })
@@ -370,9 +373,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
             proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
             shipSize: ship.size,
             existingPositions: existingBoard,
-
-            // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
-            // What is the solution?
             adjacentShipModifier: Math.random(),
             forHeatMap: true,
           })
@@ -386,9 +386,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
               shipSize: ship.size,
               existingPositions: existingBoard,
-
-              // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
-              // What is the solution?
               adjacentShipModifier: Math.random(),
               forHeatMap: true,
             })
@@ -403,9 +400,6 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
               proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
               shipSize: ship.size,
               existingPositions: existingBoard,
-
-              // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
-              // What is the solution?
               adjacentShipModifier: Math.random(),
               forHeatMap: true,
             })
@@ -416,6 +410,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       });
     }
 
+    // TODO - does this need modifying to account for sunk ships?
     heatMap[y][x] += heatMultiplier / (shipTypes.length * 4);
 
     // heatMap[y][x].heatMultiplier = heatMultiplier;
