@@ -28,8 +28,8 @@ export const HeatMapBoard = ({ positions }: any) => {
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
-      const percentageDecimal = positions[y][x] / heatMapSimulations;
-      const percentage = (percentageDecimal * 100).toFixed(1);
+      // const percentageDecimal = positions[y][x] / heatMapSimulations;
+      // const percentage = (percentageDecimal * 100).toFixed(1);
 
       cells.push(
         <div
@@ -37,12 +37,12 @@ export const HeatMapBoard = ({ positions }: any) => {
           className="cell"
           style={{
             // TODO - Not sure if I'm sticking with this. Should move to CSS if I do.
-            backgroundColor: positions[y][x] === maxValue ? 'black' : `rgba(255, 0, 0, ${percentageDecimal})`,
+            backgroundColor: positions[y][x] === maxValue ? 'black' : `rgba(255, 0, 0, ${positions[y][x] / 10})`,
             color: positions[y][x] === maxValue ? 'white' : `black`,
           }}
           data-testid="cell"
         >
-          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? percentage + '%' : ''}
+          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x]}` : ''}
           {positions[y][x] === 0 ? '❌' : ''}
           {positions[y][x] === heatMapSimulations ? '✔️' : ''}
         </div>

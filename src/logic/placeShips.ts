@@ -36,11 +36,13 @@ export const checkValidShipState = ({
   shipSize,
   existingPositions,
   adjacentShipModifier = 0,
+  mayOverlapHits = false,
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: 'horizontal' | 'vertical' };
   shipSize: number;
   existingPositions: PositionArray;
   adjacentShipModifier?: number;
+  mayOverlapHits?: boolean;
 }): boolean => {
   // First check if ship would go out of bounds
 
@@ -56,7 +58,7 @@ export const checkValidShipState = ({
 
   potentialCoordinates.forEach(({ x, y }) => {
     let thisCell = existingPositions[y][x];
-    if (thisCell) valid = false;
+    if (thisCell && !mayOverlapHits) valid = false;
 
     if (!adjacentShipsAllowable) {
       if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above

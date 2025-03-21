@@ -13,8 +13,10 @@ export const useMakeComputerGuess = () => {
     const heatMap = calculateHeatMap(userShips);
     const flatHeatMap = heatMap.flat();
 
+    console.log(flatHeatMap);
+
     let maxValue = -1;
-    let maxValueIndex = -1;
+    let maxValueIndex = 0;
 
     flatHeatMap.forEach((value, index) => {
       if (value !== heatMapSimulations && value > maxValue) {
@@ -26,6 +28,10 @@ export const useMakeComputerGuess = () => {
     const y = Math.floor(maxValueIndex / 10);
     const x = maxValueIndex % 10;
 
+    // if (y < 0 || x < 0) {
+    //   return;
+    // }
+    // if (y >= 0 && x >= 0) {
     const cell = userShips[y][x];
     // If this is an unguessed or empty cell
     if (cell?.status === CellStates.unguessed || !cell) {
@@ -49,5 +55,6 @@ export const useMakeComputerGuess = () => {
         }
       }
     }
+    // }
   }, [userShips, setUserShips, addToLog, heatMapSimulations]);
 };
