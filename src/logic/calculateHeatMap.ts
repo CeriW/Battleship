@@ -198,29 +198,29 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // MARK ADJACENT CELLS AS HOT INDISCRIMINATELY ---------------------------
 
       // If we're not in the first row, and the cell above is not a hit, then it's hot
-      if (y > 0 && existingBoard[y - 1][x]?.status !== CellStates.hit) {
+      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.unguessed) {
         heatMap[y - 1][x] += 1;
       }
 
       // If we're not in the last row, and the cell below is not a hit, then it's hot
-      if (y < 9 && existingBoard[y + 1][x]?.status !== CellStates.hit) {
+      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.unguessed) {
         heatMap[y + 1][x] += 1;
       }
 
       // If we're not in the last column, and the cell to the right is not a hit, then it's hot
-      if (x < 9 && existingBoard[y][x + 1]?.status !== CellStates.hit) {
+      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.unguessed) {
         heatMap[y][x + 1] += 1;
       }
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
-      if (x > 0 && existingBoard[y][x - 1]?.status !== CellStates.hit) {
+      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.unguessed) {
         heatMap[y][x - 1] += 1;
       }
 
-      // GO ALONG THE ROWS FOR EXTRA HEAT --------------------------------------
+      // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
 
       // Is the cell to the left also a hit?
-      if (x > 0 && existingBoard[y][x - 1]?.status !== CellStates.hit) {
+      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.unguessed) {
         // If it is, we're going to keep going left until we find empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
           if (existingBoard[y][i]?.status !== CellStates.hit) {
@@ -235,7 +235,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell to the right also a hit?
-      if (x < 10 && existingBoard[y][x + 1]?.status !== CellStates.hit) {
+      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.unguessed) {
         // If it is, we're going to keep going right until we find empty space and make it even hotter
         for (let i = x; i < 9; i++) {
           if (existingBoard[y][i]?.status !== CellStates.hit) {
@@ -249,10 +249,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
         }
       }
 
-      // GO ALONG THE COLUMNS FOR EXTRA HEAT -----------------------------------
+      // GO DOWN THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
-      if (y > 0 && existingBoard[y - 1][x]?.status !== CellStates.hit) {
+      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.unguessed) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
           if (existingBoard[i][x]?.status !== CellStates.hit) {
@@ -267,7 +267,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && existingBoard[y + 1][x]?.status !== CellStates.hit) {
+      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.unguessed) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i < 10; i++) {
           if (existingBoard[i][x]?.status !== CellStates.hit) {
