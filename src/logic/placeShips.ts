@@ -56,7 +56,7 @@ export const checkValidShipState = ({
   // Figure out whether the spaces are occupied by other ships, as well as adjacent spaces where ai disallows
   let valid = true;
 
-  const adjacentShipsAllowable = forHeatMap || Math.random() + adjacentShipModifier >= 1;
+  const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
 
   potentialCoordinates.forEach(({ x, y }) => {
     let thisCell = existingPositions[y][x];
