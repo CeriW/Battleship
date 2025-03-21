@@ -38,13 +38,13 @@ export const HeatMapBoard = ({ positions }: any) => {
           style={{
             // TODO - Not sure if I'm sticking with this. Should move to CSS if I do.
             backgroundColor: positions[y][x] === maxValue ? 'black' : `rgba(255, 0, 0, ${positions[y][x] / 10})`,
-            color: positions[y][x] === maxValue ? 'white' : `black`,
+            color: positions[y][x] >= maxValue ? 'white' : `black`,
           }}
           data-testid="cell"
         >
           {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x]}` : ''}
           {positions[y][x] === 0 ? '❌' : ''}
-          {positions[y][x] === heatMapSimulations ? '✔️' : ''}
+          {positions[y][x] >= heatMapSimulations ? '✔️' : ''}
         </div>
       );
     }

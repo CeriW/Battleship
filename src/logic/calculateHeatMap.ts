@@ -3,6 +3,7 @@ import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment } from '../types';
 import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
 import { checkValidShipState } from './placeShips';
+import { isShipSunk } from './helpers';
 
 // TODO - while this file works, it does not produce logic that a human would agree with and needs a major rework.
 
@@ -158,12 +159,6 @@ export const shipSpaceIsAvailable = ({
   return true;
 };
 
-const getHeat = (status: CellStates): number | null => {
-  if (status === CellStates.hit) return 400;
-  if (status === CellStates.miss) return 0;
-  return 0;
-};
-
 const HeatValues = {
   hit: 400,
   miss: 0,
@@ -171,7 +166,6 @@ const HeatValues = {
 };
 
 //  Cells that have been determined to be hit or miss cannot have further heat applied
-
 const isHeatable = (cell: number | null): boolean => {
   if (cell === HeatValues.hit || cell === HeatValues.miss) return false;
   return true;
@@ -179,13 +173,13 @@ const isHeatable = (cell: number | null): boolean => {
 
 export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => {
   const heatMap = initialiseHeatMapArray();
-  console.log(existingBoard);
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
     let x = i % 10;
 
-    heatMap[y][x] = HeatValues[existingBoard[y][x]?.status ?? CellStates.unguessed];
+    heatMap[y][x] = HeatValues[existingBoard[y][x]?.status as keyof typeof HeatValues] ?? HeatValues.unguessed;
+    console.log('initial heatMap', heatMap);
   }
 
   // Now we've figured out where all the hits are, we can mark the adjacent cells as possible hits
@@ -194,7 +188,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
     let x = i % 10;
 
     //  If this cell is a hit...
-    if (existingBoard[y][x]?.status === CellStates.hit) {
+    const thisCell = existingBoard[y][x];
+    if (thisCell?.status === CellStates.hit && thisCell?.name && !isShipSunk(thisCell!.name, existingBoard)) {
       // MARK ADJACENT CELLS AS HOT INDISCRIMINATELY ---------------------------
 
       // If we're not in the first row, and the cell above is not a hit, then it's hot
@@ -220,13 +215,17 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
 
       // Is the cell to the left also a hit?
-      if (x > 0 && isHeatable(heatMap[y][x - 1])) {
+      if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.hit) {
         // If it is, we're going to keep going left until we find empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
-          if (existingBoard[y][i]?.status !== CellStates.hit) {
+          if (existingBoard[y][i]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
-            if (i - 1 >= 0 && existingBoard[y][i - 1]?.status !== CellStates.hit) {
+            if (i - 1 >= 0 && isHeatable(heatMap[y][i - 1])) {
               heatMap[y][i - 1] += 1;
             }
             break;
@@ -235,13 +234,17 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell to the right also a hit?
-      if (x < 9 && isHeatable(heatMap[y][x + 1])) {
+      if (x < 9 && existingBoard[y][x + 1]?.status === CellStates.hit) {
         // If it is, we're going to keep going right until we find empty space and make it even hotter
         for (let i = x; i < 9; i++) {
-          if (existingBoard[y][i]?.status !== CellStates.hit) {
+          if (existingBoard[y][i]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
-            if (i + 1 < 10 && existingBoard[y][i + 1]?.status !== CellStates.hit) {
+            if (i + 1 < 10 && isHeatable(heatMap[y][i + 1])) {
               heatMap[y][i + 1] += 1;
             }
             break;
@@ -252,13 +255,17 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       // GO DOWN THE COLUMNS FOR EXTRA HEAT -----------------------------------
 
       // Is the cell above also a hit?
-      if (y > 0 && isHeatable(heatMap[y - 1][x])) {
+      if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.hit) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i >= 0; i--) {
-          if (existingBoard[i][x]?.status !== CellStates.hit) {
+          if (existingBoard[i][x]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            if (i - 1 >= 0 && existingBoard[i - 1][x]?.status !== CellStates.hit) {
+            if (i - 1 >= 0 && isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x] += 1;
             }
             break;
@@ -267,13 +274,17 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
       }
 
       // Is the cell below also a hit?
-      if (y < 9 && isHeatable(heatMap[y + 1][x])) {
+      if (y < 9 && existingBoard[y + 1][x]?.status === CellStates.hit) {
         // If it is, we're going to keep going up until we find empty space and make it even hotter
         for (let i = y; i < 10; i++) {
-          if (existingBoard[i][x]?.status !== CellStates.hit) {
+          if (existingBoard[i][x]?.status === CellStates.miss) {
+            break;
+          }
+
+          if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            if (i + 1 < 10 && existingBoard[i + 1][x]?.status !== CellStates.hit) {
+            if (i + 1 < 10 && isHeatable(heatMap[i + 1][x])) {
               heatMap[i + 1][x] += 1;
             }
             break;
@@ -330,72 +341,72 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   //   // heatMap[y][x].heatMultiplier = heatMultiplier;
   // }
 
-  for (let i = 0; i < 100; i++) {
-    let y = Math.floor(i / 10);
-    let x = i % 10;
+  // for (let i = 0; i < 100; i++) {
+  //   let y = Math.floor(i / 10);
+  //   let x = i % 10;
 
-    let heatMultiplier = 0;
+  //   let heatMultiplier = 0;
 
-    if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
-      shipTypes.forEach((ship) => {
-        if (
-          checkValidShipState({
-            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
-            shipSize: ship.size,
-            existingPositions: existingBoard,
-            adjacentShipModifier: 0,
-            forHeatMap: true,
-          })
-        ) {
-          heatMultiplier += 1;
-        }
+  //   if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
+  //     shipTypes.forEach((ship) => {
+  //       if (
+  //         checkValidShipState({
+  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
+  //           shipSize: ship.size,
+  //           existingPositions: existingBoard,
+  //           adjacentShipModifier: 0,
+  //           forHeatMap: true,
+  //         })
+  //       ) {
+  //         heatMultiplier += 1;
+  //       }
 
-        if (
-          checkValidShipState({
-            proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
-            shipSize: ship.size,
-            existingPositions: existingBoard,
-            adjacentShipModifier: 0,
-            forHeatMap: true,
-          })
-        ) {
-          heatMultiplier += 1;
-        }
+  //       if (
+  //         checkValidShipState({
+  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
+  //           shipSize: ship.size,
+  //           existingPositions: existingBoard,
+  //           adjacentShipModifier: 0,
+  //           forHeatMap: true,
+  //         })
+  //       ) {
+  //         heatMultiplier += 1;
+  //       }
 
-        if (x - ship.size >= 0) {
-          if (
-            checkValidShipState({
-              proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
-              shipSize: ship.size,
-              existingPositions: existingBoard,
-              adjacentShipModifier: 0,
-              forHeatMap: true,
-            })
-          ) {
-            heatMultiplier += 1;
-          }
-        }
+  //       if (x - ship.size >= 0) {
+  //         if (
+  //           checkValidShipState({
+  //             proposedPositions: { startingRow: y, startingColumn: x - ship.size, alignment: 'horizontal' },
+  //             shipSize: ship.size,
+  //             existingPositions: existingBoard,
+  //             adjacentShipModifier: 0,
+  //             forHeatMap: true,
+  //           })
+  //         ) {
+  //           heatMultiplier += 1;
+  //         }
+  //       }
 
-        if (y - ship.size >= 0) {
-          if (
-            checkValidShipState({
-              proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
-              shipSize: ship.size,
-              existingPositions: existingBoard,
-              adjacentShipModifier: 0,
-              forHeatMap: true,
-            })
-          ) {
-            heatMultiplier += 1;
-          }
-        }
-      });
-    }
+  //       if (y - ship.size >= 0) {
+  //         if (
+  //           checkValidShipState({
+  //             proposedPositions: { startingRow: y - ship.size, startingColumn: x, alignment: 'vertical' },
+  //             shipSize: ship.size,
+  //             existingPositions: existingBoard,
+  //             adjacentShipModifier: 0,
+  //             forHeatMap: true,
+  //           })
+  //         ) {
+  //           heatMultiplier += 1;
+  //         }
+  //       }
+  //     });
+  //   }
 
-    // heatMap[y][x] += heatMultiplier / 2;
+  //   // heatMap[y][x] += heatMultiplier / 2;
 
-    // heatMap[y][x].heatMultiplier = heatMultiplier;
-  }
+  //   // heatMap[y][x].heatMultiplier = heatMultiplier;
+  // }
 
   console.log(heatMap);
 
