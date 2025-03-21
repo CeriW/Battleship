@@ -224,13 +224,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
-            // If we're at the start of the row, give that cell extra heat
-            if (i === 0) {
-              heatMap[y][i] += 0.5;
-            }
-
-            // otherwise give the cell adjacent to that one a bit of heat
-            if (isHeatable(heatMap[y][i - 1])) {
+            if (i > 0 && isHeatable(heatMap[y][i - 1])) {
               heatMap[y][i - 1] += 1;
             }
             break;
@@ -249,13 +243,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[y][i])) {
             heatMap[y][i] += 1;
 
-            // If we're at the end of the row, give that cell extra heat
-            if (i === existingBoard[y].length - 1) {
-              heatMap[y][i] += 0.5;
-            }
-
-            // otherwise give the cell adjacent to that one a bit of heat
-            if (isHeatable(heatMap[y][i + 1])) {
+            if (i < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
               heatMap[y][i + 1] += 1;
             }
             break;
@@ -276,13 +264,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            // If we're at the top of the column, give that cell extra heat
-            if (i === 0) {
-              heatMap[i][x] += 0.5;
-            }
-
-            // otherwise give the cell adjacent to that one a bit of heat
-            if (isHeatable(heatMap[i - 1][x])) {
+            if (i >= 0 && isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x] += 1;
             }
             break;
@@ -301,13 +283,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            // If we're at the bottom of the column, give that cell extra heat
-            if (i === existingBoard.length - 1) {
-              heatMap[i][x] += 0.5;
-            }
-
-            // otherwise give the cell adjacent to that one a bit of heat
-            if (isHeatable(heatMap[i + 1][x])) {
+            if (i < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
               heatMap[i + 1][x] += 1;
             }
             break;
@@ -372,6 +348,8 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
     if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
       shipTypes.forEach((ship) => {
+        if (isShipSunk(ship.name, existingBoard)) return;
+
         if (
           checkValidShipState({
             proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
