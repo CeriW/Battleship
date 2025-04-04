@@ -213,7 +213,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
 
-      // Is the cell to the left also a hit?
+      // Is the cell to the right also a hit?
       if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.hit) {
         // If it is, we're going to keep going left until we find empty space and make it even hotter
         for (let i = x; i >= 0; i--) {
@@ -232,7 +232,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
         }
       }
 
-      // Is the cell to the right also a hit?
+      // Is the cell to the left also a hit?
       if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.hit) {
         // If it is, we're going to keep going right until we find empty space and make it even hotter
         for (let i = x; i < existingBoard[y].length; i++) {

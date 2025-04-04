@@ -223,13 +223,65 @@ describe('calculateHeatMap', () => {
     board[y][x] = { name: null, status: CellStates.miss };
     const heatMap = calculateHeatMap(board);
 
-    console.log(heatMap);
-
     expect(heatMap[y][x]).toBe(0);
     expect(heatMap[y][x + 1]).toBe(0.75);
     expect(heatMap[y][x - 1]).toBe(0.75);
     expect(heatMap[y + 1][x]).toBe(0.75);
     expect(heatMap[y - 1][x]).toBe(0.75);
+  });
+
+  test('a miss cell next to a hit cell should have a heat of 0', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: null, status: CellStates.miss };
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][6]).toBe(0);
+  });
+
+  test('two horizontal hits then unguessed and empty cells should have appropriate heat', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: 'carrier', status: CellStates.hit };
+    board[4][6] = { name: 'carrier', status: CellStates.hit };
+    board[4][7] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+
+    console.log(board);
+
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][6]).toBe(400);
+
+    // Cells to right
+    expect(heatMap[4][7]).toBeGreaterThan(2);
+    expect(heatMap[4][8]).toBeGreaterThan(2);
+    expect(heatMap[4][7]).toBeGreaterThan(heatMap[4][8]);
+
+    // Cells to left
+    expect(heatMap[4][4]).toBeGreaterThan(2);
+    expect(heatMap[4][3]).toBeGreaterThan(2);
+    expect(heatMap[4][4]).toBeGreaterThan(heatMap[4][3]);
+  });
+
+  test('two vertical hits then unguessed and empty cells should have appropriate heat', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: 'carrier', status: CellStates.hit };
+    board[5][5] = { name: 'carrier', status: CellStates.hit };
+    board[6][5] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+
+    console.log(board);
+
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[5][5]).toBe(400);
+
+    // Cells to right
+    expect(heatMap[6][5]).toBeGreaterThan(2);
+    expect(heatMap[7][5]).toBeGreaterThan(2);
+    expect(heatMap[6][5]).toBeGreaterThan(heatMap[7][5]);
+
+    // Cells to left
+    expect(heatMap[4][5]).toBeGreaterThan(2);
+    expect(heatMap[3][5]).toBeGreaterThan(2);
+    expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
   //   test('should handle multiple hits in a row', () => {
