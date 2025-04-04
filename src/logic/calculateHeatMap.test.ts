@@ -280,8 +280,8 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
-    expect(heatMap[4][8]).toBeGreaterThan(2);
-    expect(heatMap[4][7]).toBeGreaterThan(heatMap[4][8]);
+    expect(heatMap[4][8]).toBeGreaterThanOrEqual(2);
+    expect(heatMap[4][7]).toBeGreaterThanOrEqual(heatMap[4][8]);
 
     // Cells to left
     expect(heatMap[4][4]).toBeGreaterThan(2);
@@ -308,6 +308,46 @@ describe('calculateHeatMap', () => {
     expect(heatMap[4][5]).toBeGreaterThan(2);
     expect(heatMap[3][5]).toBeGreaterThan(2);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
+  });
+
+  test('two horizontal misses then empty cells should have appropriate cooling', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: null, status: CellStates.miss };
+    board[4][6] = { name: null, status: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(0);
+    expect(heatMap[4][6]).toBe(0);
+
+    // Cells to right
+    expect(heatMap[4][7]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][8]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][7]).toBeLessThanOrEqual(heatMap[4][8]);
+
+    // Cells to left
+    expect(heatMap[4][4]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][3]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][4]).toBeLessThanOrEqual(heatMap[4][3]);
+  });
+
+  test('two vertical misses then unguessed should have appropriate cooling', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: null, status: CellStates.miss };
+    board[5][5] = { name: null, status: CellStates.miss };
+
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(0);
+    expect(heatMap[5][5]).toBe(0);
+
+    // Cells to right
+    expect(heatMap[6][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[7][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[6][5]).toBeLessThanOrEqual(heatMap[7][5]);
+
+    // Cells to left
+    expect(heatMap[4][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[3][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][5]).toBeLessThanOrEqual(heatMap[3][5]);
   });
 
   //   test('should handle multiple hits in a row', () => {

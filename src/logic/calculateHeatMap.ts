@@ -5,8 +5,6 @@ import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } fr
 import { checkValidShipState } from './placeShips';
 import { isShipSunk } from './helpers';
 
-// TODO - while this file works, it does not produce logic that a human would agree with and needs a major rework.
-
 const HeatValues = {
   hit: 400,
   miss: 0,
@@ -517,11 +515,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
     // TODO - does this need modifying to account for sunk ships?
     heatMap[y][x] += heatMultiplier / (shipTypes.length * 4);
-
-    // heatMap[y][x].heatMultiplier = heatMultiplier;
   }
-
-  console.log(heatMap);
 
   return heatMap;
 };
