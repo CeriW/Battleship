@@ -264,7 +264,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           if (isHeatable(heatMap[i][x])) {
             heatMap[i][x] += 1;
 
-            if (i >= 0 && isHeatable(heatMap[i - 1][x])) {
+            if (i > 0 && isHeatable(heatMap[i - 1][x])) {
               heatMap[i - 1][x] += 1;
             }
             break;
@@ -298,39 +298,39 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
       // If we're not in the first row, and the cell above is a miss, then it's cool
       if (y > 0 && isHeatable(heatMap[y - 1][x])) {
-        heatMap[y - 1][x] /= 2;
+        heatMap[y - 1][x] *= 0.75;
       }
 
       // If we're not in the last row, and the cell below is a miss, then it's cool
       if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
-        heatMap[y + 1][x] /= 2;
+        heatMap[y + 1][x] *= 0.75;
       }
 
       // If we're not in the last column, and the cell to the right is a miss, then it's cool
       if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
-        heatMap[y][x + 1] /= 2;
+        heatMap[y][x + 1] *= 0.75;
       }
 
       // If we're not in the first column, and the cell to the left is a miss, then it's cool
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
-        heatMap[y][x - 1] /= 2;
+        heatMap[y][x - 1] *= 0.75;
       }
 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA COOLING ---------------------
 
       // Is the cell to the left also a miss?
       if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.miss) {
-        // If it is, we're going to keep going left until we find a hit and make it even hotter
+        // If it is, we're going to keep going left until we find a miss and make it even cooler
         for (let i = x; i >= 0; i--) {
           if (existingBoard[y][i]?.status === CellStates.hit) {
             break;
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] /= 2;
+            heatMap[y][i] *= 0.75;
 
             if (i > 0 && isHeatable(heatMap[y][i - 1])) {
-              heatMap[y][i - 1] /= 2;
+              heatMap[y][i - 1] *= 0.75;
             }
             break;
           }
@@ -339,17 +339,17 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
 
       // Is the cell to the right also a miss?
       if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.miss) {
-        // If it is, we're going to keep going right until we find a hit and make it even cooler
+        // If it is, we're going to keep going right until we find a miss and make it even cooler
         for (let i = x; i < existingBoard[y].length; i++) {
           if (existingBoard[y][i]?.status === CellStates.hit) {
             break;
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] /= 2;
+            heatMap[y][i] *= 0.75;
 
             if (i < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
-              heatMap[y][i + 1] /= 2;
+              heatMap[y][i + 1] *= 0.75;
             }
             break;
           }
@@ -367,10 +367,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] /= 2;
+            heatMap[i][x] *= 0.75;
 
-            if (i >= 0 && isHeatable(heatMap[i - 1][x])) {
-              heatMap[i - 1][x] /= 2;
+            if (i > 0 && isHeatable(heatMap[i - 1][x])) {
+              heatMap[i - 1][x] *= 0.75;
             }
             break;
           }
@@ -386,10 +386,10 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] /= 2;
+            heatMap[i][x] *= 0.75;
 
             if (i < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
-              heatMap[i + 1][x] /= 2;
+              heatMap[i + 1][x] *= 0.75;
             }
             break;
           }

@@ -41,6 +41,8 @@ export const HeatMapBoard = ({ positions }: any) => {
             // TODO - Not sure if I'm sticking with this. Should move to CSS if I do.
             backgroundColor: positions[y][x] === maxValue ? 'black' : `rgba(255, 0, 0, ${positions[y][x] / 10})`,
             color: positions[y][x] >= maxValue ? 'white' : `black`,
+            overflow: 'hidden',
+            textAlign: 'left',
           }}
           data-testid="cell"
         >
