@@ -39,7 +39,7 @@ describe('Heatmap board component', () => {
     // Set test values
     positions[0][0] = 0; // Should show ❌
     positions[0][1] = 400; // Should show ✔️
-    positions[0][2] = Math.floor(400 / 2); // Should show percentage
+    positions[0][2] = 200; // Should show 200
 
     render(<HeatMapBoard positions={positions} />);
 
@@ -53,8 +53,7 @@ describe('Heatmap board component', () => {
     expect(cells[1]).toHaveTextContent('✔️');
 
     // Test cell with intermediate value (positions[0][2])
-    const expectedPercentage = ((400 / 2 / 400) * 100).toFixed(1);
-    expect(cells[2]).toHaveTextContent(`${expectedPercentage}%`);
+    expect(cells[2]).toHaveTextContent(`200`);
   });
 
   test('should handle empty positions array', () => {

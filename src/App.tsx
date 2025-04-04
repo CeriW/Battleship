@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 
-import { ShipInfo } from './types';
+import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
 import HeatMapBoard from './components/HeatMapBoard';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
@@ -36,6 +36,25 @@ const GameBoards = () => {
       setPlayerTurn('user');
     }
   }, [playerTurn]);
+
+  // userShips[5][5] = {
+  //   name: 'carrier',
+  //   status: CellStates.hit,
+  // };
+  // userShips[5][6] = {
+  //   name: 'carrier',
+  //   status: CellStates.hit,
+  // };
+
+  // for (let i = 0; i < 10; i++) {
+  //   for (let j = 0; j < 10; j++) {
+  //     if (userShips[i][j]?.name === 'carrier') {
+  //       userShips[i][j]!.status = CellStates.hit;
+  //       i = 100;
+  //       j = 100;
+  //     }
+  //   }
+  // }
 
   return (
     <div id="boards">
