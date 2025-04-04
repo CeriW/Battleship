@@ -1,6 +1,7 @@
 import {
   calculateHeatMap,
   generateMatchingBoard,
+  generateValidShipPlacement,
   initialiseHeatMapArray,
   shipSpaceIsAvailable,
 } from './calculateHeatMap';
@@ -109,6 +110,36 @@ describe('generateMatchingBoard', () => {
     const result = generateMatchingBoard(existingBoard);
     expect(result[0][0]?.name).toBeTruthy();
     expect(result[1][0]?.name).toBeTruthy();
+  });
+});
+
+describe('generateValidShipPlacement', () => {
+  test('returns number between 0 and 9', () => {
+    const result = generateValidShipPlacement(5, 5, 'horizontal');
+    expect(result).toBeGreaterThanOrEqual(0);
+    expect(result).toBeLessThanOrEqual(9);
+  });
+
+  test('for horizontal ship in first column, always returns 0', () => {
+    const result = generateValidShipPlacement(0, 5, 'horizontal');
+    expect(result).toBe(0);
+  });
+
+  test('for horizontal ship in last column, cannot exist in first 5 columns', () => {
+    // A 5 long ship in last column will always start in column 5 (occupying columns 5, 6, 7, 8, 9)
+    const result = generateValidShipPlacement(9, 5, 'horizontal');
+    expect(result).toBeGreaterThanOrEqual(5);
+  });
+
+  test('for vertical ship in first row, always returns 0', () => {
+    const result = generateValidShipPlacement(0, 5, 'vertical');
+    expect(result).toBe(0);
+  });
+
+  test('for vertical ship in last row, cannot exist in first 5 rows', () => {
+    // A 5 long ship in last column will always start in column 5 (occupying columns 5, 6, 7, 8, 9)
+    const result = generateValidShipPlacement(9, 5, 'vertical');
+    expect(result).toBeGreaterThanOrEqual(5);
   });
 });
 
