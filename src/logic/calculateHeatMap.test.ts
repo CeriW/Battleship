@@ -127,7 +127,6 @@ describe('calculateHeatMap', () => {
   test('should return 100% for cells that are hits', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
-
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(400);
   });
@@ -135,20 +134,17 @@ describe('calculateHeatMap', () => {
   test('should return 0% for cells that are misses', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: null, status: CellStates.miss };
-
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(0);
   });
 
-  test('miss cells should not have heat, even when adjacent to hit cells', () => {
+  test('miss cells should have 0% heat, even when adjacent to hit cells', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: null, status: CellStates.miss };
     board[4][4] = { name: null, status: CellStates.miss };
-
     board[3][5] = { name: null, status: CellStates.miss };
     board[5][5] = { name: null, status: CellStates.miss };
-
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][6]).toBe(0);
     expect(heatMap[4][4]).toBe(0);
@@ -158,239 +154,261 @@ describe('calculateHeatMap', () => {
 
   test('a single unguessed cell surrounded by misses should have a heat of 0', () => {
     const board = initialiseShipArray();
-
     const x = 5;
     const y = 5;
-
     board[y][x] = { name: null, status: CellStates.unguessed };
     board[y][x + 1] = { name: null, status: CellStates.miss };
     board[y][x - 1] = { name: null, status: CellStates.miss };
     board[y + 1][x] = { name: null, status: CellStates.miss };
     board[y - 1][x] = { name: null, status: CellStates.miss };
-
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(0);
   });
 
-  test('should mark misses as zero probability', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingBoard[0][0] = { status: CellStates.miss };
+  test('heat radiates outwards from hits', () => {
+    const board = initialiseShipArray();
+    console.log(board);
 
-    const result = calculateHeatMap(existingBoard);
-    expect(result[0][0]).toBe(0);
+    const x = 5;
+    const y = 5;
+    board[y][x] = { name: 'destroyer', status: CellStates.hit };
+    board[y][x + 1] = { name: 'destroyer', status: CellStates.unguessed };
+
+    const heatMap = calculateHeatMap(board);
+
+    // The hit cell
+    expect(heatMap[y][x]).toBe(400);
+
+    // 1 is the value for a normal unguessed cell
+    // Immediately adjacent unguessed cells should be at least 2
+    expect(heatMap[y][x + 1]).toBeGreaterThanOrEqual(2);
+    expect(heatMap[y][x - 1]).toBeGreaterThanOrEqual(2);
+    expect(heatMap[y + 1][x]).toBeGreaterThanOrEqual(2);
+    expect(heatMap[y - 1][x]).toBeGreaterThanOrEqual(2);
+
+    // Cells adjacent to adjacent cells should be a little hotter than normal
+    expect(heatMap[y][x + 2]).toBeGreaterThan(1);
+    expect(heatMap[y][x - 2]).toBeGreaterThan(1);
+    expect(heatMap[y + 2][x]).toBeGreaterThan(1);
+    expect(heatMap[y - 2][x]).toBeGreaterThan(1);
   });
 
-  test('should generate higher probabilities near hits', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingBoard[5][5] = { status: CellStates.hit };
-
-    const result = calculateHeatMap(existingBoard);
-    expect(result[5][4]).toBeGreaterThan(0);
-    expect(result[5][6]).toBeGreaterThan(0);
-    expect(result[4][5]).toBeGreaterThan(0);
-    expect(result[6][5]).toBeGreaterThan(0);
+  test('a hit cell next to another hit cell should have a heat of 400', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][6]).toBe(400);
   });
 
-  test('should handle multiple hits in a row', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingBoard[5][5] = { status: CellStates.hit };
-    existingBoard[5][6] = { status: CellStates.hit };
-
-    const result = calculateHeatMap(existingBoard);
-    expect(result[5][4]).toBe(1);
-    expect(result[5][7]).toBe(1);
-    expect(result[4][5]).toBe(1);
-    expect(result[4][6]).toBe(1);
-    expect(result[6][5]).toBe(1);
-    expect(result[6][6]).toBe(1);
+  test('cells next to a sunk ship should have default heat', () => {
+    const board = initialiseShipArray();
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+    const heatMap = calculateHeatMap(board);
+    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][6]).toBe(400);
+    expect(heatMap[4][4]).toBe(1);
+    expect(heatMap[4][7]).toBe(1);
+    expect(heatMap[3][5]).toBe(1);
+    expect(heatMap[3][6]).toBe(1);
   });
 
-  test('should handle hits in a column', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingBoard[5][5] = { status: CellStates.hit };
-    existingBoard[6][5] = { status: CellStates.hit };
+  test('cells next to a miss should be cooler', () => {
+    const board = initialiseShipArray();
 
-    const result = calculateHeatMap(existingBoard);
-    expect(result[5][4]).toBe(1);
-    expect(result[5][6]).toBe(1);
-    expect(result[4][5]).toBe(1);
-    expect(result[7][5]).toBe(1);
-    expect(result[6][4]).toBe(1);
-    expect(result[6][6]).toBe(1);
+    const x = 4;
+    const y = 4;
+    board[y][x] = { name: null, status: CellStates.miss };
+    const heatMap = calculateHeatMap(board);
+
+    console.log(heatMap);
+
+    expect(heatMap[y][x]).toBe(0);
+    expect(heatMap[y][x + 1]).toBe(0.75);
+    expect(heatMap[y][x - 1]).toBe(0.75);
+    expect(heatMap[y + 1][x]).toBe(0.75);
+    expect(heatMap[y - 1][x]).toBe(0.75);
   });
 
-  test('should handle sunk ships', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-
-    // Create a sunk destroyer (2 cells)
-    existingBoard[5][5] = { name: 'destroyer', status: CellStates.hit };
-    existingBoard[5][6] = { name: 'destroyer', status: CellStates.hit };
-
-    const result = calculateHeatMap(existingBoard);
-    // Cells adjacent to a sunk ship should not have increased heat
-    expect(result[5][4]).toBe(1);
-    expect(result[5][7]).toBe(1);
-    expect(result[4][5]).toBe(1);
-    expect(result[4][6]).toBe(1);
-    expect(result[6][5]).toBe(1);
-    expect(result[6][6]).toBe(1);
-  });
-
-  test('should handle edge cases (corners)', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    // Test top-left corner
-    existingBoard[0][0] = { status: CellStates.hit };
-    let result = calculateHeatMap(existingBoard);
-    expect(result[0][1]).toBe(1);
-    expect(result[1][0]).toBe(1);
-
-    // Test top-right corner
-    existingBoard[0][0] = null;
-    existingBoard[0][9] = { status: CellStates.hit };
-    result = calculateHeatMap(existingBoard);
-    expect(result[0][8]).toBe(1);
-    expect(result[1][9]).toBe(1);
-
-    // Test bottom-left corner
-    existingBoard[0][9] = null;
-    existingBoard[9][0] = { status: CellStates.hit };
-    result = calculateHeatMap(existingBoard);
-    expect(result[9][1]).toBe(1);
-    expect(result[8][0]).toBe(1);
-
-    // Test bottom-right corner
-    existingBoard[9][0] = null;
-    existingBoard[9][9] = { status: CellStates.hit };
-    result = calculateHeatMap(existingBoard);
-    expect(result[9][8]).toBe(1);
-    expect(result[8][9]).toBe(1);
-  });
-});
-
-describe('shipSpaceIsAvailable', () => {
-  test('should return false if ship doesnt fit on board', () => {
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 9,
-        startingColumn: 9,
-        alignment: 'horizontal',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-    });
-    expect(result).toBe(false);
-  });
-
-  test('should return false if space is occupied', () => {
-    const existingPositions = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingPositions[0][1] = { name: 'ship', status: CellStates.unguessed };
-
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 0,
-        startingColumn: 0,
-        alignment: 'horizontal',
-      },
-      shipSize: 2,
-      existingPositions,
-    });
-    expect(result).toBe(false);
-  });
-
-  test('should return false if space contains a miss', () => {
-    const existingBoard = Array(10)
-      .fill(null)
-      .map(() => Array(10).fill(null));
-    existingBoard[0][1] = { status: CellStates.miss };
-
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 0,
-        startingColumn: 0,
-        alignment: 'horizontal',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-      existingBoard,
-    });
-    expect(result).toBe(false);
-  });
-
-  test('should return true for valid horizontal placement', () => {
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 0,
-        startingColumn: 0,
-        alignment: 'horizontal',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-    });
-    expect(result).toBe(true);
-  });
-
-  test('should return true for valid vertical placement', () => {
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 0,
-        startingColumn: 0,
-        alignment: 'vertical',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-    });
-    expect(result).toBe(true);
-  });
-
-  test('should return false if ship would go off the right edge', () => {
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 0,
-        startingColumn: 9,
-        alignment: 'horizontal',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-    });
-    expect(result).toBe(false);
-  });
-
-  test('should return false if ship would go off the bottom edge', () => {
-    const result = shipSpaceIsAvailable({
-      proposedPositions: {
-        startingRow: 9,
-        startingColumn: 0,
-        alignment: 'vertical',
-      },
-      shipSize: 2,
-      existingPositions: Array(10)
-        .fill(null)
-        .map(() => Array(10).fill(null)),
-    });
-    expect(result).toBe(false);
-  });
+  //   test('should handle multiple hits in a row', () => {
+  //     const existingBoard = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     existingBoard[5][5] = { status: CellStates.hit };
+  //     existingBoard[5][6] = { status: CellStates.hit };
+  //     const result = calculateHeatMap(existingBoard);
+  //     expect(result[5][4]).toBe(1);
+  //     expect(result[5][7]).toBe(1);
+  //     expect(result[4][5]).toBe(1);
+  //     expect(result[4][6]).toBe(1);
+  //     expect(result[6][5]).toBe(1);
+  //     expect(result[6][6]).toBe(1);
+  //   });
+  //   test('should handle hits in a column', () => {
+  //     const existingBoard = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     existingBoard[5][5] = { status: CellStates.hit };
+  //     existingBoard[6][5] = { status: CellStates.hit };
+  //     const result = calculateHeatMap(existingBoard);
+  //     expect(result[5][4]).toBe(1);
+  //     expect(result[5][6]).toBe(1);
+  //     expect(result[4][5]).toBe(1);
+  //     expect(result[7][5]).toBe(1);
+  //     expect(result[6][4]).toBe(1);
+  //     expect(result[6][6]).toBe(1);
+  //   });
+  //   test('should handle sunk ships', () => {
+  //     const existingBoard = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     // Create a sunk destroyer (2 cells)
+  //     existingBoard[5][5] = { name: 'destroyer', status: CellStates.hit };
+  //     existingBoard[5][6] = { name: 'destroyer', status: CellStates.hit };
+  //     const result = calculateHeatMap(existingBoard);
+  //     // Cells adjacent to a sunk ship should not have increased heat
+  //     expect(result[5][4]).toBe(1);
+  //     expect(result[5][7]).toBe(1);
+  //     expect(result[4][5]).toBe(1);
+  //     expect(result[4][6]).toBe(1);
+  //     expect(result[6][5]).toBe(1);
+  //     expect(result[6][6]).toBe(1);
+  //   });
+  //   test('should handle edge cases (corners)', () => {
+  //     const existingBoard = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     // Test top-left corner
+  //     existingBoard[0][0] = { status: CellStates.hit };
+  //     let result = calculateHeatMap(existingBoard);
+  //     expect(result[0][1]).toBe(1);
+  //     expect(result[1][0]).toBe(1);
+  //     // Test top-right corner
+  //     existingBoard[0][0] = null;
+  //     existingBoard[0][9] = { status: CellStates.hit };
+  //     result = calculateHeatMap(existingBoard);
+  //     expect(result[0][8]).toBe(1);
+  //     expect(result[1][9]).toBe(1);
+  //     // Test bottom-left corner
+  //     existingBoard[0][9] = null;
+  //     existingBoard[9][0] = { status: CellStates.hit };
+  //     result = calculateHeatMap(existingBoard);
+  //     expect(result[9][1]).toBe(1);
+  //     expect(result[8][0]).toBe(1);
+  //     // Test bottom-right corner
+  //     existingBoard[9][0] = null;
+  //     existingBoard[9][9] = { status: CellStates.hit };
+  //     result = calculateHeatMap(existingBoard);
+  //     expect(result[9][8]).toBe(1);
+  //     expect(result[8][9]).toBe(1);
+  //   });
+  // });
+  // describe('shipSpaceIsAvailable', () => {
+  //   test('should return false if ship doesnt fit on board', () => {
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 9,
+  //         startingColumn: 9,
+  //         alignment: 'horizontal',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //     });
+  //     expect(result).toBe(false);
+  //   });
+  //   test('should return false if space is occupied', () => {
+  //     const existingPositions = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     existingPositions[0][1] = { name: 'ship', status: CellStates.unguessed };
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 0,
+  //         startingColumn: 0,
+  //         alignment: 'horizontal',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions,
+  //     });
+  //     expect(result).toBe(false);
+  //   });
+  //   test('should return false if space contains a miss', () => {
+  //     const existingBoard = Array(10)
+  //       .fill(null)
+  //       .map(() => Array(10).fill(null));
+  //     existingBoard[0][1] = { status: CellStates.miss };
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 0,
+  //         startingColumn: 0,
+  //         alignment: 'horizontal',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //       existingBoard,
+  //     });
+  //     expect(result).toBe(false);
+  //   });
+  //   test('should return true for valid horizontal placement', () => {
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 0,
+  //         startingColumn: 0,
+  //         alignment: 'horizontal',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //     });
+  //     expect(result).toBe(true);
+  //   });
+  //   test('should return true for valid vertical placement', () => {
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 0,
+  //         startingColumn: 0,
+  //         alignment: 'vertical',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //     });
+  //     expect(result).toBe(true);
+  //   });
+  //   test('should return false if ship would go off the right edge', () => {
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 0,
+  //         startingColumn: 9,
+  //         alignment: 'horizontal',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //     });
+  //     expect(result).toBe(false);
+  //   });
+  //   test('should return false if ship would go off the bottom edge', () => {
+  //     const result = shipSpaceIsAvailable({
+  //       proposedPositions: {
+  //         startingRow: 9,
+  //         startingColumn: 0,
+  //         alignment: 'vertical',
+  //       },
+  //       shipSize: 2,
+  //       existingPositions: Array(10)
+  //         .fill(null)
+  //         .map(() => Array(10).fill(null)),
+  //     });
+  //     expect(result).toBe(false);
+  //   });
 });

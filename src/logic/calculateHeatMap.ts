@@ -377,7 +377,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
         }
       }
 
-      // Is the cell below also a hit?
+      // Is the cell below also a miss?
       if (y < existingBoard.length - 1 && existingBoard[y + 1][x]?.status === CellStates.miss) {
         // If it is, we're going to keep going up until we find a hit and make it even cooler
         for (let i = y; i < existingBoard.length; i++) {
