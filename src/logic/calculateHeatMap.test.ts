@@ -350,12 +350,22 @@ describe('calculateHeatMap', () => {
     expect(heatMap[4][5]).toBeLessThanOrEqual(heatMap[3][5]);
   });
 
-  test('a hit and adjacent miss to retain max/min heat', () => {
+  test('a hit and adjacent misses to retain max/min heat', () => {
     const board = initialiseShipArray();
+
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
-    board[4][6] = { name: null, status: CellStates.miss };
+
+    board[4][6] = { name: null, status: CellStates.miss }; // to right
+    board[4][4] = { name: null, status: CellStates.miss }; // to left
+
+    board[3][5] = { name: null, status: CellStates.miss }; // above
+    board[5][5] = { name: null, status: CellStates.miss }; // below
+
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(400);
     expect(heatMap[4][6]).toBe(0);
+    expect(heatMap[4][4]).toBe(0);
+    expect(heatMap[3][5]).toBe(0);
+    expect(heatMap[5][5]).toBe(0);
   });
 });
