@@ -397,51 +397,7 @@ export const calculateHeatMap = (existingBoard: PositionArray): HeatMapArray => 
   }
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
-  // Calculated as such:
-  // +1 for every ship type that can fit here horizontally
-  // +1 for every ship type that can fit here vertically
-  // will result in 0 for a space where no ships can fit (e.g. a 1x1 gap)
-  // will result in 10 for a space where every ship could fit horizontally and vertically (e.g. a 5x5 gap)
-  // and everything in between
-
-  // for (let i = 0; i < 100; i++) {
-  //   let y = Math.floor(i / 10);
-  //   let x = i % 10;
-
-  //   let heatMultiplier = 0;
-
-  //   if (existingBoard[y][x]?.status !== CellStates.hit) {
-  //     shipTypes.forEach((ship) => {
-  //       if (
-  //         checkValidShipState({
-  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'horizontal' },
-  //           shipSize: ship.size,
-  //           existingPositions: existingBoard,
-  //           adjacentShipModifier: 1,
-  //           forHeatMap: true,
-  //         })
-  //       ) {
-  //         heatMultiplier += 1;
-  //       }
-
-  //       if (
-  //         checkValidShipState({
-  //           proposedPositions: { startingRow: y, startingColumn: x, alignment: 'vertical' },
-  //           shipSize: ship.size,
-  //           existingPositions: existingBoard,
-  //           adjacentShipModifier: 1,
-  //           forHeatMap: true,
-  //         })
-  //       ) {
-  //         heatMultiplier += 1;
-  //       }
-  //     });
-  //   }
-
-  //   heatMap[y][x] += heatMultiplier / 10;
-
-  //   // heatMap[y][x].heatMultiplier = heatMultiplier;
-  // }
+  // e.g. a 1x1 gap surrounded by misses can't possible have a ship in it
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
