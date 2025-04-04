@@ -7,6 +7,12 @@ import { isShipSunk } from './helpers';
 
 // TODO - while this file works, it does not produce logic that a human would agree with and needs a major rework.
 
+const HeatValues = {
+  hit: 400,
+  miss: 0,
+  unguessed: 1,
+};
+
 export function initialiseHeatMapArray(): HeatMapArray {
   let array: HeatMapArray = [];
 
@@ -16,7 +22,7 @@ export function initialiseHeatMapArray(): HeatMapArray {
   return array;
 }
 
-const generateValidShipPlacement = (startingPoint: number, size: number, alignment: Alignment): number => {
+export const generateValidShipPlacement = (startingPoint: number, size: number, alignment: Alignment): number => {
   const min = Math.max(0, startingPoint - (size - 1));
   const max = Math.min(9 - (alignment === 'vertical' ? size - 1 : 0), startingPoint);
   return min + Math.floor(Math.random() * (max - min + 1));
@@ -157,12 +163,6 @@ export const shipSpaceIsAvailable = ({
   }
 
   return true;
-};
-
-const HeatValues = {
-  hit: 400,
-  miss: 0,
-  unguessed: 1,
 };
 
 //  Cells that have been determined to be hit or miss cannot have further heat applied

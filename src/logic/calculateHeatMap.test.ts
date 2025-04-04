@@ -167,7 +167,6 @@ describe('calculateHeatMap', () => {
 
   test('heat radiates outwards from hits', () => {
     const board = initialiseShipArray();
-    console.log(board);
 
     const x = 5;
     const y = 5;
@@ -244,8 +243,6 @@ describe('calculateHeatMap', () => {
     board[4][6] = { name: 'carrier', status: CellStates.hit };
     board[4][7] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-    console.log(board);
-
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(400);
     expect(heatMap[4][6]).toBe(400);
@@ -266,8 +263,6 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: 'carrier', status: CellStates.hit };
     board[5][5] = { name: 'carrier', status: CellStates.hit };
     board[6][5] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
-
-    console.log(board);
 
     const heatMap = calculateHeatMap(board);
     expect(heatMap[4][5]).toBe(400);
