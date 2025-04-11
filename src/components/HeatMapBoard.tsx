@@ -47,7 +47,7 @@ export const HeatMapBoard = ({ positions }: any) => {
           }}
           data-testid="cell"
         >
-          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x]}` : ''}
+          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x].toFixed(2)}` : ''}
           {positions[y][x] === 0 ? '❌' : ''}
           {positions[y][x] >= heatMapSimulations ? '✔️' : ''}
         </div>

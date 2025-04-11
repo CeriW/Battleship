@@ -1,6 +1,6 @@
 // import { ai } from '../ai-behaviour';
 import { shipTypes } from '../App';
-import { CellStates, HeatMapArray, PositionArray, Alignment } from '../types';
+import { CellStates, HeatMapArray, PositionArray, Alignment, ShipNames } from '../types';
 import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
 import { isShipSunk } from './helpers';
 import { GameContext } from '../GameContext';
@@ -88,19 +88,35 @@ const calculateHeatMapStrategy = (aiLevel: number): HeatMapStrategy => {
 };
 
 const isAdjacentToHit = (existingBoard: PositionArray, x: number, y: number) => {
-  if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.hit) {
+  if (
+    y > 0 &&
+    existingBoard[y - 1][x]?.status === CellStates.hit &&
+    !isShipSunk(existingBoard[y - 1][x]!.name as ShipNames, existingBoard)
+  ) {
     return true;
   }
 
-  if (y < existingBoard.length - 1 && existingBoard[y + 1][x]?.status === CellStates.hit) {
+  if (
+    y < existingBoard.length - 1 &&
+    existingBoard[y + 1][x]?.status === CellStates.hit &&
+    !isShipSunk(existingBoard[y + 1][x]!.name as ShipNames, existingBoard)
+  ) {
     return true;
   }
 
-  if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.hit) {
+  if (
+    x > 0 &&
+    existingBoard[y][x - 1]?.status === CellStates.hit &&
+    !isShipSunk(existingBoard[y][x - 1]!.name as ShipNames, existingBoard)
+  ) {
     return true;
   }
 
-  if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.hit) {
+  if (
+    x < existingBoard[y].length - 1 &&
+    existingBoard[y][x + 1]?.status === CellStates.hit &&
+    !isShipSunk(existingBoard[y][x + 1]!.name as ShipNames, existingBoard)
+  ) {
     return true;
   }
 
@@ -199,7 +215,11 @@ const markMissAdjacentCellsColder = (
             if (isHeatable(heatMap[y][i])) {
               newHeatMap[y][i] *= secondaryAdjacentCoolnessMultiplier;
 
-              if (i < existingBoard[y].length - 1 && isHeatable(heatMap[y][i + 1])) {
+              if (
+                i < existingBoard[y].length - 1 &&
+                isHeatable(heatMap[y][i + 1]) &&
+                !isAdjacentToHit(existingBoard, i + 1, y)
+              ) {
                 newHeatMap[y][i + 1] *= tertiaryAdjacentCoolnessMultiplier;
               }
 
@@ -226,10 +246,10 @@ const markMissAdjacentCellsColder = (
               break;
             }
 
-            if (isHeatable(heatMap[i][x])) {
+            if (isHeatable(heatMap[i][x]) && !isAdjacentToHit(existingBoard, x, i)) {
               newHeatMap[i][x] *= immediatelyAdjacentCoolnessMultiplier;
 
-              if (i > 0 && isHeatable(heatMap[i - 1][x])) {
+              if (i > 0 && isHeatable(heatMap[i - 1][x]) && !isAdjacentToHit(existingBoard, x, i - 1)) {
                 newHeatMap[i - 1][x] *= secondaryAdjacentCoolnessMultiplier;
               }
 
@@ -255,7 +275,7 @@ const markMissAdjacentCellsColder = (
               break;
             }
 
-            if (isHeatable(heatMap[i][x])) {
+            if (isHeatable(heatMap[i][x]) && !isAdjacentToHit(existingBoard, x, i)) {
               newHeatMap[i][x] *= immediatelyAdjacentCoolnessMultiplier;
 
               if (i < existingBoard.length - 1 && isHeatable(heatMap[i + 1][x])) {
