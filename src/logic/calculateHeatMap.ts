@@ -61,6 +61,7 @@ type HeatMapStrategy = {
   missCoolnessRadius: 0 | 1 | 2;
 };
 
+/* istanbul ignore next */
 const calculateHeatMapStrategy = (aiLevel: number): HeatMapStrategy => {
   let missCoolnessRadius; // how many cells adjacent to a miss should be considered colder
 
@@ -87,7 +88,7 @@ const calculateHeatMapStrategy = (aiLevel: number): HeatMapStrategy => {
   };
 };
 
-const isAdjacentToHit = (existingBoard: PositionArray, x: number, y: number) => {
+export const isAdjacentToHit = (existingBoard: PositionArray, x: number, y: number) => {
   if (
     y > 0 &&
     existingBoard[y - 1][x]?.status === CellStates.hit &&

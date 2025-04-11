@@ -1,4 +1,4 @@
-import { calculateHeatMap, initialiseHeatMapArray } from './calculateHeatMap';
+import { calculateHeatMap, initialiseHeatMapArray, isAdjacentToHit } from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
 import { CellStates } from '../types';
 
@@ -113,10 +113,10 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board);
 
     expect(heatMap[y][x]).toBe(0);
-    expect(heatMap[y][x + 1]).toBe(0.75);
-    expect(heatMap[y][x - 1]).toBe(0.75);
-    expect(heatMap[y + 1][x]).toBe(0.75);
-    expect(heatMap[y - 1][x]).toBe(0.75);
+    expect(heatMap[y][x + 1]).toBe(0.42);
+    expect(heatMap[y][x - 1]).toBe(0.36);
+    expect(heatMap[y + 1][x]).toBe(0.36);
+    expect(heatMap[y - 1][x]).toBe(0.36);
   });
 
   test('a miss cell next to a hit cell should have a heat of 0', () => {
@@ -139,12 +139,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
-    expect(heatMap[4][8]).toBeGreaterThanOrEqual(2);
+    expect(heatMap[4][8]).toBe(1.55);
     expect(heatMap[4][7]).toBeGreaterThanOrEqual(heatMap[4][8]);
 
     // Cells to left
     expect(heatMap[4][4]).toBeGreaterThan(2);
-    expect(heatMap[4][3]).toBeGreaterThan(2);
+    expect(heatMap[4][3]).toBe(1.55);
     expect(heatMap[4][4]).toBeGreaterThan(heatMap[4][3]);
   });
 
@@ -160,12 +160,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[6][5]).toBeGreaterThan(2);
-    expect(heatMap[7][5]).toBeGreaterThan(2);
+    expect(heatMap[7][5]).toBe(1.6);
     expect(heatMap[6][5]).toBeGreaterThan(heatMap[7][5]);
 
     // Cells to left
     expect(heatMap[4][5]).toBeGreaterThan(2);
-    expect(heatMap[3][5]).toBeGreaterThan(2);
+    expect(heatMap[3][5]).toBe(1.55);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
@@ -180,7 +180,7 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[4][7]).toBeLessThanOrEqual(0.75);
-    expect(heatMap[4][8]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[4][8]).toBeLessThanOrEqual(0.8);
     expect(heatMap[4][7]).toBeLessThanOrEqual(heatMap[4][8]);
 
     // Cells to left
@@ -200,12 +200,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[6][5]).toBeLessThanOrEqual(0.75);
-    expect(heatMap[7][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[7][5]).toBeLessThanOrEqual(0.8);
     expect(heatMap[6][5]).toBeLessThanOrEqual(heatMap[7][5]);
 
     // Cells to left
     expect(heatMap[4][5]).toBeLessThanOrEqual(0.75);
-    expect(heatMap[3][5]).toBeLessThanOrEqual(0.75);
+    expect(heatMap[3][5]).toBeLessThanOrEqual(0.8);
     expect(heatMap[4][5]).toBeLessThanOrEqual(heatMap[3][5]);
   });
 
@@ -226,5 +226,48 @@ describe('calculateHeatMap', () => {
     expect(heatMap[4][4]).toBe(0);
     expect(heatMap[3][5]).toBe(0);
     expect(heatMap[5][5]).toBe(0);
+  });
+
+  test('isAdjacentToHit returns true when there is an unsunk hit above', () => {
+    const board = initialiseShipArray();
+    board[3][5] = { name: 'destroyer', status: CellStates.hit };
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // required to ensure isShipSunk returns false
+    expect(isAdjacentToHit(board, 5, 4)).toBe(true);
+  });
+
+  test('isAdjacentToHit returns true when there is an unsunk hit below', () => {
+    const board = initialiseShipArray();
+    board[5][5] = { name: 'destroyer', status: CellStates.hit };
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // required to ensure isShipSunk returns false
+
+    expect(isAdjacentToHit(board, 5, 4)).toBe(true);
+  });
+
+  test('isAdjacentToHit returns true when there is an unsunk hit to the left', () => {
+    const board = initialiseShipArray();
+    board[4][4] = { name: 'destroyer', status: CellStates.hit };
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // required to ensure isShipSunk returns false
+
+    expect(isAdjacentToHit(board, 5, 4)).toBe(true);
+  });
+
+  test('isAdjacentToHit returns true when there is an unsunk hit to the right', () => {
+    const board = initialiseShipArray();
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // required to ensure isShipSunk returns false
+    expect(isAdjacentToHit(board, 5, 4)).toBe(true);
+  });
+
+  test('isAdjacentToHit returns false when there are no adjacent hits', () => {
+    const board = initialiseShipArray();
+    expect(isAdjacentToHit(board, 5, 4)).toBe(false);
+  });
+
+  test('isAdjacentToHit returns false when adjacent hit is from a sunk ship', () => {
+    const board = initialiseShipArray();
+    // Place a destroyer (size 2) horizontally and mark both cells as hit
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+    expect(isAdjacentToHit(board, 5, 4)).toBe(false);
   });
 });
