@@ -21,7 +21,7 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const GameBoards = () => {
       <h3>Computer board</h3>
       <Board positions={computerShips} />
       <h3>Heat map</h3>
-      <HeatMapBoard positions={calculateHeatMap(userShips)} />
+      <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} />
     </div>
   );
 };

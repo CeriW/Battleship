@@ -7,10 +7,10 @@ import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
-  const { userShips, setUserShips, addToLog, heatMapSimulations } = useContext(GameContext);
+  const { userShips, setUserShips, addToLog, heatMapSimulations, aiLevel } = useContext(GameContext);
 
   return useCallback(() => {
-    const heatMap = calculateHeatMap(userShips);
+    const heatMap = calculateHeatMap(userShips, aiLevel);
     const flatHeatMap = heatMap.flat();
 
     // console.log(flatHeatMap);

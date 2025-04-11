@@ -10,6 +10,7 @@ $carrier: purple;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, (400px / 11));
+  margin: 20px;
 
   .column-marker,
   .row-marker {

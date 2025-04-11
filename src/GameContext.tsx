@@ -50,6 +50,7 @@ export type GameContextType = {
   aiAdjacentShipModifier: number;
   setAiAdjacentShipModifier: (modifier: number) => void;
 
+  // TODO - needs removing since not used any more
   // How many simulations to run when calculating the heat map
   // Higher numbers will generate more accurate heat maps
   heatMapSimulations: number;
@@ -65,9 +66,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [log, setLog] = useState<string[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
-  const [aiLevel, setAiLevel] = useState<number>(20);
+  const [aiLevel, setAiLevel] = useState<number>(1);
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
-  const [heatMapSimulations, setHeatMapSimulations] = useState<number>(calculateHeatMapIterations(aiLevel));
+  const [heatMapSimulations, setHeatMapSimulations] = useState<number>(400);
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const previousAiLevelRef = useRef<number>(aiLevel);
