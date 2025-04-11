@@ -304,7 +304,7 @@ const markMissAdjacentCellsColder = (
 
 export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number = 20): HeatMapArray => {
   let heatMap = initialiseHeatMapArray();
-  const heatMapStrategy = calculateHeatMapStrategy(aiLevel);
+  const { missCoolnessRadius } = calculateHeatMapStrategy(aiLevel);
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
@@ -433,8 +433,8 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
     }
   }
 
-  if (heatMapStrategy.missCoolnessRadius > 0) {
-    heatMap = markMissAdjacentCellsColder(heatMap, existingBoard, heatMapStrategy.missCoolnessRadius);
+  if (missCoolnessRadius > 0) {
+    heatMap = markMissAdjacentCellsColder(heatMap, existingBoard, missCoolnessRadius);
   }
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available

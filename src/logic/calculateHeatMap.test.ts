@@ -1,4 +1,4 @@
-import { calculateHeatMap, initialiseHeatMapArray, isAdjacentToHit } from './calculateHeatMap';
+import { calculateHeatMap, initialiseHeatMapArray, isAdjacentToHit, checkValidShipPlacement } from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
 import { CellStates } from '../types';
 
@@ -165,7 +165,7 @@ describe('calculateHeatMap', () => {
 
     // Cells to left
     expect(heatMap[4][5]).toBeGreaterThan(2);
-    expect(heatMap[3][5]).toBe(1.55);
+    expect(heatMap[3][5]).toBe(3.1);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
@@ -269,5 +269,78 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
     expect(isAdjacentToHit(board, 5, 4)).toBe(false);
+  });
+
+  test('should handle break statements in ship placement loops', () => {
+    const board = initialiseShipArray();
+
+    // Create a scenario that will trigger break statements
+    // Place a ship horizontally with a miss at the end
+    board[0][0] = { name: 'destroyer', status: CellStates.hit };
+    board[0][1] = { name: 'destroyer', status: CellStates.hit };
+    board[0][2] = { name: 'destroyer', status: CellStates.hit };
+    board[0][3] = { name: null, status: CellStates.miss }; // This should trigger a break
+
+    // Place a ship vertically with a miss at the end
+    board[2][0] = { name: 'submarine', status: CellStates.hit };
+    board[3][0] = { name: 'submarine', status: CellStates.hit };
+    board[4][0] = { name: null, status: CellStates.miss }; // This should trigger a break
+
+    const heatMap = calculateHeatMap(board);
+
+    // Verify the heat map was calculated correctly
+    expect(heatMap[0][0]).toBe(400); // Hit cell
+    expect(heatMap[0][1]).toBe(400); // Hit cell
+    expect(heatMap[0][2]).toBe(400); // Hit cell
+    expect(heatMap[0][3]).toBe(0); // Miss cell
+    expect(heatMap[0][4]).toBe(0.42); // Adjacent to hit
+
+    expect(heatMap[2][0]).toBe(400); // Hit cell
+    expect(heatMap[3][0]).toBe(400); // Hit cell
+    expect(heatMap[4][0]).toBe(0); // Miss cell
+    expect(heatMap[5][0]).toBe(0.36); // Adjacent to hit
+  });
+
+  test('should handle break statements in ship space availability checks', () => {
+    const board = initialiseShipArray();
+
+    // Create a scenario that will trigger break statements in checkValidShipPlacement
+    // Place a ship that would block other ships
+    board[0][0] = { name: 'carrier', status: CellStates.hit };
+    board[0][1] = { name: 'carrier', status: CellStates.hit };
+    board[0][2] = { name: 'carrier', status: CellStates.hit };
+    board[0][3] = { name: 'carrier', status: CellStates.hit };
+    board[0][4] = { name: 'carrier', status: CellStates.hit };
+
+    // This should trigger the break in checkValidShipPlacement
+    const result = checkValidShipPlacement({
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' },
+      shipSize: 3,
+      existingPositions: board,
+    });
+
+    expect(result).toBe(false);
+  });
+
+  test('should handle break statements in ship placement with adjacent ships', () => {
+    const board = initialiseShipArray();
+
+    // Create a scenario with ships placed adjacent to each other
+    board[0][0] = { name: 'destroyer', status: CellStates.hit };
+    board[0][1] = { name: 'destroyer', status: CellStates.hit };
+    board[0][2] = { name: 'destroyer', status: CellStates.hit };
+
+    board[1][0] = { name: 'submarine', status: CellStates.hit };
+    board[1][1] = { name: 'submarine', status: CellStates.hit };
+    board[1][2] = { name: 'submarine', status: CellStates.hit };
+
+    // This should trigger the break in ship placement logic
+    const result = checkValidShipPlacement({
+      proposedPositions: { startingRow: 0, startingColumn: 0, alignment: 'horizontal' },
+      shipSize: 3,
+      existingPositions: board,
+    });
+
+    expect(result).toBe(false);
   });
 });

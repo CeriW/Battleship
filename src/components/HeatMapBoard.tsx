@@ -2,8 +2,6 @@ import React, { useContext } from 'react';
 import { GameContext } from '../GameContext';
 
 export const HeatMapBoard = ({ positions }: any) => {
-  console.log(positions);
-  // const context = useContext(GameContext);
   const heatMapSimulations = 400;
 
   const columnMarkers = [];
