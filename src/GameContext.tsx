@@ -66,7 +66,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [log, setLog] = useState<string[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
-  const [aiLevel, setAiLevel] = useState<number>(1);
+  const [aiLevel, setAiLevel] = useState<number>(20);
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
   const [heatMapSimulations, setHeatMapSimulations] = useState<number>(400);
 

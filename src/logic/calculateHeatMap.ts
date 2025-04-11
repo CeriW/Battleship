@@ -87,6 +87,26 @@ const calculateHeatMapStrategy = (aiLevel: number): HeatMapStrategy => {
   };
 };
 
+const isAdjacentToHit = (existingBoard: PositionArray, x: number, y: number) => {
+  if (y > 0 && existingBoard[y - 1][x]?.status === CellStates.hit) {
+    return true;
+  }
+
+  if (y < existingBoard.length - 1 && existingBoard[y + 1][x]?.status === CellStates.hit) {
+    return true;
+  }
+
+  if (x > 0 && existingBoard[y][x - 1]?.status === CellStates.hit) {
+    return true;
+  }
+
+  if (x < existingBoard[y].length - 1 && existingBoard[y][x + 1]?.status === CellStates.hit) {
+    return true;
+  }
+
+  return false;
+};
+
 const markMissAdjacentCellsColder = (
   heatMap: HeatMapArray,
   existingBoard: PositionArray,
@@ -111,22 +131,30 @@ const markMissAdjacentCellsColder = (
         // MARK ADJACENT CELLS AS COOL INDISCRIMINATELY --------------------------
 
         // If we're not in the first row, and the cell above is unknown, then it's cool
-        if (y > 0 && isHeatable(heatMap[y - 1][x])) {
+        if (y > 0 && isHeatable(heatMap[y - 1][x]) && !isAdjacentToHit(existingBoard, x, y - 1)) {
           newHeatMap[y - 1][x] *= immediatelyAdjacentCoolnessMultiplier;
         }
 
         // If we're not in the last row, and the cell below is unknown, then it's cool
-        if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
+        if (
+          y < existingBoard.length - 1 &&
+          isHeatable(heatMap[y + 1][x]) &&
+          !isAdjacentToHit(existingBoard, x, y + 1)
+        ) {
           newHeatMap[y + 1][x] *= immediatelyAdjacentCoolnessMultiplier;
         }
 
         // If we're not in the last column, and the cell to the right is unknown, then it's cool
-        if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
+        if (
+          x < existingBoard[y].length - 1 &&
+          isHeatable(heatMap[y][x + 1]) &&
+          !isAdjacentToHit(existingBoard, x + 1, y)
+        ) {
           newHeatMap[y][x + 1] *= immediatelyAdjacentCoolnessMultiplier;
         }
 
         // If we're not in the first column, and the cell to the left is unknown, then it's cool
-        if (x > 0 && isHeatable(heatMap[y][x - 1])) {
+        if (x > 0 && isHeatable(heatMap[y][x - 1]) && !isAdjacentToHit(existingBoard, x - 1, y)) {
           newHeatMap[y][x - 1] *= immediatelyAdjacentCoolnessMultiplier;
         }
 
@@ -143,11 +171,16 @@ const markMissAdjacentCellsColder = (
             if (isHeatable(heatMap[y][i])) {
               newHeatMap[y][i] *= immediatelyAdjacentCoolnessMultiplier;
 
-              if (i > 0 && isHeatable(heatMap[y][i - 1])) {
+              if (i > 0 && isHeatable(heatMap[y][i - 1]) && !isAdjacentToHit(existingBoard, i - 1, y)) {
                 newHeatMap[y][i - 1] *= secondaryAdjacentCoolnessMultiplier;
               }
 
-              if (missCoolnessRadius > 1 && isHeatable(heatMap[y][i - 2])) {
+              if (
+                missCoolnessRadius > 1 &&
+                i > 1 &&
+                isHeatable(heatMap[y][i - 2]) &&
+                !isAdjacentToHit(existingBoard, i - 2, y)
+              ) {
                 newHeatMap[y][i - 2] *= tertiaryAdjacentCoolnessMultiplier;
               }
               break;
@@ -170,7 +203,12 @@ const markMissAdjacentCellsColder = (
                 newHeatMap[y][i + 1] *= tertiaryAdjacentCoolnessMultiplier;
               }
 
-              if (missCoolnessRadius > 1 && i < existingBoard[y].length - 1 && isHeatable(heatMap[y][i + 2])) {
+              if (
+                missCoolnessRadius > 1 &&
+                i < existingBoard[y].length - 2 &&
+                isHeatable(heatMap[y][i + 2]) &&
+                !isAdjacentToHit(existingBoard, i + 2, y)
+              ) {
                 newHeatMap[y][i + 2] *= tertiaryAdjacentCoolnessMultiplier;
               }
               break;
@@ -195,7 +233,12 @@ const markMissAdjacentCellsColder = (
                 newHeatMap[i - 1][x] *= secondaryAdjacentCoolnessMultiplier;
               }
 
-              if (missCoolnessRadius > 1 && isHeatable(heatMap[i - 2][x])) {
+              if (
+                missCoolnessRadius > 1 &&
+                i > 1 &&
+                isHeatable(heatMap[i - 2][x]) &&
+                !isAdjacentToHit(existingBoard, i - 2, y)
+              ) {
                 newHeatMap[i - 2][x] *= tertiaryAdjacentCoolnessMultiplier;
               }
 
@@ -215,11 +258,16 @@ const markMissAdjacentCellsColder = (
             if (isHeatable(heatMap[i][x])) {
               newHeatMap[i][x] *= immediatelyAdjacentCoolnessMultiplier;
 
-              if (i < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
+              if (i < existingBoard.length - 1 && isHeatable(heatMap[i + 1][x])) {
                 newHeatMap[i + 1][x] *= secondaryAdjacentCoolnessMultiplier;
               }
 
-              if (missCoolnessRadius > 1 && i < existingBoard.length - 1 && isHeatable(heatMap[i + 2][x])) {
+              if (
+                missCoolnessRadius > 1 &&
+                i < existingBoard.length - 2 &&
+                isHeatable(heatMap[i + 2][x]) &&
+                !isAdjacentToHit(existingBoard, i + 2, y)
+              ) {
                 newHeatMap[i + 2][x] *= tertiaryAdjacentCoolnessMultiplier;
               }
               break;
@@ -250,6 +298,9 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
   /* HEAT CELLS ADJACENT TO HITS */
   /* ---------------------------------------------------------------------- */
 
+  const immediatelyAdjacentExtraHeat = 2;
+  const secondaryAdjacentExtraHeat = 1.5;
+
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
     let x = i % 10;
@@ -261,22 +312,22 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
 
       // If we're not in the first row, and the cell above is not a hit, then it's hot
       if (y > 0 && isHeatable(heatMap[y - 1][x])) {
-        heatMap[y - 1][x] += 1;
+        heatMap[y - 1][x] *= immediatelyAdjacentExtraHeat;
       }
 
       // If we're not in the last row, and the cell below is not a hit, then it's hot
       if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
-        heatMap[y + 1][x] += 1;
+        heatMap[y + 1][x] *= immediatelyAdjacentExtraHeat;
       }
 
       // If we're not in the last column, and the cell to the right is not a hit, then it's hot
       if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
-        heatMap[y][x + 1] += 1;
+        heatMap[y][x + 1] *= immediatelyAdjacentExtraHeat;
       }
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
-        heatMap[y][x - 1] += 1;
+        heatMap[y][x - 1] *= immediatelyAdjacentExtraHeat;
       }
 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
@@ -290,10 +341,10 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] += 1;
+            heatMap[y][i] *= secondaryAdjacentExtraHeat;
 
             if (i > 0 && isHeatable(heatMap[y][i - 1])) {
-              heatMap[y][i - 1] += 1;
+              heatMap[y][i - 1] *= secondaryAdjacentExtraHeat;
             }
             break;
           }
@@ -309,10 +360,10 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] += 1;
+            heatMap[y][i] *= secondaryAdjacentExtraHeat;
 
-            if (i < existingBoard[y].length && isHeatable(heatMap[y][i + 1])) {
-              heatMap[y][i + 1] += 1;
+            if (i < existingBoard[y].length - 1 && isHeatable(heatMap[y][i + 1])) {
+              heatMap[y][i + 1] *= secondaryAdjacentExtraHeat;
             }
             break;
           }
@@ -330,10 +381,10 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] += 1;
+            heatMap[i][x] *= secondaryAdjacentExtraHeat;
 
             if (i > 0 && isHeatable(heatMap[i - 1][x])) {
-              heatMap[i - 1][x] += 1;
+              heatMap[i - 1][x] *= secondaryAdjacentExtraHeat;
             }
             break;
           }
@@ -349,10 +400,10 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] += 1;
+            heatMap[i][x] *= secondaryAdjacentExtraHeat;
 
-            if (i < existingBoard.length && isHeatable(heatMap[i + 1][x])) {
-              heatMap[i + 1][x] += 1;
+            if (i < existingBoard.length - 1 && isHeatable(heatMap[i + 1][x])) {
+              heatMap[i + 1][x] *= secondaryAdjacentExtraHeat;
             }
             break;
           }
