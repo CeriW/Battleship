@@ -333,7 +333,7 @@ export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionAr
 };
 
 // Cells adjacent to sunk ships are marked cooler.
-const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+export const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
   const sunkCoolnessMultiplier = 0.6;
 
