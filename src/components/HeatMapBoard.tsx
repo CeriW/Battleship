@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { GameContext } from '../GameContext';
+import React from 'react';
 import { HeatValues } from '../logic/calculateHeatMap';
 
 export const HeatMapBoard = ({ positions }: any) => {

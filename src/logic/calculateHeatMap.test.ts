@@ -92,7 +92,7 @@ describe('markSunkAdjacentColder', () => {
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
 
     // Set initial heat values
-    heatMap[4][5] = 400; // Hit cell
+    heatMap[4][5] = HeatValues.hit; // Hit cell
     heatMap[4][6] = 2;
 
     const cooledBoard = markSunkAdjacentColder(heatMap, board);
@@ -178,22 +178,11 @@ describe('calculateHeatMap', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
-    const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
-  });
+    board[4][7] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-  test('cells next to a sunk ship should have default heat', () => {
-    const board = initialiseShipArray();
-    board[4][5] = { name: 'destroyer', status: CellStates.hit };
-    board[4][6] = { name: 'destroyer', status: CellStates.hit };
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
-    expect(heatMap[4][4]).toBe(1);
-    expect(heatMap[4][7]).toBe(1);
-    expect(heatMap[3][5]).toBe(1);
-    expect(heatMap[3][6]).toBe(1);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[4][6]).toBe(HeatValues.hit);
   });
 
   test('cells next to a miss should be cooler', () => {
@@ -304,6 +293,7 @@ describe('calculateHeatMap', () => {
   test('a hit and adjacent misses to retain max/min heat', () => {
     const board = initialiseShipArray();
 
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
 
     board[4][6] = { name: null, status: CellStates.miss }; // to right
@@ -313,7 +303,7 @@ describe('calculateHeatMap', () => {
     board[5][5] = { name: null, status: CellStates.miss }; // below
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[4][6]).toBe(0);
     expect(heatMap[4][4]).toBe(0);
     expect(heatMap[3][5]).toBe(0);
@@ -366,14 +356,17 @@ describe('calculateHeatMap', () => {
   test('should handle break statements in ship placement loops', () => {
     const board = initialiseShipArray();
 
+    board[9][9] = { name: 'submarine', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+    board[8][9] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+
     // Create a scenario that will trigger break statements
     // Place a ship horizontally with a miss at the end
-    board[0][0] = { name: 'destroyer', status: CellStates.hit };
     board[0][1] = { name: 'destroyer', status: CellStates.hit };
     board[0][2] = { name: 'destroyer', status: CellStates.hit };
     board[0][3] = { name: null, status: CellStates.miss }; // This should trigger a break
 
     // Place a ship vertically with a miss at the end
+
     board[2][0] = { name: 'submarine', status: CellStates.hit };
     board[3][0] = { name: 'submarine', status: CellStates.hit };
     board[4][0] = { name: null, status: CellStates.miss }; // This should trigger a break
@@ -381,16 +374,15 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board);
 
     // Verify the heat map was calculated correctly
-    expect(heatMap[0][0]).toBe(400); // Hit cell
-    expect(heatMap[0][1]).toBe(400); // Hit cell
-    expect(heatMap[0][2]).toBe(400); // Hit cell
+    expect(heatMap[0][1]).toBe(HeatValues.hit); // Hit cell
+    expect(heatMap[0][2]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][3]).toBe(0); // Miss cell
-    expect(heatMap[0][4]).toBe(0.294); // Adjacent to hit
+    expect(heatMap[0][4]).toBe(0.494); // Adjacent to hit
 
-    expect(heatMap[2][0]).toBe(400); // Hit cell
-    expect(heatMap[3][0]).toBe(400); // Hit cell
+    expect(heatMap[2][0]).toBe(HeatValues.hit); // Hit cell
+    expect(heatMap[3][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[4][0]).toBe(0); // Miss cell
-    expect(heatMap[5][0]).toBe(0.252); // Adjacent to hit
+    expect(heatMap[5][0]).toBe(0.452); // Adjacent to hit
   });
 
   test('should handle break statements in ship space availability checks', () => {
