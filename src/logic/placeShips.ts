@@ -36,18 +36,13 @@ export const checkValidShipState = ({
   shipSize,
   existingPositions,
   adjacentShipModifier = 0,
-  forHeatMap = false,
 }: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: Alignment };
   shipSize: number;
   existingPositions: PositionArray;
-  adjacentShipModifier?: number;
-  forHeatMap?: boolean;
+  adjacentShipModifier?: number; // How likely it is as a number between 0 and 1 that we will allow ships to touch each other
 }): boolean => {
-  const mayOverlapHits = forHeatMap;
-
   // First check if ship would go out of bounds
-
   if (!doesShipFit(proposedPositions, shipSize)) return false;
 
   // Generate a list of all the cells that this ship could occupy
@@ -59,9 +54,6 @@ export const checkValidShipState = ({
   const adjacentShipsAllowable = Math.random() + adjacentShipModifier >= 1;
 
   potentialCoordinates.forEach(({ x, y }) => {
-    let thisCell = existingPositions[y][x];
-    if (thisCell && !mayOverlapHits) valid = false;
-
     if (!adjacentShipsAllowable) {
       if (existingPositions[Math.max(0, y - 1)][x]) valid = false; // Check row above
       if (existingPositions[Math.min(9, y + 1)][x]) valid = false; // Check row below

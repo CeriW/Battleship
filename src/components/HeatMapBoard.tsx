@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { GameContext } from '../GameContext';
 
 export const HeatMapBoard = ({ positions }: any) => {
-  const context = useContext(GameContext);
-  const heatMapSimulations = context?.heatMapSimulations || 400;
+  const heatMapSimulations = 400;
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -46,7 +45,7 @@ export const HeatMapBoard = ({ positions }: any) => {
           }}
           data-testid="cell"
         >
-          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x]}` : ''}
+          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x].toFixed(2)}` : ''}
           {positions[y][x] === 0 ? '❌' : ''}
           {positions[y][x] >= heatMapSimulations ? '✔️' : ''}
         </div>
