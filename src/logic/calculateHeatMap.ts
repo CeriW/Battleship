@@ -18,13 +18,10 @@ export const checkValidShipPlacement = ({
   proposedPositions,
   shipSize,
   existingPositions,
-}: // adjacentShipModifier = 0,
-{
+}: {
   proposedPositions: { startingRow: number; startingColumn: number; alignment: Alignment };
   shipSize: number;
   existingPositions: PositionArray;
-  // adjacentShipModifier?: number; // How likely it is as a number between 0 and 1 that we will allow ships to touch each other
-  // forHeatMap?: boolean;
 }): boolean => {
   // First check if ship would go out of bounds
   if (!doesShipFit(proposedPositions, shipSize)) return false;
@@ -124,6 +121,9 @@ export const isAdjacentToHit = (existingBoard: PositionArray, x: number, y: numb
   return false;
 };
 
+// Cells that are adjacent to misses are marked cooler.
+// This will radiate out 0, 1 or 2 cells from the miss.
+// Cells that are in proximity to a hit are not marked cooler.
 const markMissAdjacentCellsColder = (
   heatMap: HeatMapArray,
   existingBoard: PositionArray,
@@ -302,6 +302,36 @@ const markMissAdjacentCellsColder = (
   return newHeatMap;
 };
 
+// Edge cells are marked cooler.
+// Cells that are hits or adjacent to hits will not be marked cooler.
+const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+  const newHeatMap = heatMap.map((row) => [...row]);
+  const edgeCoolnessMultiplier = 0.7;
+
+  for (let i = 0; i < heatMap[0].length; i++) {
+    if (existingBoard[0][i]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
+      newHeatMap[0][i] *= edgeCoolnessMultiplier;
+    }
+    if (
+      existingBoard[heatMap.length - 1][i]?.status !== CellStates.hit &&
+      !isAdjacentToHit(existingBoard, i, heatMap.length - 1)
+    ) {
+      newHeatMap[heatMap.length - 1][i] *= edgeCoolnessMultiplier;
+    }
+    if (existingBoard[i][0]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
+      newHeatMap[i][0] *= edgeCoolnessMultiplier;
+    }
+    if (
+      existingBoard[i][heatMap[i].length - 1]?.status !== CellStates.hit &&
+      !isAdjacentToHit(existingBoard, i, heatMap[i].length - 1)
+    ) {
+      newHeatMap[i][heatMap[i].length - 1] *= edgeCoolnessMultiplier;
+    }
+  }
+
+  return newHeatMap;
+};
+
 export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number = 20): HeatMapArray => {
   let heatMap = initialiseHeatMapArray();
   const { missCoolnessRadius } = calculateHeatMapStrategy(aiLevel);
@@ -437,6 +467,8 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
     heatMap = markMissAdjacentCellsColder(heatMap, existingBoard, missCoolnessRadius);
   }
 
+  heatMap = markEdgesColder(heatMap, existingBoard);
+
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
   // e.g. a 1x1 gap surrounded by misses can't possible have a ship in it
 
@@ -449,12 +481,6 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
     if (existingBoard[y][x]?.status !== CellStates.hit && existingBoard[y][x]?.status !== CellStates.miss) {
       shipTypes.forEach((ship) => {
         if (isShipSunk(ship.name, existingBoard)) return;
-
-        // TODO - an adjacent ship modifier of 1 creates a perfect heat map which results in unhumanlike guesses
-        // What is the solution?
-        // adjust the modifier based on AI which creates more randomness?
-        // Adjust makeComputerGuess to not guess in proximity to other guesses?
-        const adjacentShipModifier = 1;
 
         if (
           checkValidShipPlacement({
