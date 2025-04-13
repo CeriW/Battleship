@@ -332,6 +332,27 @@ const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): H
   return newHeatMap;
 };
 
+// Cells adjacent to sunk ships are marked cooler.
+const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+  const newHeatMap = heatMap.map((row) => [...row]);
+  const sunkCoolnessMultiplier = 0.6;
+
+  for (let i = 0; i < 100; i++) {
+    let y = Math.floor(i / 10);
+    let x = i % 10;
+
+    if (
+      existingBoard[y][x] &&
+      isShipSunk(existingBoard[y][x]!.name as ShipNames, existingBoard) &&
+      newHeatMap[y][x] !== HeatValues.hit
+    ) {
+      newHeatMap[y][x] *= sunkCoolnessMultiplier;
+    }
+  }
+
+  return newHeatMap;
+};
+
 export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number = 20): HeatMapArray => {
   let heatMap = initialiseHeatMapArray();
   const { missCoolnessRadius } = calculateHeatMapStrategy(aiLevel);
@@ -349,7 +370,7 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
   /* HEAT CELLS ADJACENT TO HITS */
   /* ---------------------------------------------------------------------- */
 
-  const immediatelyAdjacentExtraHeat = 2;
+  const immediatelyAdjacentExtraHeat = 3;
   const secondaryAdjacentExtraHeat = 1.5;
 
   for (let i = 0; i < 100; i++) {
@@ -468,6 +489,7 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
   }
 
   heatMap = markEdgesColder(heatMap, existingBoard);
+  heatMap = markSunkAdjacentColder(heatMap, existingBoard);
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
   // e.g. a 1x1 gap surrounded by misses can't possible have a ship in it
