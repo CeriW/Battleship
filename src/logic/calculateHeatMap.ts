@@ -304,7 +304,7 @@ const markMissAdjacentCellsColder = (
 
 // Edge cells are marked cooler.
 // Cells that are hits or adjacent to hits will not be marked cooler.
-const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
   const edgeCoolnessMultiplier = 0.7;
 

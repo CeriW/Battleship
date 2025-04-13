@@ -1,4 +1,10 @@
-import { calculateHeatMap, initialiseHeatMapArray, isAdjacentToHit, checkValidShipPlacement } from './calculateHeatMap';
+import {
+  calculateHeatMap,
+  initialiseHeatMapArray,
+  isAdjacentToHit,
+  checkValidShipPlacement,
+  markEdgesColder,
+} from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
 import { CellStates } from '../types';
 
@@ -10,6 +16,29 @@ describe('initialiseHeatMap', () => {
       expect(row).toHaveLength(10);
       expect(row.every((value) => value === 1)).toBe(true);
     });
+  });
+});
+
+describe('markEdgesColder', () => {
+  test('edges should be cooler', () => {
+    const board = initialiseShipArray();
+    const cooledBoard = markEdgesColder(initialiseHeatMapArray(), board);
+
+    for (let x = 1; x < 9; x++) {
+      expect(cooledBoard[0][x]).toBe(0.7);
+      expect(cooledBoard[9][x]).toBe(0.7);
+    }
+
+    for (let y = 1; y < 9; y++) {
+      expect(cooledBoard[y][0]).toBe(0.7);
+      expect(cooledBoard[y][9]).toBe(0.7);
+    }
+
+    // Corners
+    expect(cooledBoard[0][0]).toBe(0.48999999999999994);
+    expect(cooledBoard[0][9]).toBe(0.48999999999999994);
+    expect(cooledBoard[9][0]).toBe(0.48999999999999994);
+    expect(cooledBoard[9][9]).toBe(0.48999999999999994);
   });
 });
 
@@ -165,7 +194,7 @@ describe('calculateHeatMap', () => {
 
     // Cells to left
     expect(heatMap[4][5]).toBeGreaterThan(2);
-    expect(heatMap[3][5]).toBe(3.1);
+    expect(heatMap[3][5]).toBe(4.6);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
@@ -293,12 +322,12 @@ describe('calculateHeatMap', () => {
     expect(heatMap[0][1]).toBe(400); // Hit cell
     expect(heatMap[0][2]).toBe(400); // Hit cell
     expect(heatMap[0][3]).toBe(0); // Miss cell
-    expect(heatMap[0][4]).toBe(0.42); // Adjacent to hit
+    expect(heatMap[0][4]).toBe(0.294); // Adjacent to hit
 
     expect(heatMap[2][0]).toBe(400); // Hit cell
     expect(heatMap[3][0]).toBe(400); // Hit cell
     expect(heatMap[4][0]).toBe(0); // Miss cell
-    expect(heatMap[5][0]).toBe(0.36); // Adjacent to hit
+    expect(heatMap[5][0]).toBe(0.252); // Adjacent to hit
   });
 
   test('should handle break statements in ship space availability checks', () => {
