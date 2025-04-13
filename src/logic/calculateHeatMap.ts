@@ -10,6 +10,7 @@ export const HeatValues = {
   hit: 400,
   miss: 0,
   unguessed: 1,
+  sunk: -1,
 };
 
 // Check that for a proposed ship occupation, there are no overlaps with other ships
@@ -552,6 +553,11 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number =
 
     // TODO - does this need modifying to account for sunk ships?
     heatMap[y][x] += heatMultiplier / (shipTypes.length * 4);
+
+    // Before we finish, sunk ships get all heat and cooling stripped away
+    if (existingBoard[y][x]?.name && isShipSunk(existingBoard[y][x]!.name as ShipNames, existingBoard)) {
+      heatMap[y][x] = HeatValues.sunk;
+    }
   }
 
   return heatMap;

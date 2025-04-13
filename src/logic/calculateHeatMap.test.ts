@@ -108,8 +108,9 @@ describe('calculateHeatMap', () => {
   test('should return 100% for cells that are hits', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
   });
 
   test('should return 0% for cells that are misses', () => {

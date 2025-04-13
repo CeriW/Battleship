@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { GameContext } from '../GameContext';
+import { HeatValues } from '../logic/calculateHeatMap';
 
 export const HeatMapBoard = ({ positions }: any) => {
-  const heatMapSimulations = 400;
-
+  console.log(positions);
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -20,7 +20,7 @@ export const HeatMapBoard = ({ positions }: any) => {
   let maxValue = 0;
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
-      if (positions[y][x] !== 400) {
+      if (positions[y][x] !== HeatValues.hit) {
         maxValue = Math.max(maxValue, positions[y][x]);
       }
     }
@@ -29,9 +29,6 @@ export const HeatMapBoard = ({ positions }: any) => {
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
-      // const percentageDecimal = positions[y][x] / heatMapSimulations;
-      // const percentage = (percentageDecimal * 100).toFixed(1);
-
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
@@ -45,9 +42,10 @@ export const HeatMapBoard = ({ positions }: any) => {
           }}
           data-testid="cell"
         >
-          {positions[y][x] > 0 && positions[y][x] < heatMapSimulations ? `${positions[y][x].toFixed(2)}` : ''}
+          {positions[y][x] > 0 && positions[y][x] < HeatValues.hit ? `${positions[y][x].toFixed(2)}` : ''}
           {positions[y][x] === 0 ? '❌' : ''}
-          {positions[y][x] >= heatMapSimulations ? '✔️' : ''}
+          {positions[y][x] === HeatValues.hit ? '✔️' : ''}
+          {positions[y][x] === HeatValues.sunk ? '💀' : ''}
         </div>
       );
     }
