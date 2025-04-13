@@ -102,27 +102,6 @@ describe('markSunkAdjacentColder', () => {
     // The other cell should be cooled
     expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
   });
-
-  // test('should not affect cells that are not part of any ship', () => {
-  //   const board = initialiseShipArray();
-  //   const heatMap = initialiseHeatMapArray();
-
-  //   // Place a destroyer (size 2) horizontally and mark both cells as hit
-  //   board[4][5] = { name: 'destroyer', status: CellStates.hit };
-  //   board[4][6] = { name: 'destroyer', status: CellStates.hit };
-
-  //   // Set initial heat values
-  //   heatMap[4][5] = 2;
-  //   heatMap[4][6] = 2;
-  //   heatMap[0][0] = 5; // Cell not part of any ship
-
-  //   const cooledBoard = markSunkAdjacentColder(heatMap, board);
-
-  //   // The cells of the sunk ship should have their heat reduced
-  //   expect(cooledBoard[4][5]).toBe(1.2); // 2 * 0.6
-  //   expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
-
-  // });
 });
 
 describe('calculateHeatMap', () => {
