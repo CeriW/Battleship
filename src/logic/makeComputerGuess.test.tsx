@@ -31,7 +31,6 @@ describe('useMakeComputerGuess', () => {
           userShips: mockShips,
           computerShips: mockShips,
           setUserShips: mockSetUserShips,
-          heatMapSimulations: 100,
         }}
       >
         {children}
