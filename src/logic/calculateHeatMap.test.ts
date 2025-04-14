@@ -158,7 +158,7 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board);
 
     // The hit cell
-    expect(heatMap[y][x]).toBe(400);
+    expect(heatMap[y][x]).toBe(HeatValues.hit);
 
     // 1 is the value for a normal unguessed cell
     // Immediately adjacent unguessed cells should be at least 2
@@ -174,7 +174,7 @@ describe('calculateHeatMap', () => {
     expect(heatMap[y - 2][x]).toBeGreaterThan(1);
   });
 
-  test('a hit cell next to another hit cell should have a heat of 400', () => {
+  test('a hit cell next to another hit cell should have a heat of 100', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
@@ -215,8 +215,8 @@ describe('calculateHeatMap', () => {
     board[4][7] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[4][6]).toBe(HeatValues.hit);
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
@@ -236,8 +236,8 @@ describe('calculateHeatMap', () => {
     board[6][5] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[5][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[5][5]).toBe(HeatValues.hit);
 
     // Cells to right
     expect(heatMap[6][5]).toBeGreaterThan(2);

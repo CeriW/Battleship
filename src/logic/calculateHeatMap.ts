@@ -7,7 +7,7 @@ import { GameContext } from '../GameContext';
 import { useContext } from 'react';
 
 export const HeatValues = {
-  hit: 400,
+  hit: 100,
   miss: 0,
   unguessed: 1,
   sunk: -1,
@@ -307,7 +307,7 @@ const markMissAdjacentCellsColder = (
 // Cells that are hits or adjacent to hits will not be marked cooler.
 export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const edgeCoolnessMultiplier = 0.7;
+  const edgeCoolnessMultiplier = 0.6;
 
   for (let i = 0; i < heatMap[0].length; i++) {
     if (existingBoard[0][i]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
