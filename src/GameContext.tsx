@@ -23,10 +23,6 @@ const calculateAdjacentShipModifier = (difficultyClass: number) => {
   }
 };
 
-/* istanbul ignore next */
-const calculateHeatMapIterations = (difficultyClass: number) =>
-  difficultyClass > 10 ? difficultyClass * difficultyClass : difficultyClass;
-
 export type GameContextType = {
   userShips: PositionArray;
   computerShips: PositionArray;
@@ -49,12 +45,6 @@ export type GameContextType = {
   // with surprising frequency. It was not uncommon to have multiple and sometimes all ships touching each other.
   aiAdjacentShipModifier: number;
   setAiAdjacentShipModifier: (modifier: number) => void;
-
-  // TODO - needs removing since not used any more
-  // How many simulations to run when calculating the heat map
-  // Higher numbers will generate more accurate heat maps
-  heatMapSimulations: number;
-  setHeatMapSimulations: (simulations: number) => void;
 };
 
 export const GameContext = createContext<GameContextType>({} as GameContextType);
@@ -68,18 +58,12 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [aiLevel, setAiLevel] = useState<number>(20);
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
-  const [heatMapSimulations, setHeatMapSimulations] = useState<number>(400);
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const previousAiLevelRef = useRef<number>(aiLevel);
 
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
-
-    // TODO - This would ideally change when the AI level changes, but since I am reworking
-    // the heatmap in the future anyway, it is not worth the fuss to figure out
-    // why this breaks things so badly.
-    setHeatMapSimulations(calculateHeatMapIterations(aiLevel));
   }, [aiLevel]);
 
   const addToLog = (message: string) => {
@@ -127,8 +111,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setAiLevel: handleAiLevelChange,
         aiAdjacentShipModifier,
         setAiAdjacentShipModifier,
-        heatMapSimulations,
-        setHeatMapSimulations,
       }}
     >
       {children}

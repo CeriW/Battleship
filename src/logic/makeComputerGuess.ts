@@ -1,13 +1,13 @@
 import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
-import { calculateHeatMap } from './calculateHeatMap';
+import { calculateHeatMap, HeatValues } from './calculateHeatMap';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
-  const { userShips, setUserShips, addToLog, heatMapSimulations, aiLevel } = useContext(GameContext);
+  const { userShips, setUserShips, addToLog, aiLevel } = useContext(GameContext);
 
   return useCallback(() => {
     const heatMap = calculateHeatMap(userShips, aiLevel);
@@ -19,7 +19,7 @@ export const useMakeComputerGuess = () => {
     let maxValueIndex = 0;
 
     flatHeatMap.forEach((value, index) => {
-      if (value !== heatMapSimulations && value > maxValue) {
+      if (value !== HeatValues.hit && value > maxValue) {
         maxValue = value;
         maxValueIndex = index;
       }
@@ -60,5 +60,5 @@ export const useMakeComputerGuess = () => {
         }
       }
     }
-  }, [userShips, setUserShips, addToLog, heatMapSimulations]);
+  }, [userShips, setUserShips, addToLog]);
 };
