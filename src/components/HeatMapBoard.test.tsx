@@ -2,8 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { HeatMapBoard } from './HeatMapBoard';
-import { initialiseHeatMapArray } from '../logic/calculateHeatMap';
-import { GameContext, GameContextType } from '../GameContext';
+import { initialiseHeatMapArray, HeatValues } from '../logic/calculateHeatMap';
 
 // Mock the GameContext
 jest.mock('../GameContext', () => ({
@@ -38,8 +37,8 @@ describe('Heatmap board component', () => {
 
     // Set test values
     positions[0][0] = 0; // Should show ❌
-    positions[0][1] = 400; // Should show ✔️
-    positions[0][2] = 200; // Should show 200
+    positions[0][1] = HeatValues.hit; // Should show ✔️
+    positions[0][2] = HeatValues.hit / 2;
 
     render(<HeatMapBoard positions={positions} />);
 
@@ -53,7 +52,7 @@ describe('Heatmap board component', () => {
     expect(cells[1]).toHaveTextContent('✔️');
 
     // Test cell with intermediate value (positions[0][2])
-    expect(cells[2]).toHaveTextContent(`200`);
+    expect(cells[2]).toHaveTextContent(`${HeatValues.hit / 2}`);
   });
 
   test('should handle empty positions array', () => {

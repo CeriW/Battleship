@@ -19,8 +19,6 @@ export const defaultTestContext: GameContextType = {
   setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: jest.fn(),
-  heatMapSimulations: 400,
-  setHeatMapSimulations: jest.fn(),
 };
 
 export default defaultTestContext;

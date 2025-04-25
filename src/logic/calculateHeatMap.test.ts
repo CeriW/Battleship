@@ -1,4 +1,12 @@
-import { calculateHeatMap, initialiseHeatMapArray, isAdjacentToHit, checkValidShipPlacement } from './calculateHeatMap';
+import {
+  calculateHeatMap,
+  initialiseHeatMapArray,
+  isAdjacentToHit,
+  checkValidShipPlacement,
+  markEdgesColder,
+  markSunkAdjacentColder,
+  HeatValues,
+} from './calculateHeatMap';
 import { initialiseShipArray } from './placeShips';
 import { CellStates } from '../types';
 
@@ -13,12 +21,96 @@ describe('initialiseHeatMap', () => {
   });
 });
 
+describe('markEdgesColder', () => {
+  test('edges should be cooler', () => {
+    const board = initialiseShipArray();
+    const cooledBoard = markEdgesColder(initialiseHeatMapArray(), board);
+
+    for (let x = 1; x < 9; x++) {
+      expect(cooledBoard[0][x]).toBe(0.6);
+      expect(cooledBoard[9][x]).toBe(0.6);
+    }
+
+    for (let y = 1; y < 9; y++) {
+      expect(cooledBoard[y][0]).toBe(0.6);
+      expect(cooledBoard[y][9]).toBe(0.6);
+    }
+
+    // Corners
+    expect(cooledBoard[0][0]).toBe(0.36);
+    expect(cooledBoard[0][9]).toBe(0.36);
+    expect(cooledBoard[9][0]).toBe(0.36);
+    expect(cooledBoard[9][9]).toBe(0.36);
+  });
+});
+
+describe('markSunkAdjacentColder', () => {
+  test('should mark cells of sunk ships cooler', () => {
+    const board = initialiseShipArray();
+    const heatMap = initialiseHeatMapArray();
+
+    // Place a destroyer (size 2) horizontally and mark both cells as hit
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+
+    // Set initial heat values
+    heatMap[4][5] = 2;
+    heatMap[4][6] = 2;
+
+    const cooledBoard = markSunkAdjacentColder(heatMap, board);
+
+    // The cells of the sunk ship should have their heat reduced by the multiplier (0.6)
+    expect(cooledBoard[4][5]).toBe(1.2); // 2 * 0.6
+    expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
+  });
+
+  test('should not affect cells that are not part of sunk ships', () => {
+    const board = initialiseShipArray();
+    const heatMap = initialiseHeatMapArray();
+
+    // Place a destroyer (size 2) horizontally with one hit and one unguessed
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.unguessed };
+
+    // Set initial heat values
+    heatMap[4][5] = 2;
+    heatMap[4][6] = 2;
+
+    const cooledBoard = markSunkAdjacentColder(heatMap, board);
+
+    // The cells should not be affected since the ship is not sunk
+    expect(cooledBoard[4][5]).toBe(2);
+    expect(cooledBoard[4][6]).toBe(2);
+  });
+
+  test('should not affect hit cells', () => {
+    const board = initialiseShipArray();
+    const heatMap = initialiseHeatMapArray();
+
+    // Place a destroyer (size 2) horizontally and mark both cells as hit
+    board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.hit };
+
+    // Set initial heat values
+    heatMap[4][5] = HeatValues.hit; // Hit cell
+    heatMap[4][6] = 2;
+
+    const cooledBoard = markSunkAdjacentColder(heatMap, board);
+
+    // The hit cell should not be affected
+    expect(cooledBoard[4][5]).toBe(HeatValues.hit);
+    // The other cell should be cooled
+    expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
+  });
+});
+
 describe('calculateHeatMap', () => {
   test('should return 100% for cells that are hits', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
+    board[4][6] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
   });
 
   test('should return 0% for cells that are misses', () => {
@@ -66,7 +158,7 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board);
 
     // The hit cell
-    expect(heatMap[y][x]).toBe(400);
+    expect(heatMap[y][x]).toBe(HeatValues.hit);
 
     // 1 is the value for a normal unguessed cell
     // Immediately adjacent unguessed cells should be at least 2
@@ -82,26 +174,15 @@ describe('calculateHeatMap', () => {
     expect(heatMap[y - 2][x]).toBeGreaterThan(1);
   });
 
-  test('a hit cell next to another hit cell should have a heat of 400', () => {
+  test('a hit cell next to another hit cell should have a heat of 100', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
-    const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
-  });
+    board[4][7] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-  test('cells next to a sunk ship should have default heat', () => {
-    const board = initialiseShipArray();
-    board[4][5] = { name: 'destroyer', status: CellStates.hit };
-    board[4][6] = { name: 'destroyer', status: CellStates.hit };
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
-    expect(heatMap[4][4]).toBe(1);
-    expect(heatMap[4][7]).toBe(1);
-    expect(heatMap[3][5]).toBe(1);
-    expect(heatMap[3][6]).toBe(1);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[4][6]).toBe(HeatValues.hit);
   });
 
   test('cells next to a miss should be cooler', () => {
@@ -134,8 +215,8 @@ describe('calculateHeatMap', () => {
     board[4][7] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[4][6]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[4][6]).toBe(HeatValues.hit);
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
@@ -155,8 +236,8 @@ describe('calculateHeatMap', () => {
     board[6][5] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
-    expect(heatMap[5][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
+    expect(heatMap[5][5]).toBe(HeatValues.hit);
 
     // Cells to right
     expect(heatMap[6][5]).toBeGreaterThan(2);
@@ -165,7 +246,7 @@ describe('calculateHeatMap', () => {
 
     // Cells to left
     expect(heatMap[4][5]).toBeGreaterThan(2);
-    expect(heatMap[3][5]).toBe(3.1);
+    expect(heatMap[3][5]).toBe(4.6);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
@@ -212,6 +293,7 @@ describe('calculateHeatMap', () => {
   test('a hit and adjacent misses to retain max/min heat', () => {
     const board = initialiseShipArray();
 
+    board[0][0] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
 
     board[4][6] = { name: null, status: CellStates.miss }; // to right
@@ -221,7 +303,7 @@ describe('calculateHeatMap', () => {
     board[5][5] = { name: null, status: CellStates.miss }; // below
 
     const heatMap = calculateHeatMap(board);
-    expect(heatMap[4][5]).toBe(400);
+    expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[4][6]).toBe(0);
     expect(heatMap[4][4]).toBe(0);
     expect(heatMap[3][5]).toBe(0);
@@ -274,14 +356,17 @@ describe('calculateHeatMap', () => {
   test('should handle break statements in ship placement loops', () => {
     const board = initialiseShipArray();
 
+    board[9][9] = { name: 'submarine', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+    board[8][9] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
+
     // Create a scenario that will trigger break statements
     // Place a ship horizontally with a miss at the end
-    board[0][0] = { name: 'destroyer', status: CellStates.hit };
     board[0][1] = { name: 'destroyer', status: CellStates.hit };
     board[0][2] = { name: 'destroyer', status: CellStates.hit };
     board[0][3] = { name: null, status: CellStates.miss }; // This should trigger a break
 
     // Place a ship vertically with a miss at the end
+
     board[2][0] = { name: 'submarine', status: CellStates.hit };
     board[3][0] = { name: 'submarine', status: CellStates.hit };
     board[4][0] = { name: null, status: CellStates.miss }; // This should trigger a break
@@ -289,16 +374,15 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board);
 
     // Verify the heat map was calculated correctly
-    expect(heatMap[0][0]).toBe(400); // Hit cell
-    expect(heatMap[0][1]).toBe(400); // Hit cell
-    expect(heatMap[0][2]).toBe(400); // Hit cell
+    expect(heatMap[0][1]).toBe(HeatValues.hit); // Hit cell
+    expect(heatMap[0][2]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][3]).toBe(0); // Miss cell
-    expect(heatMap[0][4]).toBe(0.42); // Adjacent to hit
+    expect(heatMap[0][4]).toBe(0.452); // Adjacent to hit
 
-    expect(heatMap[2][0]).toBe(400); // Hit cell
-    expect(heatMap[3][0]).toBe(400); // Hit cell
+    expect(heatMap[2][0]).toBe(HeatValues.hit); // Hit cell
+    expect(heatMap[3][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[4][0]).toBe(0); // Miss cell
-    expect(heatMap[5][0]).toBe(0.36); // Adjacent to hit
+    expect(heatMap[5][0]).toBe(0.41600000000000004); // Adjacent to hit
   });
 
   test('should handle break statements in ship space availability checks', () => {
