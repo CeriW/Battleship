@@ -27,20 +27,20 @@ describe('markEdgesColder', () => {
     const cooledBoard = markEdgesColder(initialiseHeatMapArray(), board);
 
     for (let x = 1; x < 9; x++) {
-      expect(cooledBoard[0][x]).toBe(0.7);
-      expect(cooledBoard[9][x]).toBe(0.7);
+      expect(cooledBoard[0][x]).toBe(0.6);
+      expect(cooledBoard[9][x]).toBe(0.6);
     }
 
     for (let y = 1; y < 9; y++) {
-      expect(cooledBoard[y][0]).toBe(0.7);
-      expect(cooledBoard[y][9]).toBe(0.7);
+      expect(cooledBoard[y][0]).toBe(0.6);
+      expect(cooledBoard[y][9]).toBe(0.6);
     }
 
     // Corners
-    expect(cooledBoard[0][0]).toBe(0.48999999999999994);
-    expect(cooledBoard[0][9]).toBe(0.48999999999999994);
-    expect(cooledBoard[9][0]).toBe(0.48999999999999994);
-    expect(cooledBoard[9][9]).toBe(0.48999999999999994);
+    expect(cooledBoard[0][0]).toBe(0.36);
+    expect(cooledBoard[0][9]).toBe(0.36);
+    expect(cooledBoard[9][0]).toBe(0.36);
+    expect(cooledBoard[9][9]).toBe(0.36);
   });
 });
 
@@ -377,12 +377,12 @@ describe('calculateHeatMap', () => {
     expect(heatMap[0][1]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][2]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][3]).toBe(0); // Miss cell
-    expect(heatMap[0][4]).toBe(0.494); // Adjacent to hit
+    expect(heatMap[0][4]).toBe(0.452); // Adjacent to hit
 
     expect(heatMap[2][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[3][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[4][0]).toBe(0); // Miss cell
-    expect(heatMap[5][0]).toBe(0.452); // Adjacent to hit
+    expect(heatMap[5][0]).toBe(0.41600000000000004); // Adjacent to hit
   });
 
   test('should handle break statements in ship space availability checks', () => {
