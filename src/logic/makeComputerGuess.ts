@@ -13,8 +13,6 @@ export const useMakeComputerGuess = () => {
     const heatMap = calculateHeatMap(userShips, aiLevel);
     const flatHeatMap = heatMap.flat();
 
-    // console.log(flatHeatMap);
-
     let maxValue = -1;
     let maxValueIndex = 0;
 
