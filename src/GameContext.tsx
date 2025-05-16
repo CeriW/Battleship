@@ -28,8 +28,6 @@ export type GameContextType = {
   addToLog: (message: string) => void;
   gameEnded: boolean;
   setGameEnded: (ended: boolean) => void;
-
-  // How 'smart' the AI is, out of 20, with 1 being the easiest and 20 being the hardest
   aiLevel: AiLevel;
   setAiLevel: (level: AiLevel) => void;
 
