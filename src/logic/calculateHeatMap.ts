@@ -1,10 +1,8 @@
 // import { ai } from '../ai-behaviour';
 import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment, ShipNames } from '../types';
-import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
+import { doesShipFit, generatePotentialCoordinates } from './helpers';
 import { isShipSunk } from './helpers';
-import { GameContext } from '../GameContext';
-import { useContext } from 'react';
 import { AiLevel } from '../types';
 
 export const HeatValues = {
