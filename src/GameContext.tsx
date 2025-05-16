@@ -1,22 +1,16 @@
 /* istanbul ignore file */
 import React, { createContext, useEffect, useState, useRef } from 'react';
-import { PositionArray } from './types';
+import { AiLevel, PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
 
 /* istanbul ignore next */
-const calculateAdjacentShipModifier = (difficultyClass: number) => {
-  switch (difficultyClass) {
-    case 6:
-      return 0.05;
-    case 5:
-      return 0.1;
-    case 4:
-      return 0.25;
-    case 3:
-      return 0.5;
-    case 2:
+const calculateAdjacentShipModifier = (aiLevel: AiLevel) => {
+  switch (aiLevel) {
+    case 'hard':
+      return 0;
+    case 'medium':
       return 0.7;
-    case 1:
+    case 'easy':
       return 1;
     default:
       return 0;
@@ -36,8 +30,8 @@ export type GameContextType = {
   setGameEnded: (ended: boolean) => void;
 
   // How 'smart' the AI is, out of 20, with 1 being the easiest and 20 being the hardest
-  aiLevel: number;
-  setAiLevel: (level: number) => void;
+  aiLevel: AiLevel;
+  setAiLevel: (level: AiLevel) => void;
 
   // How likely it is that the AI will allow ships to be placed touching each other, used in combination with Math.random()
   // Level 1 has 100% chance of allowing adjacent placement. The next few subsequent levels may still allow it, but have progressively less chance of doing so.
@@ -56,11 +50,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [log, setLog] = useState<string[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
-  const [aiLevel, setAiLevel] = useState<number>(20);
+  const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const previousAiLevelRef = useRef<number>(aiLevel);
+  const previousAiLevelRef = useRef<AiLevel>(aiLevel);
 
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
@@ -71,7 +65,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setLog((prevLog) => [`${message} - ${new Date().toISOString()}`, ...prevLog]);
   };
 
-  const handleAiLevelChange = (level: number) => {
+  const handleAiLevelChange = (level: AiLevel) => {
     setAiLevel(level);
 
     if (debounceTimerRef.current) {

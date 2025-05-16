@@ -16,3 +16,5 @@ export enum CellStates {
 export type PositionArray = ({ name: ShipNames | null; status: CellStates } | null)[][];
 
 export type Alignment = 'horizontal' | 'vertical';
+
+export type AiLevel = 'easy' | 'medium' | 'hard';

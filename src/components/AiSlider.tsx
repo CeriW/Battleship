@@ -4,29 +4,47 @@ import { GameContext } from '../GameContext';
 const AiSlider = () => {
   const { aiLevel, setAiLevel } = useContext(GameContext);
 
-  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newLevel = parseInt(event.target.value, 10);
-    setAiLevel(newLevel);
+  const handleDifficultyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAiLevel(event.target.value as 'easy' | 'medium' | 'hard');
   };
 
   return (
     <div className="ai-slider-container">
-      <label htmlFor="ai-difficulty" id="ai-difficulty-label">
-        AI Difficulty: {aiLevel}
-      </label>
-      <div className="slider-row">
-        <span className="slider-label">Easy</span>
-        <input
-          id="ai-difficulty"
-          type="range"
-          min="1"
-          max="20"
-          value={aiLevel}
-          onChange={handleSliderChange}
-          className="difficulty-slider"
-          data-testid="ai-difficulty-slider"
-        />
-        <span className="slider-label">Hard</span>
+      <label id="ai-difficulty-label">AI Difficulty: {aiLevel}</label>
+      <div className="radio-row">
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="easy"
+            checked={aiLevel === 'easy'}
+            onChange={handleDifficultyChange}
+            data-testid="difficulty-easy"
+          />
+          Easy
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="medium"
+            checked={aiLevel === 'medium'}
+            onChange={handleDifficultyChange}
+            data-testid="difficulty-medium"
+          />
+          Medium
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="hard"
+            checked={aiLevel === 'hard'}
+            onChange={handleDifficultyChange}
+            data-testid="difficulty-hard"
+          />
+          Hard
+        </label>
       </div>
     </div>
   );
