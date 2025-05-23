@@ -109,14 +109,14 @@ describe('calculateHeatMap', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(HeatValues.hit);
   });
 
   test('should return 0% for cells that are misses', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: null, status: CellStates.miss };
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(0);
   });
 
@@ -127,7 +127,7 @@ describe('calculateHeatMap', () => {
     board[4][4] = { name: null, status: CellStates.miss };
     board[3][5] = { name: null, status: CellStates.miss };
     board[5][5] = { name: null, status: CellStates.miss };
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][6]).toBe(0);
     expect(heatMap[4][4]).toBe(0);
     expect(heatMap[3][5]).toBe(0);
@@ -143,7 +143,7 @@ describe('calculateHeatMap', () => {
     board[y][x - 1] = { name: null, status: CellStates.miss };
     board[y + 1][x] = { name: null, status: CellStates.miss };
     board[y - 1][x] = { name: null, status: CellStates.miss };
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(0);
   });
 
@@ -155,7 +155,7 @@ describe('calculateHeatMap', () => {
     board[y][x] = { name: 'destroyer', status: CellStates.hit };
     board[y][x + 1] = { name: 'destroyer', status: CellStates.unguessed };
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
 
     // The hit cell
     expect(heatMap[y][x]).toBe(HeatValues.hit);
@@ -180,7 +180,7 @@ describe('calculateHeatMap', () => {
     board[4][6] = { name: 'destroyer', status: CellStates.hit };
     board[4][7] = { name: 'destroyer', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[4][6]).toBe(HeatValues.hit);
   });
@@ -191,7 +191,7 @@ describe('calculateHeatMap', () => {
     const x = 4;
     const y = 4;
     board[y][x] = { name: null, status: CellStates.miss };
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
 
     expect(heatMap[y][x]).toBe(0);
     expect(heatMap[y][x + 1]).toBe(0.42);
@@ -204,7 +204,7 @@ describe('calculateHeatMap', () => {
     const board = initialiseShipArray();
     board[4][5] = { name: 'destroyer', status: CellStates.hit };
     board[4][6] = { name: null, status: CellStates.miss };
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][6]).toBe(0);
   });
 
@@ -214,7 +214,7 @@ describe('calculateHeatMap', () => {
     board[4][6] = { name: 'carrier', status: CellStates.hit };
     board[4][7] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[4][6]).toBe(HeatValues.hit);
 
@@ -235,7 +235,7 @@ describe('calculateHeatMap', () => {
     board[5][5] = { name: 'carrier', status: CellStates.hit };
     board[6][5] = { name: 'carrier', status: CellStates.unguessed }; // Unguessed cell ensures isShipSunk returns false
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[5][5]).toBe(HeatValues.hit);
 
@@ -255,7 +255,7 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: null, status: CellStates.miss };
     board[4][6] = { name: null, status: CellStates.miss };
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(0);
     expect(heatMap[4][6]).toBe(0);
 
@@ -275,7 +275,7 @@ describe('calculateHeatMap', () => {
     board[4][5] = { name: null, status: CellStates.miss };
     board[5][5] = { name: null, status: CellStates.miss };
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(0);
     expect(heatMap[5][5]).toBe(0);
 
@@ -302,7 +302,7 @@ describe('calculateHeatMap', () => {
     board[3][5] = { name: null, status: CellStates.miss }; // above
     board[5][5] = { name: null, status: CellStates.miss }; // below
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
     expect(heatMap[4][5]).toBe(HeatValues.hit);
     expect(heatMap[4][6]).toBe(0);
     expect(heatMap[4][4]).toBe(0);
@@ -371,7 +371,7 @@ describe('calculateHeatMap', () => {
     board[3][0] = { name: 'submarine', status: CellStates.hit };
     board[4][0] = { name: null, status: CellStates.miss }; // This should trigger a break
 
-    const heatMap = calculateHeatMap(board);
+    const heatMap = calculateHeatMap(board, 'hard');
 
     // Verify the heat map was calculated correctly
     expect(heatMap[0][1]).toBe(HeatValues.hit); // Hit cell
