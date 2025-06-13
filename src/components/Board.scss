@@ -4,19 +4,27 @@ $submarine: green;
 $destroyer: yellow;
 $carrier: purple;
 
+$bold-border: 3px solid white;
+
 .board {
-  border: 1px solid black;
-  width: 400px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, (400px / 11));
-  margin: 20px;
+  grid-template-rows: min-content repeat(10, 1fr);
+  aspect-ratio: 1 / 1;
+
+  @media (max-width: 1000px) {
+    font-size: 18px;
+  }
 
   .column-marker,
   .row-marker {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .column-marker {
+    margin-bottom: 20%;
   }
 
   .row {
@@ -26,10 +34,30 @@ $carrier: purple;
   }
 
   .cell {
-    border: 1px solid lightgrey;
+    border: 1px solid rgba(white, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .cell.unguessed {
+    cursor: pointer;
+  }
+
+  .row-marker + .cell {
+    border-left: $bold-border;
+  }
+
+  .cell:last-child {
+    border-right: $bold-border;
+  }
+
+  .column-marker + .row .cell {
+    border-top: $bold-border;
+  }
+
+  .row:last-child .cell {
+    border-bottom: $bold-border;
   }
 
   .battleship {

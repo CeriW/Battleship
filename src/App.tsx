@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
+import Window from './components/Window';
 
 import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
@@ -37,37 +38,35 @@ const GameBoards = () => {
     }
   }, [playerTurn]);
 
-  // userShips[5][5] = {
-  //   name: 'carrier',
-  //   status: CellStates.hit,
-  // };
-  // userShips[5][6] = {
-  //   name: 'carrier',
-  //   status: CellStates.hit,
-  // };
-
-  // for (let i = 0; i < 10; i++) {
-  //   for (let j = 0; j < 10; j++) {
-  //     if (userShips[i][j]?.name === 'carrier') {
-  //       userShips[i][j]!.status = CellStates.hit;
-  //       i = 100;
-  //       j = 100;
-  //     }
-  //   }
-  // }
-
   return (
-    <div id="boards">
-      <h3>User guess board</h3>
-      <UserGuessBoard />
+    <div className="game-container">
+      <div className="player-guess-board">
+        {/* <h3>User guess board</h3> */}
+        <div className="player-guess-board-inner">
+          <UserGuessBoard />
+        </div>
+      </div>
 
-      <h3>User board</h3>
-      <Board positions={userShips} />
+      <Window title="Computer avatar" className="computer-avatar">
+        <div>Computer's avatar will appear here</div>
+      </Window>
 
-      <h3>Computer board</h3>
-      <Board positions={computerShips} />
-      <h3>Heat map</h3>
-      <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} />
+      <Window title="Stats" className="stats">
+        <div>Stats will appear here</div>
+      </Window>
+
+      <Window title="Player fleet" className="player-fleet">
+        <Board positions={userShips} />
+      </Window>
+
+      <Window title="Feed" className="feed">
+        <Log />
+      </Window>
+
+      {/* <h3>Computer board</h3>
+      <Board positions={computerShips} /> */}
+      {/* <h3>Heat map</h3> */}
+      {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
     </div>
   );
 };
@@ -76,8 +75,7 @@ export function App() {
   return (
     <GameProvider>
       <GameBoards />
-      <Log />
-      <AiSlider />
+      {/* <AiSlider /> */}
     </GameProvider>
   );
 }

@@ -1,29 +1,118 @@
-@import './components/Board.scss';
-@import './components/HeatMapBoard.scss';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --battleship-blue: #0088d1;
+  --orange: #ff6800;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+@import './components/Board.scss';
+@import './components/HeatMapBoard.scss';
+@import './components/Window.scss';
+
+@mixin page-background {
+  background-color: #0088d1;
+  background-image: url('../public/img/bg-left.svg'), url('../public/img/bg-right.svg');
+  background-position: left top, right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-attachment: fixed;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  @include page-background;
+  color: white;
+  font-size: 28px;
+  overflow-x: hidden;
+  font-family: 'Oswald', sans-serif;
+  display: flex;
 }
 
 #root {
-  display: flex;
-  flex-wrap: wrap;
+  align-self: center;
+  width: 100%;
 }
 
-#boards {
-  display: flex;
-  flex-wrap: wrap;
+.game-container {
+  display: grid;
+  grid-template:
+    'player-guess-board computer-avatar stats'
+    'player-guess-board player-fleet feed'
+    / 5fr 2.2fr 2.2fr;
+  gap: 30px;
+  padding: 2vw;
+
+  @media (max-width: 1500px) {
+    grid-template:
+      'player-guess-board player-guess-board player-guess-board player-guess-board'
+      'computer-avatar player-fleet stats feed'
+      / 1fr 1fr 1fr 1fr;
+    gap: 50px 15px;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template:
+      'player-guess-board player-guess-board'
+      'computer-avatar player-fleet'
+      'stats feed'
+      / 1fr 1fr;
+  }
+
+  @media (max-width: 550px) {
+    grid-template:
+      'player-guess-board'
+      'computer-avatar'
+      'player-fleet'
+      'stats'
+      'feed'
+      / 1fr;
+  }
 }
 
-.user-guess-board .cell.hit,
-.user-guess-board .cell.miss {
-  pointer-events: none;
+.computer-avatar {
+  grid-area: computer-avatar;
+}
+
+.player-guess-board {
+  grid-area: player-guess-board;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .player-guess-board-inner {
+    max-width: max(35vw, 550px);
+    width: 100%;
+  }
+}
+
+.computer-avatar {
+  grid-area: computer-avatar;
+}
+
+.stats {
+  grid-area: stats;
+}
+
+.player-fleet {
+  grid-area: player-fleet;
+}
+
+.feed {
+  grid-area: feed;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #333;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

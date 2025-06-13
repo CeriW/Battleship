@@ -28,7 +28,7 @@ describe('Board Component', () => {
     render(<Board positions={positions} />);
 
     const cells = screen.getAllByTestId('cell');
-    expect(cells[0]).toHaveTextContent('🔥');
+    expect(cells[0]).toHaveClass('hit');
   });
 
   test('displays X emoji for missed cells', () => {
@@ -38,7 +38,7 @@ describe('Board Component', () => {
     render(<Board positions={positions} />);
 
     const cells = screen.getAllByTestId('cell');
-    expect(cells[0]).toHaveTextContent('❌');
+    expect(cells[0]).toHaveClass('miss');
   });
 
   test('displays blank for empty or unmarked cells', () => {
