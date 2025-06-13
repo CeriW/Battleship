@@ -9,7 +9,7 @@ $bold-border: 3px solid white;
 .board {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, 1fr);
+  grid-template-rows: min-content repeat(10, 1fr);
   aspect-ratio: 1 / 1;
 
   @media (max-width: 1000px) {
@@ -21,6 +21,10 @@ $bold-border: 3px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .column-marker {
+    margin-bottom: 20%;
   }
 
   .row {

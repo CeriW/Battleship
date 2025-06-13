@@ -107,7 +107,7 @@ body {
   justify-content: center;
 
   .player-guess-board-inner {
-    max-width: 550px;
+    max-width: max(35vw, 550px);
     width: 100%;
   }
 }
