@@ -24,12 +24,10 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${positions[y][x]?.name ?? ''} ${positions[y][x]?.status ?? ''}`}
+          className={`cell ${positions[y][x]?.name ?? ''} ${
+            positions[y][x]?.status ?? ''
+          } border border-white border-opacity-40`}
           data-testid="cell"
-          // onClick={() => {
-          //   console.log(i, j);
-          // }}
-          // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         >
           {positions[y][x]?.status === CellStates.hit && '🔥'}
           {positions[y][x]?.status === CellStates.miss && '❌'}
@@ -38,8 +36,8 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
     }
 
     rows.push(
-      <div className="row" key={`row-${y}`}>
-        <div className="row-marker" key={`row-marker-${y}`} data-testid="row-marker">
+      <div className="row grid grid-cols-[repeat(11,1fr)]" key={`row-${y}`}>
+        <div className="row-marker border-white border-r-4" key={`row-marker-${y}`} data-testid="row-marker">
           {letters[y]}
         </div>
         {cells}
@@ -49,7 +47,7 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
 
   return (
     <div className="board" data-testid="board">
-      {columnMarkers}
+      <div className="grid grid-cols-[repeat(11,1fr)]">{columnMarkers}</div>
       {rows}
     </div>
   );
