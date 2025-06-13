@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
-import './index.scss';
+import './index.css';
 
 import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
@@ -75,9 +75,14 @@ const GameBoards = () => {
 export function App() {
   return (
     <GameProvider>
-      <GameBoards />
-      <Log />
-      <AiSlider />
+      <div className="container">
+        <h1>Battleship Game</h1>
+        <GameBoards />
+        <div>
+          <Log />
+          <AiSlider />
+        </div>
+      </div>
     </GameProvider>
   );
 }
