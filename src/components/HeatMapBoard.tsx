@@ -2,7 +2,6 @@ import React from 'react';
 import { HeatValues } from '../logic/calculateHeatMap';
 
 export const HeatMapBoard = ({ positions }: any) => {
-  console.log(positions);
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(

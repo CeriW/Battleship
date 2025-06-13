@@ -1,10 +1,9 @@
 // import { ai } from '../ai-behaviour';
 import { shipTypes } from '../App';
 import { CellStates, HeatMapArray, PositionArray, Alignment, ShipNames } from '../types';
-import { doesShipFit, generatePotentialCoordinates, generateRandomAlignment } from './helpers';
+import { doesShipFit, generatePotentialCoordinates } from './helpers';
 import { isShipSunk } from './helpers';
-import { GameContext } from '../GameContext';
-import { useContext } from 'react';
+import { AiLevel } from '../types';
 
 export const HeatValues = {
   hit: 100,
@@ -60,25 +59,22 @@ type HeatMapStrategy = {
 };
 
 /* istanbul ignore next */
-const calculateHeatMapStrategy = (aiLevel: number): HeatMapStrategy => {
+const calculateHeatMapStrategy = (aiLevel: AiLevel): HeatMapStrategy => {
   let missCoolnessRadius; // how many cells adjacent to a miss should be considered colder
 
-  // At AI < 5, we don't consider cells adjacent to misses cooler
-  // At 5-10, we consider one cell adjacent to misses cooler
-  // At 11-15, we might consider 1-2 cells adjacent to misses cooler (random)
-  // At 16-19, might be 1 or 2 but probably 2 (random)
-  // At 20 (maximum AI level), we always consider 2 cells adjacent to misses cooler
-
-  if (aiLevel < 5) {
-    missCoolnessRadius = 0;
-  } else if (aiLevel <= 10) {
-    missCoolnessRadius = 1;
-  } else if (aiLevel <= 15) {
-    missCoolnessRadius = Math.round(Math.random() * 2);
-  } else if (aiLevel <= 19) {
-    missCoolnessRadius = Math.round(Math.random() * 2.5);
-  } else {
-    missCoolnessRadius = 2;
+  switch (aiLevel) {
+    case 'easy':
+      missCoolnessRadius = 0;
+      break;
+    case 'medium':
+      missCoolnessRadius = 1;
+      break;
+    case 'hard':
+      missCoolnessRadius = 2;
+      break;
+    default:
+      missCoolnessRadius = 0;
+      break;
   }
 
   return {
@@ -378,7 +374,7 @@ export const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: Pos
   return newHeatMap;
 };
 
-export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: number = 20): HeatMapArray => {
+export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel): HeatMapArray => {
   let heatMap = initialiseHeatMapArray();
   const { missCoolnessRadius } = calculateHeatMapStrategy(aiLevel);
 

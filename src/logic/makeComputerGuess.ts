@@ -12,12 +12,23 @@ export const useMakeComputerGuess = () => {
   return useCallback(() => {
     const heatMap = calculateHeatMap(userShips, aiLevel);
     const flatHeatMap = heatMap.flat();
-
     // Find the top 2 highest values
     const sortedValues = [...flatHeatMap].sort((a, b) => b - a);
     const top2Values = [...new Set(sortedValues)].slice(0, 2);
 
     // Get all indices that match any of the top 3 values
+
+    let maxValue = -1;
+    let maxValueIndex = 0;
+
+    flatHeatMap.forEach((value, index) => {
+      if (value !== HeatValues.hit && value > maxValue) {
+        maxValue = value;
+        maxValueIndex = index;
+      }
+    });
+
+    // Create a list of all cells that have the most heat, and pick one at random
     const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
       if (top2Values.includes(value)) {
         indices.push(index);
