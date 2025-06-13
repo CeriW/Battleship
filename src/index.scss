@@ -1,8 +1,11 @@
+:root {
+  --battleship-blue: #0088d1;
+  --orange: #ff6800;
+}
+
 @import './components/Board.scss';
 @import './components/HeatMapBoard.scss';
-
-$battleship-blue: #0088d1;
-$orange: #ff6800;
+@import './components/Window.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -80,7 +83,16 @@ body {
       'computer-avatar player-fleet'
       'stats feed'
       / 1fr 1fr;
-    gap: 50px 15px;
+  }
+
+  @media (max-width: 550px) {
+    grid-template:
+      'player-guess-board'
+      'computer-avatar'
+      'player-fleet'
+      'stats'
+      'feed'
+      / 1fr;
   }
 }
 
@@ -95,11 +107,11 @@ body {
   justify-content: center;
 
   .player-guess-board-inner {
-    max-width: 950px;
+    max-width: 550px;
     width: 100%;
 
-    @media (max-width: 1500px) {
-      max-width: 700px;
+    @media (max-width: 1000px) {
+      font-size: 18px;
     }
   }
 }
@@ -118,29 +130,6 @@ body {
 
 .feed {
   grid-area: feed;
-}
-
-.window {
-  background: url('../public/img/window.svg');
-  background-size: 100% 100%;
-  aspect-ratio: 484 / 431;
-  padding: 5%;
-  box-sizing: border-box;
-  overflow: hidden;
-
-  & > div {
-    height: 100%;
-    overflow: auto;
-  }
-}
-
-h3 {
-  text-transform: uppercase;
-  color: $orange;
-  margin: 0;
-  font-size: 3.3rem;
-  text-shadow: 5px 5px 0 #000, -5px -5px 0 #000, 5px -5px 0 #000, -5px 5px 0 #000, 5px 5px 0 #000;
-  line-height: 1;
 }
 
 /* width */
