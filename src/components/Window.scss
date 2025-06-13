@@ -5,7 +5,7 @@
   padding: 5%;
   box-sizing: border-box;
   overflow: hidden;
-  width: min(100%, 400px);
+  width: clamp(100%, 400px, 600px);
   float: none;
   margin: 0 auto;
 
@@ -14,7 +14,7 @@
     overflow: auto;
     padding: 0 10px 10px;
     box-sizing: border-box;
-    font-size: 18px;
+    font-size: 2rem;
   }
 
   h3 {
