@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
+import Window from './components/Window';
 
 import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
@@ -40,27 +41,27 @@ const GameBoards = () => {
   return (
     <div className="game-container">
       <div className="player-guess-board">
-        <h3>User guess board</h3>
-        <UserGuessBoard />
+        {/* <h3>User guess board</h3> */}
+        <div className="player-guess-board-inner">
+          <UserGuessBoard />
+        </div>
       </div>
 
-      <div className="computer-avatar window">
-        <h3>Computer avatar</h3>
-      </div>
+      <Window title="Computer avatar" className="computer-avatar">
+        <div>Computer's avatar will appear here</div>
+      </Window>
 
-      <div className="stats window">
-        <h3>Stats</h3>
-      </div>
+      <Window title="Stats" className="stats">
+        <div>Stats will appear here</div>
+      </Window>
 
-      <div className="player-fleet window">
-        <h3>Player fleet</h3>
+      <Window title="Player fleet" className="player-fleet">
         <Board positions={userShips} />
-      </div>
+      </Window>
 
-      <div className="feed window">
-        <h3>Feed</h3>
+      <Window title="Feed" className="feed">
         <Log />
-      </div>
+      </Window>
 
       {/* <h3>Computer board</h3>
       <Board positions={computerShips} /> */}
