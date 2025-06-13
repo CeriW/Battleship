@@ -7,12 +7,14 @@ $carrier: purple;
 $bold-border: 3px solid white;
 
 .board {
-  // border: 1px solid black;
-  // width: 600px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, 1fr);
   aspect-ratio: 1 / 1;
+
+  @media (max-width: 1000px) {
+    font-size: 18px;
+  }
 
   .column-marker,
   .row-marker {
