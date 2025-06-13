@@ -18,3 +18,5 @@ export type PositionArray = ({ name: ShipNames | null; status: CellStates } | nu
 export type Alignment = 'horizontal' | 'vertical';
 
 export type AiLevel = 'easy' | 'medium' | 'hard';
+
+export type RowName = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J';

@@ -22,14 +22,14 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, playerTurn, setPlayerTurn, gameEnded, addToLog } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
-  useEffect(() => {
-    if (!gameEnded) {
-      addToLog(`${playerTurn} turn`);
-    }
-  }, [playerTurn]);
+  // useEffect(() => {
+  //   if (!gameEnded) {
+  //     addToLog(`${playerTurn} turn`);
+  //   }
+  // }, [playerTurn]);
 
   useEffect(() => {
     if (playerTurn === 'computer' && !gameEnded) {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { CellStates, ShipNames } from '../types';
+import { CellStates, RowName, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
+import { guessMessage, shipSunkMessage } from '../logic/log-messaging';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
@@ -17,7 +18,7 @@ export const UserGuessBoard: React.FC = () => {
     );
   }
 
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+  const letters: RowName[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
   for (let y = 0; y < letters.length; y++) {
@@ -50,9 +51,9 @@ export const UserGuessBoard: React.FC = () => {
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
-              addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
+              addToLog(guessMessage({ player: 'user', x, y: letters[y], type: 'hit' }));
               if (shipIsSunk) {
-                addToLog(`User sunk ${cell?.name}`);
+                addToLog(shipSunkMessage({ player: 'user', shipName: cell?.name as ShipNames }));
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
@@ -64,7 +65,7 @@ export const UserGuessBoard: React.FC = () => {
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
-              addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
+              addToLog(guessMessage({ player: 'user', x, y: letters[y], type: 'miss' }));
             }
 
             setPlayerTurn('computer');

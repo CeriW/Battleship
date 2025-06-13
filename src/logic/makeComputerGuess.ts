@@ -1,8 +1,9 @@
 import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
-import { CellStates, ShipNames } from '../types';
+import { CellStates, RowName, ShipNames } from '../types';
 import { calculateHeatMap, HeatValues } from './calculateHeatMap';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
+import { guessMessage, shipSunkMessage } from './log-messaging';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -48,10 +49,10 @@ export const useMakeComputerGuess = () => {
       };
 
       setUserShips(newUserShips);
-      addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`);
+      addToLog(guessMessage({ player: 'computer', x, y: letters[y] as RowName, type: status }));
 
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
-        addToLog(`Computer sunk ${cell?.name}`);
+        addToLog(shipSunkMessage({ player: 'computer', shipName: cell?.name as ShipNames }));
 
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'));

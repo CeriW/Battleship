@@ -24,8 +24,8 @@ export type GameContextType = {
   setComputerShips: (ships: PositionArray) => void;
   playerTurn: 'user' | 'computer';
   setPlayerTurn: (turn: 'user' | 'computer') => void;
-  log: string[];
-  addToLog: (message: string) => void;
+  log: React.ReactNode[];
+  addToLog: (message: React.ReactNode) => void;
   gameEnded: boolean;
   setGameEnded: (ended: boolean) => void;
   aiLevel: AiLevel;
@@ -45,7 +45,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips()); // TODO - have user place their own ships
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>(Math.random() > 0.5 ? 'user' : 'computer');
-  const [log, setLog] = useState<string[]>([]);
+  const [log, setLog] = useState<React.ReactNode[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
@@ -58,9 +58,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
   }, [aiLevel]);
 
-  const addToLog = (message: string) => {
-    console.log(message);
-    setLog((prevLog) => [`${message} - ${new Date().toISOString()}`, ...prevLog]);
+  const addToLog = (message: React.ReactNode) => {
+    setLog((prevLog) => [message, ...prevLog]);
   };
 
   const handleAiLevelChange = (level: AiLevel) => {
