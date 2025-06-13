@@ -75,7 +75,13 @@ const GameBoards = () => {
 export function App() {
   return (
     <GameProvider>
-      <div className="container">
+      <div
+        className="w-full max-w-none bg-battleship-blue text-white bg-no-repeat bg-contain bg-fixed overflow-x-hidden text-base"
+        style={{
+          backgroundImage: "url('/img/bg-left.svg'), url('/img/bg-right.svg')",
+          backgroundPosition: 'left top, right top',
+        }}
+      >
         <h1>Battleship Game</h1>
         <GameBoards />
         <div>

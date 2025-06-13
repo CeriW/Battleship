@@ -4,7 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'custom-blue': '#0088D1',
+        'battleship-blue': '#0088D1',
+      },
+      fontFamily: {
+        sans: ['Oswald', 'sans-serif'],
+      },
+      fontSize: {
+        base: '28px',
       },
     },
   },
