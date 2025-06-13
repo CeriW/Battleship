@@ -64,7 +64,7 @@ describe('UserGuessBoard', () => {
       </GameContext.Provider>
     );
 
-    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('✔️');
+    expect(screen.getAllByTestId('cell')[0]).toHaveClass('hit');
   });
 
   test('Renders a board with a miss', () => {
@@ -91,7 +91,7 @@ describe('UserGuessBoard', () => {
       </GameContext.Provider>
     );
 
-    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('❌');
+    expect(screen.getAllByTestId('cell')[0]).toHaveClass('miss');
   });
 
   test('Handles cell clicks correctly', async () => {
@@ -315,9 +315,11 @@ describe('UserGuessBoard', () => {
     );
 
     const cells = screen.getAllByTestId('cell');
-    expect(cells[0]).toHaveTextContent('✔️');
-    expect(cells[1]).toHaveTextContent('❌');
-    expect(cells[2]).toHaveTextContent('');
+    expect(cells[0]).toHaveClass('hit');
+    expect(cells[1]).toHaveClass('miss');
+    expect(cells[2]).toHaveClass('unguessed');
+    expect(cells[2]).not.toHaveClass('miss');
+    expect(cells[2]).not.toHaveClass('hit');
   });
 
   test('applies correct className based on cell status', () => {
