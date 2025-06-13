@@ -4,12 +4,14 @@ $submarine: green;
 $destroyer: yellow;
 $carrier: purple;
 
+$bold-border: 3px solid white;
+
 .board {
-  border: 1px solid black;
-  width: 400px;
+  // border: 1px solid black;
+  width: 600px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, (400px / 11));
+  grid-template-rows: repeat(11, (600px / 11));
   margin: 20px;
 
   .column-marker,
@@ -26,10 +28,27 @@ $carrier: purple;
   }
 
   .cell {
-    border: 1px solid lightgrey;
+    border: 1px solid rgba(white, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+  }
+
+  .row-marker + .cell {
+    border-left: $bold-border;
+  }
+
+  .cell:last-child {
+    border-right: $bold-border;
+  }
+
+  .column-marker + .row .cell {
+    border-top: $bold-border;
+  }
+
+  .row:last-child .cell {
+    border-bottom: $bold-border;
   }
 
   .battleship {
