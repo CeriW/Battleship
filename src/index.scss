@@ -65,8 +65,8 @@ body {
   grid-template:
     'player-guess-board computer-avatar stats'
     'player-guess-board player-fleet feed'
-    / 5fr 2.5fr 2.5fr;
-  gap: max(3vw, 30px);
+    / 5fr 2.2fr 2.2fr;
+  gap: 30px;
   padding: 2vw;
 
   @media (max-width: 1500px) {
