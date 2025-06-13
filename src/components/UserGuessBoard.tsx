@@ -2,6 +2,7 @@ import React from 'react';
 import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
+import { HitIcon, MissIcon } from './Icons';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
@@ -25,7 +26,7 @@ export const UserGuessBoard: React.FC = () => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${computerShips[y][x]?.status || ''}`}
+          className={`cell ${computerShips[y][x]?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
             if (gameEnded) {
@@ -67,11 +68,10 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             setPlayerTurn('computer');
-            // setUserShips(newComputerShips); // TODO - Remove this, it's wrong, it's just for testing the heat map
           }}
         >
-          {computerShips[y][x]?.status === CellStates.hit && '✔️'}
-          {computerShips[y][x]?.status === CellStates.miss && '❌'}
+          {computerShips[y][x]?.status === CellStates.hit && <HitIcon />}
+          {computerShips[y][x]?.status === CellStates.miss && <MissIcon />}
           {computerShips[y][x]?.status === CellStates.unguessed && ''}
         </div>
       );

@@ -5,7 +5,6 @@ $battleship-blue: #0088d1;
 
 @mixin page-background {
   background-color: #0088d1;
-  // background-image: url('/img/bg-left.svg'), url('/img/bg-right.svg');
   background-image: url('../public/img/bg-left.svg'), url('../public/img/bg-right.svg');
   background-position: left top, right top;
   background-repeat: no-repeat;
@@ -49,4 +48,32 @@ body {
   font-size: 28px;
   overflow-x: hidden;
   font-family: 'Oswald', sans-serif;
+}
+
+.game-container {
+  display: grid;
+  grid-template:
+    'player-guess-board computer-avatar stats'
+    'player-guess-board player-fleet feed'
+    / 5fr 3fr 3fr;
+}
+
+.player-guess-board {
+  grid-area: player-guess-board;
+}
+
+.computer-avatar {
+  grid-area: computer-avatar;
+}
+
+.stats {
+  grid-area: stats;
+}
+
+.player-fleet {
+  grid-area: player-fleet;
+}
+
+.feed {
+  grid-area: feed;
 }

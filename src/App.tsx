@@ -37,37 +37,35 @@ const GameBoards = () => {
     }
   }, [playerTurn]);
 
-  // userShips[5][5] = {
-  //   name: 'carrier',
-  //   status: CellStates.hit,
-  // };
-  // userShips[5][6] = {
-  //   name: 'carrier',
-  //   status: CellStates.hit,
-  // };
-
-  // for (let i = 0; i < 10; i++) {
-  //   for (let j = 0; j < 10; j++) {
-  //     if (userShips[i][j]?.name === 'carrier') {
-  //       userShips[i][j]!.status = CellStates.hit;
-  //       i = 100;
-  //       j = 100;
-  //     }
-  //   }
-  // }
-
   return (
-    <div id="boards">
-      <h3>User guess board</h3>
-      <UserGuessBoard />
+    <div className="game-container">
+      <div className="player-guess-board">
+        <h3>User guess board</h3>
+        <UserGuessBoard />
+      </div>
 
-      <h3>User board</h3>
-      <Board positions={userShips} />
+      <div className="computer-avatar">
+        <h3>Computer avatar</h3>
+      </div>
+
+      <div className="stats">
+        <h3>Stats</h3>
+      </div>
+
+      <div className="player-fleet">
+        <h3>Player fleet</h3>
+        <Board positions={userShips} />
+      </div>
+
+      <div className="feed">
+        <h3>Feed</h3>
+        <Log />
+      </div>
 
       <h3>Computer board</h3>
       <Board positions={computerShips} />
-      <h3>Heat map</h3>
-      <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} />
+      {/* <h3>Heat map</h3> */}
+      {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
     </div>
   );
 };
@@ -76,8 +74,7 @@ export function App() {
   return (
     <GameProvider>
       <GameBoards />
-      <Log />
-      <AiSlider />
+      {/* <AiSlider /> */}
     </GameProvider>
   );
 }

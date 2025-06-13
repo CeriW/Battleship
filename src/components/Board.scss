@@ -8,11 +8,12 @@ $bold-border: 3px solid white;
 
 .board {
   // border: 1px solid black;
-  width: 600px;
+  // width: 600px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, (600px / 11));
+  grid-template-rows: repeat(11, 1fr);
   margin: 20px;
+  aspect-ratio: 1 / 1;
 
   .column-marker,
   .row-marker {
@@ -32,6 +33,9 @@ $bold-border: 3px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .cell.unguessed {
     cursor: pointer;
   }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { PositionArray, CellStates } from '../types';
+import { HitIcon, MissIcon } from './Icons';
 
 interface BoardProps {
   positions: PositionArray;
@@ -31,8 +32,8 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
           // }}
           // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         >
-          {positions[y][x]?.status === CellStates.hit && '🔥'}
-          {positions[y][x]?.status === CellStates.miss && '❌'}
+          {positions[y][x]?.status === CellStates.hit && <HitIcon />}
+          {positions[y][x]?.status === CellStates.miss && <MissIcon />}
         </div>
       );
     }
