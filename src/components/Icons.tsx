@@ -6,7 +6,7 @@ export const MissIcon = () => (
   </svg>
 );
 
-export const HitIcon = () => {
-  const version = Math.ceil(Math.random() * 9);
-  return <img src={`/img/fire-${version}.svg`} alt="Hit" width="90%" height="90%" />;
+export const HitIcon: React.FC = () => {
+  const versionRef = React.useRef(Math.ceil(Math.random() * 9));
+  return <img src={`/img/fire-${versionRef.current}.svg`} alt="Hit marker" width="90%" height="90%" />;
 };
