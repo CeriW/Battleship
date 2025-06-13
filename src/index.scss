@@ -2,6 +2,7 @@
 @import './components/HeatMapBoard.scss';
 
 $battleship-blue: #0088d1;
+$orange: #ff6800;
 
 @mixin page-background {
   background-color: #0088d1;
@@ -56,6 +57,8 @@ body {
     'player-guess-board computer-avatar stats'
     'player-guess-board player-fleet feed'
     / 5fr 3fr 3fr;
+  gap: max(5vw, 50px);
+  padding: 5vw;
 }
 
 .player-guess-board {
@@ -76,4 +79,22 @@ body {
 
 .feed {
   grid-area: feed;
+}
+
+.window {
+  background: url('../public/img/window.svg');
+  background-size: 100% 100%;
+  aspect-ratio: 484 / 431;
+  padding: 10% 10% 5%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+h3 {
+  text-transform: uppercase;
+  color: $orange;
+  margin: 0;
+  font-size: 2.9rem;
+  text-shadow: 5px 5px 0 #000, -5px -5px 0 #000, 5px -5px 0 #000, -5px 5px 0 #000, 5px 5px 0 #000;
+  line-height: 1;
 }

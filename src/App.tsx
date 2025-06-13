@@ -44,26 +44,26 @@ const GameBoards = () => {
         <UserGuessBoard />
       </div>
 
-      <div className="computer-avatar">
+      <div className="computer-avatar window">
         <h3>Computer avatar</h3>
       </div>
 
-      <div className="stats">
+      <div className="stats window">
         <h3>Stats</h3>
       </div>
 
-      <div className="player-fleet">
+      <div className="player-fleet window">
         <h3>Player fleet</h3>
         <Board positions={userShips} />
       </div>
 
-      <div className="feed">
+      <div className="feed window">
         <h3>Feed</h3>
         <Log />
       </div>
 
-      <h3>Computer board</h3>
-      <Board positions={computerShips} />
+      {/* <h3>Computer board</h3>
+      <Board positions={computerShips} /> */}
       {/* <h3>Heat map</h3> */}
       {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
     </div>
