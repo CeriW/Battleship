@@ -22,7 +22,7 @@ export const guessMessage = ({
       <span>{deriveName(player)}:</span>
       <span>
         guessed {y}
-        {x}, {type}
+        {x + 1}, {type}
       </span>
       <span className="log-time">{deriveTime()}</span>
     </div>
