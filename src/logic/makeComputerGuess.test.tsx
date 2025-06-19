@@ -9,12 +9,22 @@ import defaultTestContext from '../defaultTestContext';
 // Mock dependencies
 jest.mock('./calculateHeatMap');
 
+// Mock Math.random to make tests deterministic
+const originalMathRandom = Math.random;
+beforeAll(() => {
+  Math.random = jest.fn();
+});
+
+afterAll(() => {
+  Math.random = originalMathRandom;
+});
+
 // Since introducing an element of randomness to the way the computer guesses,
 // it's difficult to test this with any reliability.
 // I'm leaving this here for posterity for now, but since the computer will
 // not always guess the same cell under the same circumstances, some thought
 // needs putting into what we should actually test for here.
-describe.skip('useMakeComputerGuess', () => {
+describe('useMakeComputerGuess', () => {
   const mockSetUserShips = jest.fn();
   const mockAddToLog = jest.fn();
 
@@ -47,9 +57,14 @@ describe.skip('useMakeComputerGuess', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (Math.random as jest.Mock).mockReturnValue(0.5);
   });
 
-  test('should make a hit guess when ship is present', () => {
+  afterAll(() => {
+    (Math.random as jest.Mock).mockRestore();
+  });
+
+  test.skip('should make a hit guess when ship is present', () => {
     // Mock heat map to return highest value at (2,3)
     const mockHeatMap = Array(10)
       .fill(null)
@@ -68,6 +83,10 @@ describe.skip('useMakeComputerGuess', () => {
           }))
       );
     userShips[2][3] = { name: 'destroyer', status: CellStates.unguessed };
+    userShips[2][4] = { name: 'destroyer', status: CellStates.hit };
+
+    // Mock Math.random to return 0, ensuring we pick the first (and only) maximum value cell
+    (Math.random as jest.Mock).mockReturnValue(0);
 
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
@@ -142,7 +161,7 @@ describe.skip('useMakeComputerGuess', () => {
     expect(call[1][1].status).toBe(CellStates.miss);
   });
 
-  test('should not modify already guessed cells', () => {
+  test.skip('should not modify already guessed cells', () => {
     const mockHeatMap = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
@@ -161,6 +180,9 @@ describe.skip('useMakeComputerGuess', () => {
       );
     userShips[1][1] = { name: 'destroyer', status: CellStates.hit }; // Already hit
 
+    // Mock Math.random to return 0, ensuring we pick the first maximum value cell
+    (Math.random as jest.Mock).mockReturnValue(0);
+
     const { result } = renderHook(() => useMakeComputerGuess(), {
       wrapper: ({ children }) => (
         <GameContext.Provider
@@ -178,6 +200,8 @@ describe.skip('useMakeComputerGuess', () => {
     });
 
     result.current();
+
+    // The computer should not make a guess if the highest heat cell is already guessed
     expect(mockSetUserShips).not.toHaveBeenCalled();
   });
 
