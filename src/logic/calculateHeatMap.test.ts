@@ -220,12 +220,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
-    expect(heatMap[4][8]).toBe(1.55);
+    expect(heatMap[4][8]).toBe(2.3);
     expect(heatMap[4][7]).toBeGreaterThanOrEqual(heatMap[4][8]);
 
     // Cells to left
     expect(heatMap[4][4]).toBeGreaterThan(2);
-    expect(heatMap[4][3]).toBe(1.55);
+    expect(heatMap[4][3]).toBe(2.3);
     expect(heatMap[4][4]).toBeGreaterThan(heatMap[4][3]);
   });
 
@@ -241,7 +241,7 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[6][5]).toBeGreaterThan(2);
-    expect(heatMap[7][5]).toBe(1.6);
+    expect(heatMap[7][5]).toBe(2.35);
     expect(heatMap[6][5]).toBeGreaterThan(heatMap[7][5]);
 
     // Cells to left

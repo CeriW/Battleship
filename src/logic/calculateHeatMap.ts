@@ -147,6 +147,10 @@ const markMissAdjacentCellsColder = (
         // If we're not in the first row, and the cell above is unknown, then it's cool
         if (y > 0 && isHeatable(heatMap[y - 1][x]) && !isAdjacentToHit(existingBoard, x, y - 1)) {
           newHeatMap[y - 1][x] *= immediatelyAdjacentCoolnessMultiplier;
+          // Add secondary coolness to cells two spaces away
+          if (y > 1 && isHeatable(heatMap[y - 2][x]) && !isAdjacentToHit(existingBoard, x, y - 2)) {
+            newHeatMap[y - 2][x] *= secondaryAdjacentCoolnessMultiplier;
+          }
         }
 
         // If we're not in the last row, and the cell below is unknown, then it's cool
@@ -156,6 +160,14 @@ const markMissAdjacentCellsColder = (
           !isAdjacentToHit(existingBoard, x, y + 1)
         ) {
           newHeatMap[y + 1][x] *= immediatelyAdjacentCoolnessMultiplier;
+          // Add secondary coolness to cells two spaces away
+          if (
+            y < existingBoard.length - 2 &&
+            isHeatable(heatMap[y + 2][x]) &&
+            !isAdjacentToHit(existingBoard, x, y + 2)
+          ) {
+            newHeatMap[y + 2][x] *= secondaryAdjacentCoolnessMultiplier;
+          }
         }
 
         // If we're not in the last column, and the cell to the right is unknown, then it's cool
@@ -165,11 +177,23 @@ const markMissAdjacentCellsColder = (
           !isAdjacentToHit(existingBoard, x + 1, y)
         ) {
           newHeatMap[y][x + 1] *= immediatelyAdjacentCoolnessMultiplier;
+          // Add secondary coolness to cells two spaces away
+          if (
+            x < existingBoard[y].length - 2 &&
+            isHeatable(heatMap[y][x + 2]) &&
+            !isAdjacentToHit(existingBoard, x + 2, y)
+          ) {
+            newHeatMap[y][x + 2] *= secondaryAdjacentCoolnessMultiplier;
+          }
         }
 
         // If we're not in the first column, and the cell to the left is unknown, then it's cool
         if (x > 0 && isHeatable(heatMap[y][x - 1]) && !isAdjacentToHit(existingBoard, x - 1, y)) {
           newHeatMap[y][x - 1] *= immediatelyAdjacentCoolnessMultiplier;
+          // Add secondary coolness to cells two spaces away
+          if (x > 1 && isHeatable(heatMap[y][x - 2]) && !isAdjacentToHit(existingBoard, x - 2, y)) {
+            newHeatMap[y][x - 2] *= secondaryAdjacentCoolnessMultiplier;
+          }
         }
 
         // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA COOLING ---------------------
@@ -382,21 +406,37 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
       // If we're not in the first row, and the cell above is not a hit, then it's hot
       if (y > 0 && isHeatable(heatMap[y - 1][x])) {
         heatMap[y - 1][x] *= immediatelyAdjacentExtraHeat;
+        // Add secondary heat to cells two spaces away
+        if (y > 1 && isHeatable(heatMap[y - 2][x])) {
+          heatMap[y - 2][x] *= secondaryAdjacentExtraHeat;
+        }
       }
 
       // If we're not in the last row, and the cell below is not a hit, then it's hot
       if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
         heatMap[y + 1][x] *= immediatelyAdjacentExtraHeat;
+        // Add secondary heat to cells two spaces away
+        if (y < existingBoard.length - 2 && isHeatable(heatMap[y + 2][x])) {
+          heatMap[y + 2][x] *= secondaryAdjacentExtraHeat;
+        }
       }
 
       // If we're not in the last column, and the cell to the right is not a hit, then it's hot
       if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
         heatMap[y][x + 1] *= immediatelyAdjacentExtraHeat;
+        // Add secondary heat to cells two spaces away
+        if (x < existingBoard[y].length - 2 && isHeatable(heatMap[y][x + 2])) {
+          heatMap[y][x + 2] *= secondaryAdjacentExtraHeat;
+        }
       }
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
         heatMap[y][x - 1] *= immediatelyAdjacentExtraHeat;
+        // Add secondary heat to cells two spaces away
+        if (x > 1 && isHeatable(heatMap[y][x - 2])) {
+          heatMap[y][x - 2] *= secondaryAdjacentExtraHeat;
+        }
       }
 
       // GO LEFT TO RIGHT ALONG THE ROWS FOR EXTRA HEAT ------------------------
