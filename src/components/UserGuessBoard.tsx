@@ -23,10 +23,12 @@ export const UserGuessBoard: React.FC = () => {
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
+      const shipIsSunk = isShipSunk(computerShips[y][x]?.name as ShipNames, computerShips);
+
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${computerShips[y][x]?.status || 'unguessed'}`}
+          className={`cell ${shipIsSunk ? 'sunk' : computerShips[y][x]?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
             if (gameEnded) {
@@ -47,7 +49,7 @@ export const UserGuessBoard: React.FC = () => {
 
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
-              const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
+              // const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
@@ -70,7 +72,9 @@ export const UserGuessBoard: React.FC = () => {
             setPlayerTurn('computer');
           }}
         >
-          {computerShips[y][x]?.status === CellStates.hit && <HitIcon />}
+          {/* TODO - sunk ship icon */}
+          {computerShips[y][x]?.status === CellStates.hit && shipIsSunk && '💀'}
+          {computerShips[y][x]?.status === CellStates.hit && !shipIsSunk && <HitIcon />}
           {computerShips[y][x]?.status === CellStates.miss && <MissIcon />}
           {computerShips[y][x]?.status === CellStates.unguessed && ''}
         </div>
