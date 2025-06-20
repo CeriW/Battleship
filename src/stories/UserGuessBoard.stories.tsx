@@ -5,7 +5,6 @@ import UserGuessBoard from '../components/UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, AiLevel } from '../types';
 import { initialiseShipArray } from '../logic/placeShips';
-import './Board.stories.css';
 
 // Mock GameContext values
 const createMockContext = (overrides: Partial<GameContextType> = {}): GameContextType => ({
