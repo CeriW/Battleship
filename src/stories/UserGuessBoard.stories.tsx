@@ -5,7 +5,6 @@ import UserGuessBoard from '../components/UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, AiLevel } from '../types';
 import { initialiseShipArray } from '../logic/placeShips';
-import './Board.stories.css';
 
 // Mock GameContext values
 const createMockContext = (overrides: Partial<GameContextType> = {}): GameContextType => ({
@@ -39,7 +38,7 @@ const meta = {
       const mockContext = createMockContext(context.args.contextOverrides || {});
       return (
         <GameContext.Provider value={mockContext}>
-          <div style={{ width: '450px', maxWidth: '100%' }}>
+          <div style={{ width: '450px', maxWidth: '100%', margin: '10px' }}>
             <Story />
           </div>
         </GameContext.Provider>

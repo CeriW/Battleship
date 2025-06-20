@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import Board from '../components/Board';
 import { initialiseShipArray } from '../logic/placeShips';
-import './Board.stories.css';
 import { CellStates } from '../types';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export

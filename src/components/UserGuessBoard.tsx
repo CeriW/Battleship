@@ -28,7 +28,7 @@ export const UserGuessBoard: React.FC = () => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${shipIsSunk ? 'sunk' : computerShips[y][x]?.status || 'unguessed'}`}
+          className={`cell ${computerShips[y][x]?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
             if (gameEnded) {
@@ -49,7 +49,7 @@ export const UserGuessBoard: React.FC = () => {
 
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
-              // const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
+              const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`);

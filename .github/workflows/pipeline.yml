@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -26,30 +27,3 @@ jobs:
 
       - name: Run tests
         run: npm test
-
-      publish-storybook:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v4
-            with:
-              fetch-depth: 0
-          - name: Install Node.js
-            uses: actions/setup-node@v3
-            with:
-              node-version: 16
-          - name: Install dependencies
-            run: npm install
-          - name: Build Storybook
-            run: npm run build-storybook # Or your build command
-          - name: Deploy to GitHub Pages
-            uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
-            with:
-              DEPLOYMENT_BRANCH: gh-pages # Or your deployment branch
-              BUILD_DIRECTORY: storybook-static # Or your output directory
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Alternatively, you can use Chromatic for deployment
-          # - name: Deploy to Chromatic
-          #   uses: chromaui/action@v1
-          #   with:
-          #     projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          #     token: ${{ secrets.GITHUB_TOKEN }}
