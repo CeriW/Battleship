@@ -28,7 +28,7 @@ export const UserGuessBoard: React.FC = () => {
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${shipIsSunk ? 'sunk' : computerShips[y][x]?.status || 'unguessed'}`}
+          className={`cell ${computerShips[y][x]?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
             if (gameEnded) {
