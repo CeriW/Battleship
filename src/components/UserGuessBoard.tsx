@@ -49,7 +49,7 @@ export const UserGuessBoard: React.FC = () => {
 
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
-              // const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
+              const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
