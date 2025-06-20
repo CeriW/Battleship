@@ -1,0 +1,9 @@
+{
+  "projectToken": "${CHROMATIC_PROJECT_TOKEN}",
+  "buildScriptName": "build-storybook",
+  "exitZeroOnChanges": true,
+  "onlyChanged": true,
+  "autoAcceptChanges": false,
+  "storybookBaseDir": ".",
+  "storybookConfigDir": ".storybook"
+}
