@@ -33,3 +33,4 @@ jobs:
           exitZeroOnChanges: true
           onlyChanged: true
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+        id: chromatic
