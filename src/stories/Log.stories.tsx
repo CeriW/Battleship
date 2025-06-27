@@ -12,9 +12,11 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <Window title="Feed" className="feed">
-        <Story />
-      </Window>
+      <div style={{ padding: '10px' }}>
+        <Window title="Feed" className="feed">
+          <Story />
+        </Window>
+      </div>
     ),
   ],
 } satisfies Meta<typeof Log>;
@@ -38,11 +40,11 @@ export const LogWithAllTypes: Story = {
     <MockGameProvider
       logData={[
         <LogEntry key="1" item="Example hit message" type="hit" />,
-        <LogEntry key="1" item="Example miss message" type="miss" />,
-        <LogEntry key="1" item="Example sunk message" type="sunk" />,
-        <LogEntry key="1" item="Example general message" type="general" />,
-        <LogEntry key="1" item="Example user-win message" type="user-win" />,
-        <LogEntry key="1" item="Example computer-win message" type="computer-win" />,
+        <LogEntry key="2" item="Example miss message" type="miss" />,
+        <LogEntry key="3" item="Example sunk message" type="sunk" />,
+        <LogEntry key="4" item="Example general message" type="general" />,
+        <LogEntry key="5" item="Example user-win message" type="user-win" />,
+        <LogEntry key="6" item="Example computer-win message" type="computer-win" />,
       ]}
     />
   ),

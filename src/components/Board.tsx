@@ -1,5 +1,5 @@
 import React from 'react';
-import { PositionArray, CellStates } from '../types';
+import { PositionArray, CellStates, ShipNames } from '../types';
 import { HitIcon, MissIcon } from './Icons';
 
 interface BoardProps {
@@ -17,21 +17,38 @@ export const Board: React.FC<BoardProps> = ({ positions, icons = 'dark' }) => {
     );
   }
 
+  // Used to assign classes like carrier-1, carrier-2 etc to individual cells for styling
+  const shipCounts: { [key: string]: number } = {
+    carrier: 0,
+    battleship: 0,
+    cruiser: 0,
+    submarine: 0,
+    destroyer: 0,
+  };
+
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
+      if (positions[y][x]?.name) {
+        shipCounts[positions[y][x]?.name as ShipNames]++;
+      }
+
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${positions[y][x]?.name ?? ''} ${positions[y][x]?.status ?? ''}`}
+          className={`cell 
+            ${
+              positions[y][x]?.name
+                ? `ship ${positions[y][x]?.name} ${positions[y][x]?.name}-${
+                    shipCounts[positions[y][x]?.name as ShipNames]
+                  }`
+                : ''
+            }
+            ${positions[y][x]?.status ?? ''}`}
           data-testid="cell"
-          // onClick={() => {
-          //   console.log(i, j);
-          // }}
-          // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         >
           {positions[y][x]?.status === CellStates.hit && <HitIcon />}
           {positions[y][x]?.status === CellStates.miss && <MissIcon fill={icons === 'light' ? '#fff' : '#000'} />}

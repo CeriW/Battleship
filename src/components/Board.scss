@@ -1,10 +1,23 @@
-$battleship: red;
-$cruiser: blue;
-$submarine: green;
-$destroyer: yellow;
-$carrier: purple;
-
 $bold-border: 3px solid white;
+
+// Ship configurations
+$ships: (
+  carrier: (
+    length: 5,
+  ),
+  battleship: (
+    length: 4,
+  ),
+  cruiser: (
+    length: 3,
+  ),
+  submarine: (
+    length: 3,
+  ),
+  destroyer: (
+    length: 2,
+  ),
+);
 
 .board {
   display: grid;
@@ -60,28 +73,42 @@ $bold-border: 3px solid white;
     border-bottom: $bold-border;
   }
 
-  .battleship {
-    background-color: $battleship;
-    border-color: $battleship;
+  // Generate ship styles using loops
+  @each $ship-name, $ship-config in $ships {
+    $length: map-get($ship-config, length);
+
+    .#{$ship-name} {
+      position: relative;
+      z-index: 1;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('/img/#{$ship-name}.png') no-repeat center top;
+        background-size: cover;
+        z-index: -1;
+        opacity: 0.6;
+      }
+
+      // Generate numbered instances (1 through ship length)
+      @for $i from 1 through $length {
+        &-#{$i}::before {
+          @if $i == $length {
+            background-position: center 100%;
+          } @else {
+            background-position: center (100% / $length - 1) * ($i - 1);
+          }
+        }
+      }
+    }
   }
 
-  .cruiser {
-    background-color: $cruiser;
-    border-color: $cruiser;
-  }
-
-  .submarine {
-    background-color: $submarine;
-    border-color: $submarine;
-  }
-
-  .destroyer {
-    background-color: $destroyer;
-    border-color: $destroyer;
-  }
-
-  .carrier {
-    background-color: $carrier;
-    border-color: $carrier;
+  .ship + .ship::before,
+  .ship:has(+ .ship):before {
+    transform: rotate(-90deg);
   }
 }
