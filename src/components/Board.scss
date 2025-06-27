@@ -84,10 +84,7 @@ $ships: (
       &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         background: url('/img/#{$ship-name}.png') no-repeat center top;
         background-size: cover;
         z-index: -1;
@@ -110,5 +107,9 @@ $ships: (
   .ship + .ship::before,
   .ship:has(+ .ship):before {
     transform: rotate(-90deg);
+  }
+
+  &.user-guess-board .ship:not(.sunk)::before {
+    display: none;
   }
 }
