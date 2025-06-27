@@ -1,0 +1,8 @@
+:root {
+  --battleship-blue: #0088d1;
+  --orange: #ff6800;
+}
+
+@import './components/Board.scss';
+@import './components/HeatMapBoard.scss';
+@import './components/Window.scss';

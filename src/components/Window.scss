@@ -1,16 +1,20 @@
 .window {
-  background: url('/img/window.svg');
-  background-size: 100% 100%;
+  position: relative;
   aspect-ratio: 484 / 431;
-  padding: 5%;
   box-sizing: border-box;
   overflow: hidden;
-  width: clamp(100%, 400px, 600px);
   float: none;
   margin: 0 auto;
 
-  & > div {
+  svg {
+    width: 100%;
     height: 100%;
+  }
+
+  .window-content {
+    position: absolute;
+    inset: 7%;
+    z-index: 1;
     overflow: auto;
     padding: 0 10px 10px;
     box-sizing: border-box;
@@ -20,7 +24,7 @@
     text-transform: uppercase;
     color: var(--orange);
     margin: 0;
-    font-size: 2.5rem;
+    font-size: max(2rem, 1.5vw);
     line-height: 1;
     position: sticky;
     top: 0;
