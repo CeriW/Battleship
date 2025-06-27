@@ -2,8 +2,6 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import Window from '../components/Window';
-import { initialiseShipArray } from '../logic/placeShips';
-import { CellStates } from '../types';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -50,7 +48,7 @@ export const WindowWithContent: Story = {
       </div>
     ),
     title: 'Window title',
-    className: 'window',
+    className: 'window-with-content',
   },
 };
 
@@ -58,6 +56,6 @@ export const EmptyWindow: Story = {
   args: {
     children: null,
     title: '',
-    className: 'window',
+    className: 'window-empty',
   },
 };
