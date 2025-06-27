@@ -4,9 +4,10 @@ import { HitIcon, MissIcon } from './Icons';
 
 interface BoardProps {
   positions: PositionArray;
+  icons?: 'dark' | 'light';
 }
 
-export const Board: React.FC<BoardProps> = ({ positions }) => {
+export const Board: React.FC<BoardProps> = ({ positions, icons = 'dark' }) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -33,7 +34,7 @@ export const Board: React.FC<BoardProps> = ({ positions }) => {
           // style={{ cursor: onCellClick ? 'pointer' : 'default' }}
         >
           {positions[y][x]?.status === CellStates.hit && <HitIcon />}
-          {positions[y][x]?.status === CellStates.miss && <MissIcon />}
+          {positions[y][x]?.status === CellStates.miss && <MissIcon fill={icons === 'light' ? '#fff' : '#000'} />}
         </div>
       );
     }

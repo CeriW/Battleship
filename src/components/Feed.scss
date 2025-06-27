@@ -1,0 +1,23 @@
+.game-log {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.log-entry {
+  display: grid;
+  grid-template: 'icon message' 1fr / 32px 1fr;
+  gap: 10px;
+  font-size: inherit;
+  margin: 5px 0;
+  align-items: center;
+
+  .log-entry-icon {
+    grid-area: icon;
+    display: flex;
+  }
+
+  .log-entry-message {
+    grid-area: message;
+  }
+}
