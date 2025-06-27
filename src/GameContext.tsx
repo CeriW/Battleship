@@ -2,6 +2,7 @@
 import React, { createContext, useEffect, useState, useRef } from 'react';
 import { AiLevel, PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
+import { LogEntry, LogEntryTypes } from './components/Log';
 
 /* istanbul ignore next */
 const calculateAdjacentShipModifier = (aiLevel: AiLevel) => {
@@ -24,8 +25,8 @@ export type GameContextType = {
   setComputerShips: (ships: PositionArray) => void;
   playerTurn: 'user' | 'computer';
   setPlayerTurn: (turn: 'user' | 'computer') => void;
-  log: string[];
-  addToLog: (message: string) => void;
+  log: React.ReactNode[];
+  addToLog: (message: string, type: LogEntryTypes) => void;
   gameEnded: boolean;
   setGameEnded: (ended: boolean) => void;
   aiLevel: AiLevel;
@@ -45,7 +46,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips()); // TODO - have user place their own ships
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>(Math.random() > 0.5 ? 'user' : 'computer');
-  const [log, setLog] = useState<string[]>([]);
+  const [log, setLog] = useState<React.ReactNode[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
 
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
@@ -58,9 +59,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
   }, [aiLevel]);
 
-  const addToLog = (message: string) => {
+  const addToLog = (message: string, type: LogEntryTypes) => {
     console.log(message);
-    setLog((prevLog) => [`${message} - ${new Date().toISOString()}`, ...prevLog]);
+    setLog((prevLog) => [<LogEntry key={new Date().toISOString()} item={message} type={type} />, ...prevLog]);
   };
 
   const handleAiLevelChange = (level: AiLevel) => {
@@ -72,7 +73,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
     debounceTimerRef.current = setTimeout(() => {
       if (previousAiLevelRef.current !== level) {
-        addToLog(`AI level changed to ${level}`);
+        addToLog(`AI level changed to ${level}`, 'general');
         previousAiLevelRef.current = level;
       }
     }, 500);

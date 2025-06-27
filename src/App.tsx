@@ -27,7 +27,8 @@ const GameBoards = () => {
 
   useEffect(() => {
     if (!gameEnded) {
-      addToLog(`${playerTurn} turn`);
+      // addToLog(`${playerTurn} turn`, 'general');
+      // TODO - there will be a UI element for this
     }
   }, [playerTurn]);
 
@@ -56,7 +57,7 @@ const GameBoards = () => {
       </Window>
 
       <Window title="Player fleet" className="player-fleet">
-        <Board positions={userShips} />
+        <Board positions={userShips} icons="light" />
       </Window>
 
       <Window title="Feed" className="feed">
