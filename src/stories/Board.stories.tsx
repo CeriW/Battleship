@@ -35,15 +35,28 @@ type Story = StoryObj<typeof meta>;
 
 const BoardWithHitsAndMisses = () => {
   const positions = initialiseShipArray();
-  positions[1][1] = { name: 'carrier', status: CellStates.hit };
+
+  positions[1][1] = { name: 'destroyer', status: CellStates.hit };
+  positions[1][2] = { name: 'destroyer', status: CellStates.hit };
+
   positions[1][4] = { name: 'carrier', status: CellStates.hit };
   positions[1][5] = { name: 'carrier', status: CellStates.hit };
-  positions[5][5] = { name: 'carrier', status: CellStates.hit };
+  positions[1][6] = { name: 'carrier', status: CellStates.hit };
+  positions[1][7] = { name: 'carrier', status: CellStates.unguessed };
+  positions[1][8] = { name: 'carrier', status: CellStates.unguessed };
 
-  positions[4][1] = { name: null, status: CellStates.miss };
-  positions[6][3] = { name: null, status: CellStates.miss };
-  positions[7][8] = { name: null, status: CellStates.miss };
-  positions[8][5] = { name: null, status: CellStates.miss };
+  positions[9][1] = { name: 'submarine', status: CellStates.unguessed };
+  positions[8][1] = { name: 'submarine', status: CellStates.unguessed };
+  positions[7][1] = { name: 'submarine', status: CellStates.unguessed };
+
+  positions[8][3] = { name: 'cruiser', status: CellStates.unguessed };
+  positions[7][3] = { name: 'cruiser', status: CellStates.unguessed };
+  positions[6][3] = { name: 'cruiser', status: CellStates.unguessed };
+
+  positions[1][1] = { name: 'battleship', status: CellStates.hit };
+  positions[1][2] = { name: 'battleship', status: CellStates.hit };
+  positions[1][1] = { name: 'battleship', status: CellStates.hit };
+  positions[1][2] = { name: 'battleship', status: CellStates.hit };
 
   return positions;
 };
