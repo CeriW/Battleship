@@ -12,6 +12,7 @@ import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
+import { Avatar } from './components/ComputerAvatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -48,8 +49,9 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title="Computer avatar" className="computer-avatar">
-        <div>Computer's avatar will appear here</div>
+      <Window title="Emily" className="computer-avatar">
+        {/* <div>Computer's avatar will appear here</div> */}
+        <Avatar name="Emily" emotion="happy" />
       </Window>
 
       <Window title="Stats" className="stats">
