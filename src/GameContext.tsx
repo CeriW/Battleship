@@ -31,6 +31,8 @@ export type GameContextType = {
   setGameEnded: (ended: boolean) => void;
   aiLevel: AiLevel;
   setAiLevel: (level: AiLevel) => void;
+  computerAvatar: { name: string; emotion: string };
+  setComputerAvatar: (avatar: { name: string; emotion: string }) => void;
 
   // How likely it is that the AI will allow ships to be placed touching each other, used in combination with Math.random()
   // Level 1 has 100% chance of allowing adjacent placement. The next few subsequent levels may still allow it, but have progressively less chance of doing so.
@@ -52,8 +54,10 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
 
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const previousAiLevelRef = useRef<AiLevel>(aiLevel);
+  const [computerAvatar, setComputerAvatar] = useState<{ name: string; emotion: string }>({
+    name: 'Emily',
+    emotion: 'happy',
+  });
 
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
@@ -64,28 +68,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setLog((prevLog) => [<LogEntry key={new Date().toISOString()} item={message} type={type} />, ...prevLog]);
   };
 
-  const handleAiLevelChange = (level: AiLevel) => {
-    setAiLevel(level);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    debounceTimerRef.current = setTimeout(() => {
-      if (previousAiLevelRef.current !== level) {
-        addToLog(`AI level changed to ${level}`, 'general');
-        previousAiLevelRef.current = level;
-      }
-    }, 500);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
+  const handleAiLevelChange = (level: AiLevel) => setAiLevel(level);
 
   return (
     <GameContext.Provider
@@ -104,6 +87,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setAiLevel: handleAiLevelChange,
         aiAdjacentShipModifier,
         setAiAdjacentShipModifier,
+        computerAvatar,
+        setComputerAvatar,
       }}
     >
       {children}
