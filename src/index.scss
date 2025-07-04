@@ -6,6 +6,7 @@
 @import './components/Board.scss';
 @import './components/HeatMapBoard.scss';
 @import './components/Window.scss';
+@import './components/Feed.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -22,7 +23,7 @@ body {
   min-height: 100vh;
   @include page-background;
   color: white;
-  font-size: 28px;
+  font-size: 22px;
   overflow-x: hidden;
   font-family: 'Oswald', sans-serif;
   display: flex;

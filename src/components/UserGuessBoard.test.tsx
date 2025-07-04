@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserGuessBoard } from './UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
-import { CellStates, ShipNames } from '../types';
+import { CellStates, ShipNames, PositionArray } from '../types';
 import defaultTestContext from '../defaultTestContext';
 
 describe('UserGuessBoard', () => {
@@ -323,27 +323,43 @@ describe('UserGuessBoard', () => {
   });
 
   test('applies correct className based on cell status', () => {
-    const mockContext = {
-      ...defaultTestContext,
-      computerShips: Array(10).fill(Array(10).fill(null)),
-      userShips: Array(10).fill(Array(10).fill(null)),
-      playerTurn: 'user' as 'user' | 'computer',
-    };
+    const mockComputerShips: PositionArray = Array(10)
+      .fill(null)
+      .map(() =>
+        Array(10)
+          .fill(null)
+          .map(() => ({
+            status: CellStates.unguessed,
+            name: null,
+          }))
+      );
 
-    // Set a specific cell status to test
-    mockContext.computerShips[0][0] = { name: 'ship', status: CellStates.hit };
-    mockContext.computerShips[0][1] = { name: null, status: CellStates.miss };
+    // Set up a carrier ship that spans multiple cells but is not completely sunk
+    mockComputerShips[0][0] = { name: 'carrier', status: CellStates.hit };
+    mockComputerShips[0][1] = { name: 'carrier', status: CellStates.unguessed };
+    mockComputerShips[0][2] = { name: 'carrier', status: CellStates.unguessed };
+    mockComputerShips[0][3] = { name: 'carrier', status: CellStates.unguessed };
+    mockComputerShips[0][4] = { name: 'carrier', status: CellStates.unguessed };
+
+    // Set a miss cell
+    mockComputerShips[0][5] = { name: null, status: CellStates.miss };
 
     render(
-      <GameContext.Provider value={mockContext}>
+      <GameContext.Provider
+        value={{
+          ...defaultTestContext,
+          computerShips: mockComputerShips,
+          userShips: mockComputerShips,
+        }}
+      >
         <UserGuessBoard />
       </GameContext.Provider>
     );
 
     const cells = screen.getAllByTestId('cell');
     expect(cells[0]).toHaveClass('cell', CellStates.hit);
-    expect(cells[1]).toHaveClass('cell', CellStates.miss);
-    expect(cells[2]).toHaveClass('cell');
+    expect(cells[5]).toHaveClass('cell', CellStates.miss);
+    expect(cells[6]).toHaveClass('cell');
   });
 
   test('should not allow clicking on an already hit cell', () => {

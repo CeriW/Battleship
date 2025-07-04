@@ -20,15 +20,31 @@ export const UserGuessBoard: React.FC = () => {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
+  // Used to assign classes like carrier-1, carrier-2 etc to individual cells for styling
+  const shipCounts: { [key: string]: number } = {
+    carrier: 0,
+    battleship: 0,
+    cruiser: 0,
+    submarine: 0,
+    destroyer: 0,
+  };
+
   for (let y = 0; y < letters.length; y++) {
     const cells = [];
     for (let x = 0; x < 10; x++) {
-      const shipIsSunk = isShipSunk(computerShips[y][x]?.name as ShipNames, computerShips);
+      const cell = computerShips[y][x];
+      if (cell?.name) {
+        shipCounts[cell.name as ShipNames]++;
+      }
+
+      const shipClass = cell?.name ? `ship ${cell.name} ${cell.name}-${shipCounts[cell.name as ShipNames]}` : '';
+
+      const shipIsSunk = cell?.name ? isShipSunk(cell.name as ShipNames, computerShips) : false;
 
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${computerShips[y][x]?.status || 'unguessed'}`}
+          className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
             if (gameEnded) {
@@ -36,7 +52,6 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             // Jest tests are unable to detect pointer-events: none
-            const cell = computerShips[y][x];
             if (
               (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) ||
               playerTurn === 'computer'
@@ -52,13 +67,13 @@ export const UserGuessBoard: React.FC = () => {
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
-              addToLog(`User guessed ${letters[y]}${x + 1}, hit`);
+              addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
               if (shipIsSunk) {
-                addToLog(`User sunk ${cell?.name}`);
+                addToLog(`User sunk ${cell?.name}`, 'sunk');
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
-                  addToLog('user wins');
+                  addToLog('user wins', 'user-win');
                   declareWinner('user');
                   setGameEnded(true);
                 }
@@ -66,17 +81,15 @@ export const UserGuessBoard: React.FC = () => {
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
-              addToLog(`User guessed ${letters[y]}${x + 1}, miss`);
+              addToLog(`User guessed ${letters[y]}${x + 1}, miss`, 'miss');
             }
 
             setPlayerTurn('computer');
           }}
         >
-          {/* TODO - sunk ship icon */}
-          {computerShips[y][x]?.status === CellStates.hit && shipIsSunk && '💀'}
-          {computerShips[y][x]?.status === CellStates.hit && !shipIsSunk && <HitIcon />}
-          {computerShips[y][x]?.status === CellStates.miss && <MissIcon />}
-          {computerShips[y][x]?.status === CellStates.unguessed && ''}
+          {cell?.status === CellStates.hit && !shipIsSunk && <HitIcon />}
+          {cell?.status === CellStates.miss && <MissIcon />}
+          {cell?.status === CellStates.unguessed && ''}
         </div>
       );
     }

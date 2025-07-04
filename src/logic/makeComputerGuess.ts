@@ -54,13 +54,13 @@ export const useMakeComputerGuess = () => {
       };
 
       setUserShips(newUserShips);
-      addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`);
+      addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`, status);
 
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
-        addToLog(`Computer sunk ${cell?.name}`);
+        addToLog(`Computer sunk ${cell?.name}`, 'sunk');
 
         if (checkAllShipsSunk(newUserShips)) {
-          addToLog(declareWinner('computer'));
+          addToLog(declareWinner('computer'), 'computer-win');
         }
       }
     }
