@@ -3,10 +3,20 @@ import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
+import { AvatarNames } from './ComputerAvatar';
 
 export const UserGuessBoard: React.FC = () => {
-  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
-    React.useContext(GameContext);
+  const {
+    computerShips,
+    setComputerShips,
+    playerTurn,
+    setPlayerTurn,
+    addToLog,
+    gameEnded,
+    setGameEnded,
+    computerAvatar,
+    setComputerAvatar,
+  } = React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -65,26 +75,43 @@ export const UserGuessBoard: React.FC = () => {
             if (shipIsHere) {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
+              setComputerAvatar({
+                name: computerAvatar.name,
+                emotion: Math.random() > 0.5 ? 'angry' : 'confused',
+              });
+
+              setComputerShips(newComputerShips);
+
+              // Wait for avatar reaction, then pass turn to computer
+              setTimeout(() => {
+                setPlayerTurn('computer');
+              }, 1500);
+
               if (shipIsSunk) {
                 addToLog(`User sunk ${cell?.name}`, 'sunk');
-                setComputerShips(newComputerShips);
+                setComputerAvatar({ name: computerAvatar.name, emotion: 'sad' });
 
                 if (checkAllShipsSunk(newComputerShips)) {
                   addToLog('user wins', 'user-win');
                   declareWinner('user');
                   setGameEnded(true);
+                  return; // Don't pass turn if game is over
                 }
               }
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
+
               setComputerShips(newComputerShips);
               addToLog(`User guessed ${letters[y]}${x + 1}, miss`, 'miss');
-            }
+              setComputerAvatar({ name: computerAvatar.name, emotion: 'happy' });
 
-            setPlayerTurn('computer');
+              // Wait for avatar reaction, then pass turn to computer
+              setTimeout(() => {
+                setPlayerTurn('computer');
+              }, 700);
+            }
           }}
         >
           {cell?.status === CellStates.hit && !shipIsSunk && <HitIcon />}

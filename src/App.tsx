@@ -12,6 +12,7 @@ import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
+import { Avatar } from './components/ComputerAvatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -22,7 +23,8 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, computerAvatar } =
+    useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -48,8 +50,9 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title="Computer avatar" className="computer-avatar">
-        <div>Computer's avatar will appear here</div>
+      <Window title={computerAvatar.name} className="computer-avatar">
+        {/* <div>Computer's avatar will appear here</div> */}
+        <Avatar name={computerAvatar.name} emotion={computerAvatar.emotion} />
       </Window>
 
       <Window title="Stats" className="stats">

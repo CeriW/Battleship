@@ -22,6 +22,8 @@ const createMockContext = (overrides: Partial<GameContextType> = {}): GameContex
   setAiLevel: () => {},
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: () => {},
+  computerAvatar: { name: 'Emily', emotion: 'happy' },
+  setComputerAvatar: () => {},
   ...overrides,
 });
 
