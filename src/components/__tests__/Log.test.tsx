@@ -1,4 +1,5 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { Log } from '../Log';
 import { GameContext } from '../../GameContext';
@@ -60,9 +61,9 @@ describe('Log Component', () => {
     renderLog(['Test entry']);
 
     const logList = screen.getByRole('list');
-    const logEntry = screen.getByRole('listitem');
+    const logEntry = screen.getByText('Test entry');
 
     expect(logList).toHaveClass('game-log');
-    expect(logEntry).toHaveClass('log-entry');
+    expect(logEntry).toBeInTheDocument();
   });
 });

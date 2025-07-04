@@ -39,7 +39,7 @@ export const UserGuessBoard: React.FC = () => {
 
       const shipClass = cell?.name ? `ship ${cell.name} ${cell.name}-${shipCounts[cell.name as ShipNames]}` : '';
 
-      const shipIsSunk = isShipSunk(cell?.name as ShipNames, computerShips);
+      const shipIsSunk = cell?.name ? isShipSunk(cell.name as ShipNames, computerShips) : false;
 
       cells.push(
         <div
