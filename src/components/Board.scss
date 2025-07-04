@@ -24,6 +24,7 @@ $ships: (
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: min-content repeat(10, 1fr);
   aspect-ratio: 1 / 1;
+  font-size: 28px;
 
   @media (max-width: 1000px) {
     font-size: 18px;
