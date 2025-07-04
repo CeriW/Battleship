@@ -23,7 +23,8 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, computerAvatar } =
+    useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -49,9 +50,9 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title="Emily" className="computer-avatar">
+      <Window title={computerAvatar.name} className="computer-avatar">
         {/* <div>Computer's avatar will appear here</div> */}
-        <Avatar name="Emily" emotion="happy" />
+        <Avatar name={computerAvatar.name} emotion={computerAvatar.emotion} />
       </Window>
 
       <Window title="Stats" className="stats">
