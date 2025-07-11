@@ -1,23 +1,56 @@
 import React, { useContext, useRef } from 'react';
 import { AiLevel } from '../types';
 
-import happyPng from '../img/avatars/emily/happy.png';
-import sadPng from '../img/avatars/emily/sad.png';
-import angryPng from '../img/avatars/emily/angry.png';
-import thinkingPng from '../img/avatars/emily/thinking.png';
-import worriedPng from '../img/avatars/emily/worried.png';
-import confusedPng from '../img/avatars/emily/confused.png';
+import emilyHappyPng from '../img/avatars/emily/happy.png';
+import emilySadPng from '../img/avatars/emily/sad.png';
+import emilyAngryPng from '../img/avatars/emily/angry.png';
+import emilyThinkingPng from '../img/avatars/emily/thinking.png';
+import emilyWorriedPng from '../img/avatars/emily/worried.png';
+import emilyConfusedPng from '../img/avatars/emily/confused.png';
+
+import alexHappyPng from '../img/avatars/alex/happy.png';
+import alexSadPng from '../img/avatars/alex/sad.png';
+import alexAngryPng from '../img/avatars/alex/angry.png';
+import alexThinkingPng from '../img/avatars/alex/thinking.png';
+import alexWorriedPng from '../img/avatars/alex/worried.png';
+import alexConfusedPng from '../img/avatars/alex/confused.png';
+
+import natashaHappyPng from '../img/avatars/natasha/happy.png';
+import natashaSadPng from '../img/avatars/natasha/sad.png';
+import natashaAngryPng from '../img/avatars/natasha/angry.png';
+import natashaThinkingPng from '../img/avatars/natasha/thinking.png';
+import natashaWorriedPng from '../img/avatars/natasha/worried.png';
+import natashaConfusedPng from '../img/avatars/natasha/confused.png';
+
 import { GameContext } from '../GameContext';
 
 export type Emotion = 'happy' | 'sad' | 'angry' | 'thinking' | 'worried' | 'confused';
 
 const emotionImages = {
-  happy: happyPng,
-  sad: sadPng,
-  angry: angryPng,
-  thinking: thinkingPng,
-  worried: worriedPng,
-  confused: confusedPng,
+  emily: {
+    happy: emilyHappyPng,
+    sad: emilySadPng,
+    angry: emilyAngryPng,
+    thinking: emilyThinkingPng,
+    worried: emilyWorriedPng,
+    confused: emilyConfusedPng,
+  },
+  alex: {
+    happy: alexHappyPng,
+    sad: alexSadPng,
+    angry: alexAngryPng,
+    thinking: alexThinkingPng,
+    worried: alexWorriedPng,
+    confused: alexConfusedPng,
+  },
+  natasha: {
+    happy: natashaHappyPng,
+    sad: natashaSadPng,
+    angry: natashaAngryPng,
+    thinking: natashaThinkingPng,
+    worried: natashaWorriedPng,
+    confused: natashaConfusedPng,
+  },
 };
 
 export enum GameEvents {
@@ -50,8 +83,12 @@ export const Avatar = ({ gameEvent }: { gameEvent: GameEvents }) => {
   return (
     <div className="avatar">
       <img
-        src={emotionImages[deriveAvatarEmotion({ gameEvent })]}
-        alt={`Emily ${deriveAvatarEmotion({ gameEvent })}`}
+        src={
+          emotionImages[deriveAvatarName(aiLevel).toLowerCase() as keyof typeof emotionImages][
+            deriveAvatarEmotion({ gameEvent })
+          ]
+        }
+        alt={`${deriveAvatarName(aiLevel)} ${deriveAvatarEmotion({ gameEvent })}`}
       />
 
       <div className="avatar-info">
@@ -66,12 +103,12 @@ export const deriveAvatarName = (aiLevel: AiLevel) => {
   if (aiLevel === 'easy') {
     return 'Emily';
   } else if (aiLevel === 'medium') {
-    return 'Emily';
+    return 'Alex';
   } else if (aiLevel === 'hard') {
-    return 'Emily';
+    return 'Natasha';
   }
 
-  return 'Emily';
+  return 'Natasha';
 };
 
 const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
