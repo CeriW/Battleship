@@ -1,12 +1,12 @@
 import React, { useContext, useRef } from 'react';
 import { AiLevel } from '../types';
 
-import happyPng from '../img/emily/happy.png';
-import sadPng from '../img/emily/sad.png';
-import angryPng from '../img/emily/angry.png';
-import thinkingPng from '../img/emily/thinking.png';
-import worriedPng from '../img/emily/worried.png';
-import confusedPng from '../img/emily/confused.png';
+import happyPng from '../img/avatars/emily/happy.png';
+import sadPng from '../img/avatars/emily/sad.png';
+import angryPng from '../img/avatars/emily/angry.png';
+import thinkingPng from '../img/avatars/emily/thinking.png';
+import worriedPng from '../img/avatars/emily/worried.png';
+import confusedPng from '../img/avatars/emily/confused.png';
 import { GameContext } from '../GameContext';
 
 export type Emotion = 'happy' | 'sad' | 'angry' | 'thinking' | 'worried' | 'confused';
