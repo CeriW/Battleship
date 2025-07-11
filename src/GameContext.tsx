@@ -52,9 +52,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
 
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const previousAiLevelRef = useRef<AiLevel>(aiLevel);
-
   useEffect(() => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
   }, [aiLevel]);
@@ -63,29 +60,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(message);
     setLog((prevLog) => [<LogEntry key={new Date().toISOString()} item={message} type={type} />, ...prevLog]);
   };
-
-  const handleAiLevelChange = (level: AiLevel) => {
-    setAiLevel(level);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    debounceTimerRef.current = setTimeout(() => {
-      if (previousAiLevelRef.current !== level) {
-        addToLog(`AI level changed to ${level}`, 'general');
-        previousAiLevelRef.current = level;
-      }
-    }, 500);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
 
   return (
     <GameContext.Provider
@@ -101,7 +75,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         gameEnded,
         setGameEnded,
         aiLevel,
-        setAiLevel: handleAiLevelChange,
+        setAiLevel,
         aiAdjacentShipModifier,
         setAiAdjacentShipModifier,
       }}
