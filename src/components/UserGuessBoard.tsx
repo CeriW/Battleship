@@ -3,9 +3,10 @@ import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
+import { deriveAvatarEmotion, GameEvents } from './Avatar';
 
 export const UserGuessBoard: React.FC = () => {
-  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded } =
+  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded, setAvatar } =
     React.useContext(GameContext);
 
   const columnMarkers = [];
@@ -70,18 +71,21 @@ export const UserGuessBoard: React.FC = () => {
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
               if (shipIsSunk) {
                 addToLog(`User sunk ${cell?.name}`, 'sunk');
+                setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.USER_SUNK_OPPONENT }) });
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
                   addToLog('user wins', 'user-win');
                   declareWinner('user');
                   setGameEnded(true);
+                  setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.USER_WIN }) });
                 }
               }
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
               addToLog(`User guessed ${letters[y]}${x + 1}, miss`, 'miss');
+              setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.USER_MISS }) });
             }
 
             setPlayerTurn('computer');
