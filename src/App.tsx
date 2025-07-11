@@ -13,6 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
+import { Avatar } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -51,7 +52,7 @@ const GameBoards = () => {
       </div>
 
       <Window title="Computer avatar" className="computer-avatar">
-        <div>Computer's avatar will appear here</div>
+        <Avatar emotion="happy" />
       </Window>
 
       <Window title="Stats" className="stats">
