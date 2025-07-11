@@ -36,7 +36,7 @@ const GameBoards = () => {
     //   // TODO - there will be a UI element for this
     // }
 
-    if (playerTurn === 'computer') {
+    if (playerTurn === 'computer' && !gameEnded) {
       setTimeout(() => {
         setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
 

@@ -24,3 +24,7 @@
     margin: 0 0 10px;
   }
 }
+
+.window-content:has(.avatar) {
+  overflow: hidden;
+}
