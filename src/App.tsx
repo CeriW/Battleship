@@ -42,9 +42,7 @@ const GameBoards = () => {
 
         setTimeout(() => {
           makeComputerGuess();
-          setTimeout(() => {
-            setPlayerTurn('user');
-          }, computerThinkingTime / 2);
+          setPlayerTurn('user');
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }

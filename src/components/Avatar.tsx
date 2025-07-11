@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { AiLevel } from '../types';
 
 import happyPng from '../img/emily/happy.png';
@@ -38,6 +38,14 @@ export enum GameEvents {
 
 export const Avatar = ({ gameEvent }: { gameEvent: GameEvents }) => {
   const { aiLevel } = useContext(GameContext);
+  const currentMessageRef = useRef<string>('');
+  const lastGameEventRef = useRef<GameEvents | null>(null);
+
+  // Only generate a new message if the gameEvent has changed
+  if (lastGameEventRef.current !== gameEvent) {
+    currentMessageRef.current = deriveAvatarSpeech({ gameEvent });
+    lastGameEventRef.current = gameEvent;
+  }
 
   return (
     <div className="avatar">
@@ -48,7 +56,7 @@ export const Avatar = ({ gameEvent }: { gameEvent: GameEvents }) => {
 
       <div className="avatar-info">
         <h4 className="avatar-name">{deriveAvatarName(aiLevel)}</h4>
-        <div className="speech-bubble">{deriveAvatarSpeech({ gameEvent })}</div>
+        <div className="speech-bubble">{currentMessageRef.current}</div>
       </div>
     </div>
   );
