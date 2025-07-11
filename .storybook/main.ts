@@ -7,6 +7,6 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {},
   },
-  staticDirs: ['/src/img', '/img'],
+  staticDirs: ['/src/img'],
 };
 export default config;
