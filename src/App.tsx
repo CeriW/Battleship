@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
@@ -13,6 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
+import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -22,27 +23,42 @@ export const shipTypes: ShipInfo[] = [
   { name: 'destroyer', size: 2 },
 ];
 
+const computerThinkingTime = 3500;
+
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
+    useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
-    if (!gameEnded) {
-      // addToLog(`${playerTurn} turn`, 'general');
-      // TODO - there will be a UI element for this
-    }
-  }, [playerTurn]);
+    // if (!gameEnded) {
+    //   // addToLog(`${playerTurn} turn`, 'general');
+    //   // TODO - there will be a UI element for this
+    // }
 
-  useEffect(() => {
     if (playerTurn === 'computer' && !gameEnded) {
-      makeComputerGuess();
-      setPlayerTurn('user');
+      setTimeout(() => {
+        setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
+
+        setTimeout(() => {
+          makeComputerGuess();
+          setPlayerTurn('user');
+        }, computerThinkingTime / 2);
+      }, computerThinkingTime / 2);
     }
-  }, [playerTurn]);
+  }, [playerTurn, gameEnded]);
 
   return (
     <div className="game-container">
-      <div className="player-guess-board">
+      <div
+        className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
+        style={
+          {
+            // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
+            // cursor: playerTurn === 'computer' ? 'none' : 'auto',
+          }
+        }
+      >
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />
@@ -50,8 +66,8 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title="Computer avatar" className="computer-avatar">
-        <div>Computer's avatar will appear here</div>
+      <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
+        <Avatar gameEvent={avatar.gameEvent} />
       </Window>
 
       <Window title="Stats" className="stats">

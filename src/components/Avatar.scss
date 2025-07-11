@@ -1,0 +1,31 @@
+.avatar {
+  img {
+    float: right;
+    max-width: 70%;
+  }
+
+  .avatar-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .speech-bubble {
+    background: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    z-index: 1;
+    color: black;
+    display: inline-block;
+  }
+
+  .avatar-name {
+    color: var(--orange);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+}
+
+.window-content:has(.avatar) {
+  overflow: hidden;
+}

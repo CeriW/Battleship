@@ -5,6 +5,7 @@ import UserGuessBoard from '../components/UserGuessBoard';
 import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, AiLevel } from '../types';
 import { initialiseShipArray } from '../logic/placeShips';
+import { GameEvents } from '../components/Avatar';
 
 // Mock GameContext values
 const createMockContext = (overrides: Partial<GameContextType> = {}): GameContextType => ({
@@ -22,6 +23,8 @@ const createMockContext = (overrides: Partial<GameContextType> = {}): GameContex
   setAiLevel: () => {},
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: () => {},
+  avatar: { gameEvent: GameEvents.COMPUTER_THINKING },
+  setAvatar: () => {},
   ...overrides,
 });
 

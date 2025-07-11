@@ -8,6 +8,7 @@
 @import './components/Window.scss';
 @import './components/Feed.scss';
 @import './components/TurnIndicator.scss';
+@import './components/Avatar.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -80,6 +81,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .board .cell {
+    cursor: none;
+  }
+
+  &.user-turn {
+    .board .cell {
+      cursor: url('/img/aim.png') 30 30, auto;
+    }
+  }
 
   .player-guess-board-inner {
     max-width: max(35vw, 550px);
