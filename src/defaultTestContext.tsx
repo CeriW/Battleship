@@ -19,6 +19,8 @@ export const defaultTestContext: GameContextType = {
   setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: jest.fn(),
+  avatar: { name: 'Emily', emotion: 'thinking' },
+  setAvatar: jest.fn(),
 };
 
 export default defaultTestContext;

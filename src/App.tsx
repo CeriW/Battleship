@@ -13,7 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
-import { Avatar } from './components/Avatar';
+import { AvatarImage, Emotion } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -24,7 +24,8 @@ export const shipTypes: ShipInfo[] = [
 ];
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar } =
+    useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const GameBoards = () => {
       </div>
 
       <Window title="Computer avatar" className="computer-avatar">
-        <Avatar emotion="happy" />
+        <AvatarImage emotion={avatar.emotion as Emotion} />
       </Window>
 
       <Window title="Stats" className="stats">
