@@ -1,0 +1,14 @@
+.turn-indicator {
+  background: url('/img/turn-indicator.jpg') no-repeat;
+  background-size: 100% 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 262 / 73;
+  max-width: 262px;
+  text-transform: uppercase;
+  float: none;
+  margin: 20px auto;
+  font-size: 30px;
+}

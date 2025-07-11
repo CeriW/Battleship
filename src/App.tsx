@@ -12,6 +12,7 @@ import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
+import { TurnIndicator } from './components/TurnIndicator';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -45,6 +46,7 @@ const GameBoards = () => {
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />
+          <TurnIndicator playerTurn={playerTurn} />
         </div>
       </div>
 
