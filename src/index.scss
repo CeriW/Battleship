@@ -81,6 +81,16 @@ body {
   align-items: center;
   justify-content: center;
 
+  .board .cell {
+    cursor: none;
+  }
+
+  &.user-turn {
+    .board .cell {
+      cursor: url('/img/aim.png') 16 16, auto;
+    }
+  }
+
   .player-guess-board-inner {
     max-width: max(35vw, 550px);
     width: 100%;

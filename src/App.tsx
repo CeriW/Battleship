@@ -59,7 +59,15 @@ const GameBoards = () => {
 
   return (
     <div className="game-container">
-      <div className={`player-guess-board`} style={{ pointerEvents: playerTurn === 'computer' ? 'none' : 'auto' }}>
+      <div
+        className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
+        style={
+          {
+            // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
+            // cursor: playerTurn === 'computer' ? 'none' : 'auto',
+          }
+        }
+      >
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />
