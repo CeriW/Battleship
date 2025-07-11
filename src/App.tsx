@@ -62,7 +62,7 @@ const GameBoards = () => {
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />
-          <TurnIndicator playerTurn={playerTurn} />
+          <TurnIndicator playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'} />
         </div>
       </div>
 
