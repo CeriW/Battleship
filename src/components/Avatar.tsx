@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { AiLevel } from '../types';
 
 import happyPng from '../img/emily/happy.png';
 import sadPng from '../img/emily/sad.png';
@@ -6,8 +7,6 @@ import angryPng from '../img/emily/angry.png';
 import thinkingPng from '../img/emily/thinking.png';
 import worriedPng from '../img/emily/worried.png';
 import confusedPng from '../img/emily/confused.png';
-
-import { GameContext } from '../GameContext';
 
 export type Emotion = 'happy' | 'sad' | 'angry' | 'thinking' | 'worried' | 'confused';
 
@@ -37,13 +36,23 @@ export enum GameEvents {
 }
 
 export const AvatarImage = ({ emotion }: { emotion: Emotion }) => {
-  const { avatar } = useContext(GameContext);
-
   return (
     <div className="avatar">
       <img src={emotionImages[emotion]} alt={`Emily ${emotion}`} />
     </div>
   );
+};
+
+export const deriveAvatarName = (aiLevel: AiLevel) => {
+  if (aiLevel === 'easy') {
+    return 'Emily';
+  } else if (aiLevel === 'medium') {
+    return 'Emily';
+  } else if (aiLevel === 'hard') {
+    return 'Emily';
+  }
+
+  return 'Emily';
 };
 
 export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) => {

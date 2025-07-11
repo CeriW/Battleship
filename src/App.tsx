@@ -13,7 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
-import { AvatarImage, deriveAvatarEmotion, GameEvents } from './components/Avatar';
+import { AvatarImage, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -75,7 +75,7 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title="Computer avatar" className="computer-avatar">
+      <Window title={`${deriveAvatarName(aiLevel)}`} className="computer-avatar">
         <AvatarImage emotion={avatar.emotion} />
       </Window>
 
