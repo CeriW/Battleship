@@ -13,7 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
-import { AvatarImage } from './components/Avatar';
+import { AvatarImage, deriveAvatarEmotion, GameEvents } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -23,8 +23,10 @@ export const shipTypes: ShipInfo[] = [
   { name: 'destroyer', size: 2 },
 ];
 
+const computerThinkingTime = 2500;
+
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar } =
+  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
     useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
 
@@ -37,14 +39,27 @@ const GameBoards = () => {
 
   useEffect(() => {
     if (playerTurn === 'computer' && !gameEnded) {
-      makeComputerGuess();
-      setPlayerTurn('user');
+      // Keep current emotion for 1 second
+      setTimeout(() => {
+        // Change to thinking emotion and log
+        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_THINKING }) });
+
+        // Make the guess after 1 more second (total 2 seconds)
+        setTimeout(() => {
+          makeComputerGuess();
+
+          // Switch back to user turn after 1 more second (total 3 seconds)
+          setTimeout(() => {
+            setPlayerTurn('user');
+          }, computerThinkingTime / 3);
+        }, computerThinkingTime / 3);
+      }, computerThinkingTime / 3);
     }
   }, [playerTurn]);
 
   return (
     <div className="game-container">
-      <div className="player-guess-board">
+      <div className={`player-guess-board`} style={{ pointerEvents: playerTurn === 'computer' ? 'none' : 'auto' }}>
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />

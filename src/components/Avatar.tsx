@@ -1,23 +1,23 @@
 import React, { useContext } from 'react';
 
-import happySvg from '../img/emily/happy.svg';
-import sadSvg from '../img/emily/sad.svg';
-import angrySvg from '../img/emily/angry.svg';
-import thinkingSvg from '../img/emily/thinking.svg';
-import worriedSvg from '../img/emily/worried.svg';
-import confusedSvg from '../img/emily/confused.svg';
+import happyPng from '../img/emily/happy.png';
+import sadPng from '../img/emily/sad.png';
+import angryPng from '../img/emily/angry.png';
+import thinkingPng from '../img/emily/thinking.png';
+import worriedPng from '../img/emily/worried.png';
+import confusedPng from '../img/emily/confused.png';
 
 import { GameContext } from '../GameContext';
 
 export type Emotion = 'happy' | 'sad' | 'angry' | 'thinking' | 'worried' | 'confused';
 
 const emotionImages = {
-  happy: happySvg,
-  sad: sadSvg,
-  angry: angrySvg,
-  thinking: thinkingSvg,
-  worried: worriedSvg,
-  confused: confusedSvg,
+  happy: happyPng,
+  sad: sadPng,
+  angry: angryPng,
+  thinking: thinkingPng,
+  worried: worriedPng,
+  confused: confusedPng,
 };
 
 export enum GameEvents {
@@ -32,6 +32,8 @@ export enum GameEvents {
   COMPUTER_SUNK_USER = 'computer-sunk-user',
   COMPUTER_WIN = 'computer-win',
   COMPUTER_LOSE = 'computer-lose',
+
+  COMPUTER_THINKING = 'computer-thinking',
 }
 
 export const AvatarImage = ({ emotion }: { emotion: Emotion }) => {
@@ -67,5 +69,8 @@ export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) =>
       return 'happy';
     case GameEvents.COMPUTER_LOSE:
       return 'sad';
+
+    case GameEvents.COMPUTER_THINKING:
+      return 'thinking';
   }
 };
