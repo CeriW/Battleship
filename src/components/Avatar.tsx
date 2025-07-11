@@ -23,7 +23,7 @@ const emotionImages = {
 export enum GameEvents {
   USER_MISS = 'user-miss',
   USER_HIT = 'user-hit',
-  USER_SUNK_OPPONENT = 'user-sunk-opponent',
+  USER_SUNK_COMPUTER = 'user-sunk-computer',
   USER_WIN = 'user-win',
   USER_LOSE = 'user-lose',
 
@@ -99,7 +99,7 @@ const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
       return userMissMessages[Math.floor(Math.random() * userMissMessages.length)];
     case GameEvents.USER_HIT:
       return userHitMessages[Math.floor(Math.random() * userHitMessages.length)];
-    case GameEvents.USER_SUNK_OPPONENT:
+    case GameEvents.USER_SUNK_COMPUTER:
       return userSunkOpponentMessages[Math.floor(Math.random() * userSunkOpponentMessages.length)];
     case GameEvents.USER_WIN:
       return userWinMessages[Math.floor(Math.random() * userWinMessages.length)];
@@ -127,7 +127,7 @@ export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) =>
       return 'happy';
     case GameEvents.USER_HIT:
       return 'worried';
-    case GameEvents.USER_SUNK_OPPONENT:
+    case GameEvents.USER_SUNK_COMPUTER:
       return 'angry';
     case GameEvents.USER_WIN:
       return 'sad';

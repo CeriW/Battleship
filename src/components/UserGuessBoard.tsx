@@ -73,7 +73,7 @@ export const UserGuessBoard: React.FC = () => {
 
               if (shipIsSunk) {
                 addToLog(`User sunk ${cell?.name}`, 'sunk');
-                setAvatar({ gameEvent: GameEvents.USER_SUNK_OPPONENT });
+                setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
                 setComputerShips(newComputerShips);
 
                 if (checkAllShipsSunk(newComputerShips)) {
