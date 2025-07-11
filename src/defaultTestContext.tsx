@@ -2,6 +2,7 @@
 
 // This is intended for test usage only, not for production
 
+import { GameEvents } from './components/Avatar';
 import { GameContextType } from './GameContext';
 
 export const defaultTestContext: GameContextType = {
@@ -19,7 +20,7 @@ export const defaultTestContext: GameContextType = {
   setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
   setAiAdjacentShipModifier: jest.fn(),
-  avatar: { emotion: 'thinking' },
+  avatar: { gameEvent: GameEvents.COMPUTER_THINKING },
   setAvatar: jest.fn(),
 };
 

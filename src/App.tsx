@@ -13,7 +13,7 @@ import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
 import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
-import { AvatarImage, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
+import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 
 export const shipTypes: ShipInfo[] = [
   { name: 'carrier', size: 5 },
@@ -42,18 +42,16 @@ const GameBoards = () => {
       // Keep current emotion for 1 second
       setTimeout(() => {
         // Change to thinking emotion and log
-        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_THINKING }) });
+        setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
 
         // Make the guess after 1 more second (total 2 seconds)
         setTimeout(() => {
           makeComputerGuess();
 
           // Switch back to user turn after 1 more second (total 3 seconds)
-          setTimeout(() => {
-            setPlayerTurn('user');
-          }, computerThinkingTime / 3);
-        }, computerThinkingTime / 3);
-      }, computerThinkingTime / 3);
+          setPlayerTurn('user');
+        }, computerThinkingTime / 2);
+      }, computerThinkingTime / 2);
     }
   }, [playerTurn]);
 
@@ -75,8 +73,8 @@ const GameBoards = () => {
         </div>
       </div>
 
-      <Window title={`${deriveAvatarName(aiLevel)}`} className="computer-avatar">
-        <AvatarImage emotion={avatar.emotion} />
+      <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
+        <Avatar gameEvent={avatar.gameEvent} />
       </Window>
 
       <Window title="Stats" className="stats">

@@ -58,19 +58,19 @@ export const useMakeComputerGuess = () => {
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`, status);
 
       if (status === CellStates.hit) {
-        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_HIT }) });
+        setAvatar({ gameEvent: GameEvents.COMPUTER_HIT });
       } else {
-        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_MISS }) });
+        setAvatar({ gameEvent: GameEvents.COMPUTER_MISS });
       }
 
       // If we've sunk a user's ship...
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
         addToLog(`Computer sunk ${cell?.name}`, 'sunk');
-        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_SUNK_USER }) });
+        setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'), 'computer-win');
-          setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_WIN }) });
+          setAvatar({ gameEvent: GameEvents.COMPUTER_WIN });
         }
       }
     }

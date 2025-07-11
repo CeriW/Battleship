@@ -1,8 +1,26 @@
 .avatar {
   img {
+    float: right;
+  }
+
+  .avatar-info {
     position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .speech-bubble {
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 1;
+    color: black;
+    display: inline-block;
+  }
+
+  .avatar-name {
+    color: var(--orange);
+    text-transform: uppercase;
+    margin: 0 0 10px;
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { AiLevel } from '../types';
 
 import happyPng from '../img/emily/happy.png';
@@ -7,6 +7,7 @@ import angryPng from '../img/emily/angry.png';
 import thinkingPng from '../img/emily/thinking.png';
 import worriedPng from '../img/emily/worried.png';
 import confusedPng from '../img/emily/confused.png';
+import { GameContext } from '../GameContext';
 
 export type Emotion = 'happy' | 'sad' | 'angry' | 'thinking' | 'worried' | 'confused';
 
@@ -35,10 +36,20 @@ export enum GameEvents {
   COMPUTER_THINKING = 'computer-thinking',
 }
 
-export const AvatarImage = ({ emotion }: { emotion: Emotion }) => {
+export const Avatar = ({ gameEvent }: { gameEvent: GameEvents }) => {
+  const { aiLevel } = useContext(GameContext);
+
   return (
     <div className="avatar">
-      <img src={emotionImages[emotion]} alt={`Emily ${emotion}`} />
+      <img
+        src={emotionImages[deriveAvatarEmotion({ gameEvent })]}
+        alt={`Emily ${deriveAvatarEmotion({ gameEvent })}`}
+      />
+
+      <div className="avatar-info">
+        <h4 className="avatar-name">{deriveAvatarName(aiLevel)}</h4>
+        <div className="speech-bubble">{deriveAvatarSpeech({ gameEvent })}</div>
+      </div>
     </div>
   );
 };
@@ -53,6 +64,35 @@ export const deriveAvatarName = (aiLevel: AiLevel) => {
   }
 
   return 'Emily';
+};
+
+const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
+  switch (gameEvent) {
+    case GameEvents.USER_MISS:
+      return 'Haha, you missed!';
+    case GameEvents.USER_HIT:
+      return 'Oh no...';
+    case GameEvents.USER_SUNK_OPPONENT:
+      return 'Aaah, no fair!';
+    case GameEvents.USER_WIN:
+      return 'Yay! I won!';
+    case GameEvents.USER_LOSE:
+      return 'Aww, I lost...';
+
+    case GameEvents.COMPUTER_MISS:
+      return 'Darn, I missed!';
+    case GameEvents.COMPUTER_HIT:
+      return 'Haha, I hit you!';
+    case GameEvents.COMPUTER_SUNK_USER:
+      return 'Take that!';
+    case GameEvents.COMPUTER_WIN:
+      return 'Yay! I won!';
+    case GameEvents.COMPUTER_LOSE:
+      return 'Aww, I lost...';
+
+    case GameEvents.COMPUTER_THINKING:
+      return 'Hmm...';
+  }
 };
 
 export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) => {
