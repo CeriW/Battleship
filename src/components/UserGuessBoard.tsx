@@ -69,6 +69,8 @@ export const UserGuessBoard: React.FC = () => {
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
               addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
+              setAvatar({ gameEvent: GameEvents.USER_HIT });
+
               if (shipIsSunk) {
                 addToLog(`User sunk ${cell?.name}`, 'sunk');
                 setAvatar({ gameEvent: GameEvents.USER_SUNK_OPPONENT });

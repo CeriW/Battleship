@@ -67,31 +67,49 @@ export const deriveAvatarName = (aiLevel: AiLevel) => {
 };
 
 const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
+  const userMissMessages = [
+    'Haha, you missed!',
+    'Better luck next time!',
+    'You can do better than that!',
+    'Phew, that was close!',
+  ];
+  const userHitMessages = ['Oh no...', 'Ouch!', 'Hey!', 'You got me!'];
+  const userSunkOpponentMessages = ['Aaah, no fair!', "You can't beat me!", 'Are you cheating?'];
+  const userWinMessages = ["Wow you're good! Fancy another game?"];
+  const userLoseMessages = ['Good game!', 'I knew I would win!', 'I was sure I would win!'];
+
+  const computerMissMessages = ['Darn, I missed!', 'Oh shoot...', 'I was sure there was a ship there!'];
+  const computerHitMessages = ['Haha, I hit you!', 'Take that!', 'Are you even trying?'];
+  const computerSunkUserMessages = ['Haha, I sunk your ship!', "You can't beat me!"];
+  const computerWinMessages = ['Yay! I won!', 'I knew I could do it!', 'I told you I would win!'];
+  const computerLoseMessages = ['Aww, I lost...', 'I can do better than that!', 'Good game!'];
+
+  const computerThinkingMessages = ['Hmm...', 'I need to think...', 'Watch this!'];
+
   switch (gameEvent) {
     case GameEvents.USER_MISS:
-      return 'Haha, you missed!';
+      return userMissMessages[Math.floor(Math.random() * userMissMessages.length)];
     case GameEvents.USER_HIT:
-      return 'Oh no...';
+      return userHitMessages[Math.floor(Math.random() * userHitMessages.length)];
     case GameEvents.USER_SUNK_OPPONENT:
-      return 'Aaah, no fair!';
+      return userSunkOpponentMessages[Math.floor(Math.random() * userSunkOpponentMessages.length)];
     case GameEvents.USER_WIN:
-      return 'Yay! I won!';
+      return userWinMessages[Math.floor(Math.random() * userWinMessages.length)];
     case GameEvents.USER_LOSE:
-      return 'Aww, I lost...';
-
+      return userLoseMessages[Math.floor(Math.random() * userLoseMessages.length)];
     case GameEvents.COMPUTER_MISS:
-      return 'Darn, I missed!';
+      return computerMissMessages[Math.floor(Math.random() * computerMissMessages.length)];
     case GameEvents.COMPUTER_HIT:
-      return 'Haha, I hit you!';
+      return computerHitMessages[Math.floor(Math.random() * computerHitMessages.length)];
     case GameEvents.COMPUTER_SUNK_USER:
-      return 'Take that!';
+      return computerSunkUserMessages[Math.floor(Math.random() * computerSunkUserMessages.length)];
     case GameEvents.COMPUTER_WIN:
-      return 'Yay! I won!';
+      return computerWinMessages[Math.floor(Math.random() * computerWinMessages.length)];
     case GameEvents.COMPUTER_LOSE:
-      return 'Aww, I lost...';
+      return computerLoseMessages[Math.floor(Math.random() * computerLoseMessages.length)];
 
     case GameEvents.COMPUTER_THINKING:
-      return 'Hmm...';
+      return computerThinkingMessages[Math.floor(Math.random() * computerThinkingMessages.length)];
   }
 };
 

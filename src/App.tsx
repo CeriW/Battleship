@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
@@ -23,7 +23,7 @@ export const shipTypes: ShipInfo[] = [
   { name: 'destroyer', size: 2 },
 ];
 
-const computerThinkingTime = 2500;
+const computerThinkingTime = 3500;
 
 const GameBoards = () => {
   const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
@@ -31,29 +31,24 @@ const GameBoards = () => {
   const makeComputerGuess = useMakeComputerGuess();
 
   useEffect(() => {
-    if (!gameEnded) {
-      // addToLog(`${playerTurn} turn`, 'general');
-      // TODO - there will be a UI element for this
-    }
-  }, [playerTurn]);
+    // if (!gameEnded) {
+    //   // addToLog(`${playerTurn} turn`, 'general');
+    //   // TODO - there will be a UI element for this
+    // }
 
-  useEffect(() => {
-    if (playerTurn === 'computer' && !gameEnded) {
-      // Keep current emotion for 1 second
+    if (playerTurn === 'computer') {
       setTimeout(() => {
-        // Change to thinking emotion and log
         setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
 
-        // Make the guess after 1 more second (total 2 seconds)
         setTimeout(() => {
           makeComputerGuess();
-
-          // Switch back to user turn after 1 more second (total 3 seconds)
-          setPlayerTurn('user');
+          setTimeout(() => {
+            setPlayerTurn('user');
+          }, computerThinkingTime / 2);
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }
-  }, [playerTurn]);
+  }, [playerTurn, gameEnded]);
 
   return (
     <div className="game-container">
