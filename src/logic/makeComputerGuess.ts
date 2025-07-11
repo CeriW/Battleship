@@ -3,11 +3,12 @@ import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import { calculateHeatMap, HeatValues } from './calculateHeatMap';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
+import { deriveAvatarEmotion, GameEvents } from '../components/Avatar';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
-  const { userShips, setUserShips, addToLog, aiLevel } = useContext(GameContext);
+  const { userShips, setUserShips, addToLog, aiLevel, setAvatar } = useContext(GameContext);
 
   return useCallback(() => {
     const heatMap = calculateHeatMap(userShips, aiLevel);
@@ -56,11 +57,20 @@ export const useMakeComputerGuess = () => {
       setUserShips(newUserShips);
       addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`, status);
 
+      if (status === CellStates.hit) {
+        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_HIT }) });
+      } else {
+        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_MISS }) });
+      }
+
+      // If we've sunk a user's ship...
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
         addToLog(`Computer sunk ${cell?.name}`, 'sunk');
+        setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_SUNK_USER }) });
 
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'), 'computer-win');
+          setAvatar({ emotion: deriveAvatarEmotion({ gameEvent: GameEvents.COMPUTER_WIN }) });
         }
       }
     }

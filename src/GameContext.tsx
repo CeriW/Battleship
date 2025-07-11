@@ -32,8 +32,8 @@ export type GameContextType = {
   setGameEnded: (ended: boolean) => void;
   aiLevel: AiLevel;
   setAiLevel: (level: AiLevel) => void;
-  avatar: { name: string; emotion: Emotion };
-  setAvatar: (avatar: { name: string; emotion: Emotion }) => void;
+  avatar: { emotion: Emotion };
+  setAvatar: (avatar: { emotion: Emotion }) => void;
 
   // How likely it is that the AI will allow ships to be placed touching each other, used in combination with Math.random()
   // Level 1 has 100% chance of allowing adjacent placement. The next few subsequent levels may still allow it, but have progressively less chance of doing so.
@@ -55,8 +55,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
 
-  const [avatar, setAvatar] = useState<{ name: string; emotion: Emotion }>({
-    name: 'Emily',
+  const [avatar, setAvatar] = useState<{ emotion: Emotion }>({
     emotion: 'thinking',
   });
 
