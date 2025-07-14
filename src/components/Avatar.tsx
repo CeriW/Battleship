@@ -93,7 +93,9 @@ export const Avatar = ({ gameEvent }: { gameEvent: GameEvents }) => {
 
       <div className="avatar-info">
         <h4 className="avatar-name">{deriveAvatarName(aiLevel)}</h4>
-        <div className="speech-bubble">{currentMessageRef.current}</div>
+        <div className="speech-bubble">
+          <span>{currentMessageRef.current}</span>
+        </div>
       </div>
     </div>
   );
