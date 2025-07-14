@@ -68,7 +68,7 @@ export const UserGuessBoard: React.FC = () => {
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
-              addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
+              addToLog(`You guessed ${letters[y]}${x + 1}, hit`, 'hit');
               setAvatar({ gameEvent: GameEvents.USER_HIT });
 
               if (shipIsSunk) {
@@ -86,7 +86,7 @@ export const UserGuessBoard: React.FC = () => {
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
-              addToLog(`User guessed ${letters[y]}${x + 1}, miss`, 'miss');
+              addToLog(`You guessed ${letters[y]}${x + 1}, miss`, 'miss');
               setAvatar({ gameEvent: GameEvents.USER_MISS });
             }
 

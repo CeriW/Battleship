@@ -74,7 +74,7 @@ const GameBoards = () => {
         <div>Stats will appear here</div>
       </Window>
 
-      <Window title="Player fleet" className="player-fleet">
+      <Window title="Your fleet" className="player-fleet">
         <Board positions={userShips} icons="light" />
       </Window>
 
