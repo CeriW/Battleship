@@ -23,7 +23,7 @@ export const shipTypes: ShipInfo[] = [
   { name: 'destroyer', size: 2 },
 ];
 
-const computerThinkingTime = 3500;
+const computerThinkingTime = 2200;
 
 const GameBoards = () => {
   const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
