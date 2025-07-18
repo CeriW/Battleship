@@ -30,7 +30,7 @@
   }
 
   .game-title {
-    max-width: 600px;
+    width: 600px;
   }
 
   h2 {
@@ -65,12 +65,14 @@
 
     &.natasha {
       img {
-        max-width: 95px;
+        max-width: 65%;
       }
     }
 
     &.emily {
-      max-width: 140px;
+      img {
+        max-width: 90%;
+      }
     }
   }
 
@@ -80,7 +82,11 @@
     font-weight: 600;
     font-size: 30px;
     margin-top: 20px;
-
     @include text-shadow;
+  }
+
+  .difficulty-selector-description {
+    line-height: 1.25;
+    margin-top: 10px;
   }
 }
