@@ -3,7 +3,7 @@ import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
-import { deriveAvatarEmotion, deriveAvatarName, GameEvents } from './Avatar';
+import { deriveAvatarName, GameEvents } from './Avatar';
 
 export const UserGuessBoard: React.FC = () => {
   const {
