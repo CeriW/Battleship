@@ -83,10 +83,11 @@ export const UserGuessBoard: React.FC = () => {
               if (shipIsSunk) {
                 addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
                 setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
-                setTimeout(() => {
-                  setComputerShips(newComputerShips);
-                }, 1000);
 
+                // Update the state immediately for game logic
+                setComputerShips(newComputerShips);
+
+                // Check for game end after state update
                 if (checkAllShipsSunk(newComputerShips)) {
                   addToLog('user wins', 'user-win');
                   declareWinner('user');
