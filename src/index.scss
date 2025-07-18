@@ -37,6 +37,10 @@ body {
   width: 100%;
 }
 
+.start-screen + .game-container {
+  display: none;
+}
+
 .game-container {
   display: grid;
   grid-template:

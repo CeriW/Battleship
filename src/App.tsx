@@ -50,45 +50,49 @@ const GameBoards = () => {
   }, [playerTurn, gameEnded]);
 
   return (
-    <StartScreen />
-    // <div className="game-container">
-    //   <div
-    //     className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
-    //     style={
-    //       {
-    //         // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
-    //         // cursor: playerTurn === 'computer' ? 'none' : 'auto',
-    //       }
-    //     }
-    //   >
-    //     {/* <h3>User guess board</h3> */}
-    //     <div className="player-guess-board-inner">
-    //       <UserGuessBoard />
-    //       <TurnIndicator playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'} />
-    //     </div>
-    //   </div>
+    <>
+      <StartScreen />
+      <div className="game-container">
+        <div
+          className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
+          style={
+            {
+              // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
+              // cursor: playerTurn === 'computer' ? 'none' : 'auto',
+            }
+          }
+        >
+          {/* <h3>User guess board</h3> */}
+          <div className="player-guess-board-inner">
+            <UserGuessBoard />
+            <TurnIndicator
+              playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'}
+            />
+          </div>
+        </div>
 
-    //   <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
-    //     <Avatar gameEvent={avatar.gameEvent} />
-    //   </Window>
+        <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
+          <Avatar gameEvent={avatar.gameEvent} />
+        </Window>
 
-    //   <Window title="Stats" className="stats">
-    //     <div>Stats will appear here</div>
-    //   </Window>
+        <Window title="Stats" className="stats">
+          <div>Stats will appear here</div>
+        </Window>
 
-    //   <Window title="Your fleet" className="player-fleet">
-    //     <Board positions={userShips} icons="light" />
-    //   </Window>
+        <Window title="Your fleet" className="player-fleet">
+          <Board positions={userShips} icons="light" />
+        </Window>
 
-    //   <Window title="Feed" className="feed">
-    //     <Log />
-    //   </Window>
+        <Window title="Feed" className="feed">
+          <Log />
+        </Window>
 
-    //   {/* <h3>Computer board</h3>
-    //   <Board positions={computerShips} /> */}
-    //   {/* <h3>Heat map</h3> */}
-    //   {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
-    // </div>
+        {/* <h3>Computer board</h3>
+      <Board positions={computerShips} /> */}
+        {/* <h3>Heat map</h3> */}
+        {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
+      </div>
+    </>
   );
 };
 
@@ -96,7 +100,6 @@ export function App() {
   return (
     <GameProvider>
       <GameBoards />
-      {/* <AiSlider /> */}
     </GameProvider>
   );
 }
