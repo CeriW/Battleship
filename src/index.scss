@@ -39,25 +39,25 @@ body {
 .game-container {
   display: grid;
   grid-template:
-    'player-guess-board computer-avatar stats'
-    'player-guess-board player-fleet feed'
+    'player-guess-board computer-avatar feed'
+    'player-guess-board player-fleet stats'
     / 5fr 2.2fr 2.2fr;
   gap: 30px;
   padding: 2vw;
 
+  // @media (max-width: 1500px) {
+  //   grid-template:
+  //     'player-guess-board player-guess-board player-guess-board player-guess-board'
+  //     'computer-avatar player-fleet stats feed'
+  //     / 1fr 1fr 1fr 1fr;
+  //   gap: 50px 15px;
+  // }
+
   @media (max-width: 1500px) {
     grid-template:
-      'player-guess-board player-guess-board player-guess-board player-guess-board'
-      'computer-avatar player-fleet stats feed'
-      / 1fr 1fr 1fr 1fr;
-    gap: 50px 15px;
-  }
-
-  @media (max-width: 1200px) {
-    grid-template:
       'player-guess-board player-guess-board'
-      'computer-avatar player-fleet'
-      'stats feed'
+      'computer-avatar feed '
+      'stats player-fleet'
       / 1fr 1fr;
   }
 
@@ -65,9 +65,9 @@ body {
     grid-template:
       'player-guess-board'
       'computer-avatar'
+      'feed'
       'player-fleet'
       'stats'
-      'feed'
       / 1fr;
   }
 }
@@ -108,6 +108,24 @@ body {
 
 .player-fleet {
   grid-area: player-fleet;
+
+  h3 {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    text-align: center;
+  }
+
+  .window-content {
+    display: flex;
+    overflow-x: hidden;
+    justify-content: space-between;
+  }
+
+  .board {
+    font-size: 17px;
+    width: calc(100% - 40px);
+  }
 }
 
 .feed {

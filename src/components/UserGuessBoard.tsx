@@ -3,11 +3,20 @@ import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
-import { deriveAvatarEmotion, GameEvents } from './Avatar';
+import { deriveAvatarEmotion, deriveAvatarName, GameEvents } from './Avatar';
 
 export const UserGuessBoard: React.FC = () => {
-  const { computerShips, setComputerShips, playerTurn, setPlayerTurn, addToLog, gameEnded, setGameEnded, setAvatar } =
-    React.useContext(GameContext);
+  const {
+    computerShips,
+    setComputerShips,
+    playerTurn,
+    setPlayerTurn,
+    addToLog,
+    gameEnded,
+    setGameEnded,
+    setAvatar,
+    aiLevel,
+  } = React.useContext(GameContext);
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -68,14 +77,17 @@ export const UserGuessBoard: React.FC = () => {
               const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
               newComputerShips[y][x] = { ...cell, status: CellStates.hit };
 
-              addToLog(`User guessed ${letters[y]}${x + 1}, hit`, 'hit');
+              addToLog(`You guessed ${letters[y]}${x + 1}, hit`, 'hit');
               setAvatar({ gameEvent: GameEvents.USER_HIT });
 
               if (shipIsSunk) {
-                addToLog(`User sunk ${cell?.name}`, 'sunk');
+                addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
                 setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
+
+                // Update the state immediately for game logic
                 setComputerShips(newComputerShips);
 
+                // Check for game end after state update
                 if (checkAllShipsSunk(newComputerShips)) {
                   addToLog('user wins', 'user-win');
                   declareWinner('user');
@@ -86,7 +98,7 @@ export const UserGuessBoard: React.FC = () => {
             } else {
               newComputerShips[y][x] = { name: null, status: CellStates.miss };
               setComputerShips(newComputerShips);
-              addToLog(`User guessed ${letters[y]}${x + 1}, miss`, 'miss');
+              addToLog(`You guessed ${letters[y]}${x + 1}, miss`, 'miss');
               setAvatar({ gameEvent: GameEvents.USER_MISS });
             }
 

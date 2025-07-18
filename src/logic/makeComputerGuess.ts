@@ -3,7 +3,7 @@ import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import { calculateHeatMap, HeatValues } from './calculateHeatMap';
 import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
-import { deriveAvatarEmotion, GameEvents } from '../components/Avatar';
+import { deriveAvatarEmotion, deriveAvatarName, GameEvents } from '../components/Avatar';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -55,7 +55,7 @@ export const useMakeComputerGuess = () => {
       };
 
       setUserShips(newUserShips);
-      addToLog(`Computer guessed ${letters[y]}${x + 1}, ${status}`, status);
+      addToLog(`${deriveAvatarName(aiLevel)} guessed ${letters[y]}${x + 1}, ${status}`, status);
 
       if (status === CellStates.hit) {
         setAvatar({ gameEvent: GameEvents.COMPUTER_HIT });
@@ -65,7 +65,7 @@ export const useMakeComputerGuess = () => {
 
       // If we've sunk a user's ship...
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
-        addToLog(`Computer sunk ${cell?.name}`, 'sunk');
+        addToLog(`${deriveAvatarName(aiLevel)} sunk ${cell?.name}`, 'sunk');
         setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
         if (checkAllShipsSunk(newUserShips)) {

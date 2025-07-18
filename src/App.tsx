@@ -23,7 +23,7 @@ export const shipTypes: ShipInfo[] = [
   { name: 'destroyer', size: 2 },
 ];
 
-const computerThinkingTime = 3500;
+const computerThinkingTime = 2200;
 
 const GameBoards = () => {
   const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
@@ -62,7 +62,7 @@ const GameBoards = () => {
         {/* <h3>User guess board</h3> */}
         <div className="player-guess-board-inner">
           <UserGuessBoard />
-          <TurnIndicator playerTurn={playerTurn} />
+          <TurnIndicator playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'} />
         </div>
       </div>
 
@@ -74,7 +74,7 @@ const GameBoards = () => {
         <div>Stats will appear here</div>
       </Window>
 
-      <Window title="Player fleet" className="player-fleet">
+      <Window title="Your fleet" className="player-fleet">
         <Board positions={userShips} icons="light" />
       </Window>
 

@@ -1,13 +1,13 @@
 .avatar {
-  img {
-    float: right;
-    max-width: 70%;
-  }
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 90%;
 
   .avatar-info {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
+    flex-grow: 1;
   }
 
   .speech-bubble {
@@ -16,7 +16,15 @@
     border-radius: 10px;
     z-index: 1;
     color: black;
-    display: inline-block;
+
+    width: 100%;
+
+    & > span {
+      display: inline-block;
+      min-height: 75px;
+      display: flex;
+      align-items: center;
+    }
   }
 
   .avatar-name {
@@ -28,4 +36,10 @@
 
 .window-content:has(.avatar) {
   overflow: hidden;
+}
+
+.computer-avatar.Natasha {
+  img {
+    margin-right: 30px;
+  }
 }
