@@ -1,9 +1,9 @@
 /* istanbul ignore file */
-import React, { createContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { AiLevel, PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
 import { LogEntry, LogEntryTypes } from './components/Log';
-import { Emotion, GameEvents } from './components/Avatar';
+import { GameEvents } from './components/Avatar';
 
 /* istanbul ignore next */
 const calculateAdjacentShipModifier = (aiLevel: AiLevel) => {
