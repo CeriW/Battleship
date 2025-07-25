@@ -6,6 +6,10 @@
   gap: 10px;
   min-height: 90%;
 
+  img {
+    max-width: 50%;
+  }
+
   .avatar-info {
     flex-grow: 1;
   }

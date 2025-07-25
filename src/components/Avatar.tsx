@@ -54,6 +54,8 @@ const emotionImages = {
 };
 
 export enum GameEvents {
+  GAME_START = 'game-start',
+
   USER_MISS = 'user-miss',
   USER_HIT = 'user-hit',
   USER_SUNK_COMPUTER = 'user-sunk-computer',
@@ -132,8 +134,11 @@ const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
   const computerLoseMessages = ['Aww, I lost...', 'I can do better than that!', 'Good game!'];
 
   const computerThinkingMessages = ['Hmm...', 'I need to think...', 'Watch this!'];
+  const gameStartMessages = ['Hi!', "Let's play!", 'Ready to play?'];
 
   switch (gameEvent) {
+    case GameEvents.GAME_START:
+      return gameStartMessages[Math.floor(Math.random() * gameStartMessages.length)];
     case GameEvents.USER_MISS:
       return userMissMessages[Math.floor(Math.random() * userMissMessages.length)];
     case GameEvents.USER_HIT:
@@ -162,6 +167,8 @@ const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
 
 export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) => {
   switch (gameEvent) {
+    case GameEvents.GAME_START:
+      return 'happy';
     case GameEvents.USER_MISS:
       return 'happy';
     case GameEvents.USER_HIT:
@@ -186,5 +193,8 @@ export const deriveAvatarEmotion = ({ gameEvent }: { gameEvent: GameEvents }) =>
 
     case GameEvents.COMPUTER_THINKING:
       return 'thinking';
+
+    default:
+      return 'happy';
   }
 };
