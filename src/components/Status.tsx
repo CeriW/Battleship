@@ -5,7 +5,7 @@ import { CellStates } from '../types';
 import { isShipSunk } from '../logic/helpers';
 import { deriveAvatarName } from './Avatar';
 
-export const status = () => {
+export const Status = () => {
   const { userShips, computerShips, aiLevel } = useContext(GameContext);
 
   const countHitsForShip = (shipName: string, ships: any) => {

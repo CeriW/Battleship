@@ -15,7 +15,7 @@ import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
 import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 import { StartScreen } from './components/StartScreen';
-import { status } from './components/status';
+import { Status } from './components/Status';
 
 const computerThinkingTime = 2200;
 
@@ -69,7 +69,7 @@ const GameBoards = () => {
         </Window>
 
         <Window title="status" className="status">
-          <status />
+          <Status />
         </Window>
 
         <Window title="Your fleet" className="player-fleet">
