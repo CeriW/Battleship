@@ -1,5 +1,4 @@
-import { Alignment, CellStates, PositionArray, ShipInfo } from '../types';
-import { shipTypes } from '../App';
+import { Alignment, CellStates, PositionArray, ShipInfo, shipTypes } from '../types';
 import { doesShipFit, generatePotentialCoordinates } from './helpers';
 
 export function initialiseShipArray(): PositionArray {

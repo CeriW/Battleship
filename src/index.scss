@@ -10,6 +10,7 @@
 @import './components/TurnIndicator.scss';
 @import './components/Avatar.scss';
 @import './components/StartScreen.scss';
+@import './components/Status.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -45,7 +46,7 @@ body {
   display: grid;
   grid-template:
     'player-guess-board computer-avatar feed'
-    'player-guess-board player-fleet stats'
+    'player-guess-board player-fleet status'
     / 5fr 2.2fr 2.2fr;
   gap: 30px;
   padding: 2vw;
@@ -53,7 +54,7 @@ body {
   // @media (max-width: 1500px) {
   //   grid-template:
   //     'player-guess-board player-guess-board player-guess-board player-guess-board'
-  //     'computer-avatar player-fleet stats feed'
+  //     'computer-avatar player-fleet status feed'
   //     / 1fr 1fr 1fr 1fr;
   //   gap: 50px 15px;
   // }
@@ -62,7 +63,7 @@ body {
     grid-template:
       'player-guess-board player-guess-board'
       'computer-avatar feed '
-      'stats player-fleet'
+      'status player-fleet'
       / 1fr 1fr;
   }
 
@@ -72,7 +73,7 @@ body {
       'computer-avatar'
       'feed'
       'player-fleet'
-      'stats'
+      'status'
       / 1fr;
   }
 }
@@ -107,8 +108,8 @@ body {
   grid-area: computer-avatar;
 }
 
-.stats {
-  grid-area: stats;
+.status {
+  grid-area: status;
 }
 
 .player-fleet {
