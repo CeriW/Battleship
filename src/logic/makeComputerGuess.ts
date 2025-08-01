@@ -9,8 +9,15 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
   const { userShips, setUserShips, addToLog, aiLevel, setAvatar } = useContext(GameContext);
+  const isGuessing = React.useRef(false);
 
   return useCallback(() => {
+    if (isGuessing.current) {
+      return;
+    }
+
+    isGuessing.current = true;
+
     const heatMap = calculateHeatMap(userShips, aiLevel);
     const flatHeatMap = heatMap.flat();
     // Find the top 2 highest values
@@ -74,5 +81,7 @@ export const useMakeComputerGuess = () => {
         }
       }
     }
+
+    isGuessing.current = false;
   }, [userShips, setUserShips, addToLog]);
 };
