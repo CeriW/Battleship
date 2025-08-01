@@ -5,7 +5,7 @@ import { CellStates } from '../types';
 import { isShipSunk } from '../logic/helpers';
 import { deriveAvatarName } from './Avatar';
 
-export const Stats = () => {
+export const status = () => {
   const { userShips, computerShips, aiLevel } = useContext(GameContext);
 
   const countHitsForShip = (shipName: string, ships: any) => {
@@ -22,29 +22,29 @@ export const Stats = () => {
   };
 
   return (
-    <div className="stats">
-      <div className="stats-header">
-        <div className="stats-columns">
+    <div className="status">
+      <div className="status-header">
+        <div className="status-columns">
           <span> {/* deliberately empty */}</span>
-          <span className="stats-column-label">Yours</span>
-          <span className="stats-column-label">{deriveAvatarName(aiLevel)}'s</span>
+          <span className="status-column-label">Yours</span>
+          <span className="status-column-label">{deriveAvatarName(aiLevel)}'s</span>
         </div>
       </div>
-      <div className="stats-ships">
+      <div className="status-ships">
         {shipTypes.map((ship) => {
           const userHitCount = countHitsForShip(ship.name, userShips);
           const computerHitCount = countHitsForShip(ship.name, computerShips);
           const isComputerShipSunk = isShipSunk(ship.name, computerShips);
 
           return (
-            <div key={ship.name} className="stats-ship-row">
-              <span className="stats-ship-name">{ship.name.charAt(0).toUpperCase() + ship.name.slice(1)}</span>
-              <div className="stats-ship-columns">
+            <div key={ship.name} className="status-ship-row">
+              <span className="status-ship-name">{ship.name.charAt(0).toUpperCase() + ship.name.slice(1)}</span>
+              <div className="status-ship-columns">
                 <span className="ship-status-indicator">
                   {Array.from({ length: ship.size }).map((_, i) => {
                     const isHit = i < userHitCount;
                     return (
-                      <span key={i} className={`stats-ship-cell ${isHit ? 'hit' : ''}`}>
+                      <span key={i} className={`status-ship-cell ${isHit ? 'hit' : ''}`}>
                         &#9632;
                       </span>
                     );
@@ -55,7 +55,7 @@ export const Stats = () => {
                     // Only show hits if the ship is completely sunk
                     const isHit = isComputerShipSunk && i < computerHitCount;
                     return (
-                      <span key={i} className={`stats-ship-cell ${isHit ? 'hit' : ''}`}>
+                      <span key={i} className={`status-ship-cell ${isHit ? 'hit' : ''}`}>
                         {isHit ? '■' : '□'}
                       </span>
                     );
