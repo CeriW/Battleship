@@ -17,12 +17,13 @@ import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './com
 import { StartScreen } from './components/StartScreen';
 import { Status } from './components/Status';
 
-const computerThinkingTime = 2200;
+const computerThinkingTime = 1000;
 
 const GameBoards = () => {
   const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
     useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
+  const computerTurnInProgress = useRef(false);
 
   useEffect(() => {
     // if (!gameEnded) {
@@ -30,13 +31,16 @@ const GameBoards = () => {
     //   // TODO - there will be a UI element for this
     // }
 
-    if (playerTurn === 'computer' && !gameEnded) {
+    if (playerTurn === 'computer' && !gameEnded && !computerTurnInProgress.current) {
+      computerTurnInProgress.current = true;
+
       setTimeout(() => {
         setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
 
         setTimeout(() => {
           makeComputerGuess();
           setPlayerTurn('user');
+          computerTurnInProgress.current = false;
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }

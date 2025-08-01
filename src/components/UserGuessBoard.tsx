@@ -18,6 +18,8 @@ export const UserGuessBoard: React.FC = () => {
     aiLevel,
   } = React.useContext(GameContext);
 
+  const userTurnInProgress = React.useRef(false);
+
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -57,7 +59,7 @@ export const UserGuessBoard: React.FC = () => {
           className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
-            if (gameEnded) {
+            if (gameEnded || userTurnInProgress.current) {
               return;
             }
 
@@ -68,6 +70,8 @@ export const UserGuessBoard: React.FC = () => {
             ) {
               return;
             }
+
+            userTurnInProgress.current = true;
 
             const newComputerShips = [...computerShips];
             const shipIsHere = cell && cell.name;
@@ -103,6 +107,7 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             setPlayerTurn('computer');
+            userTurnInProgress.current = false;
           }}
         >
           {cell?.status === CellStates.hit && !shipIsSunk && <HitIcon />}
