@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GameContext } from '../GameContext';
-import { shipTypes } from '../types';
+import { PositionArray, shipTypes } from '../types';
 import { CellStates } from '../types';
 import { isShipSunk } from '../logic/helpers';
 import { deriveAvatarName } from './Avatar';
@@ -8,7 +8,7 @@ import { deriveAvatarName } from './Avatar';
 export const Status = () => {
   const { userShips, computerShips, aiLevel } = useContext(GameContext);
 
-  const countHitsForShip = (shipName: string, ships: any) => {
+  const countHitsForShip = (shipName: string, ships: PositionArray) => {
     let hitCount = 0;
     for (let y = 0; y < ships.length; y++) {
       for (let x = 0; x < ships[y].length; x++) {
