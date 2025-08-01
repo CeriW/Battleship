@@ -17,7 +17,7 @@ import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './com
 import { StartScreen } from './components/StartScreen';
 import { Status } from './components/Status';
 
-const computerThinkingTime = 2200;
+const computerThinkingTime = 1000;
 
 const GameBoards = () => {
   const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
