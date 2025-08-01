@@ -15,14 +15,7 @@ import AiSlider from './components/AiChooser';
 import { TurnIndicator } from './components/TurnIndicator';
 import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 import { StartScreen } from './components/StartScreen';
-
-export const shipTypes: ShipInfo[] = [
-  { name: 'carrier', size: 5 },
-  { name: 'battleship', size: 4 },
-  { name: 'cruiser', size: 3 },
-  { name: 'submarine', size: 3 },
-  { name: 'destroyer', size: 2 },
-];
+import { Stats } from './components/Stats';
 
 const computerThinkingTime = 2200;
 
@@ -76,7 +69,7 @@ const GameBoards = () => {
         </Window>
 
         <Window title="Stats" className="stats">
-          <div>Stats will appear here</div>
+          <Stats />
         </Window>
 
         <Window title="Your fleet" className="player-fleet">

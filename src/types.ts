@@ -18,3 +18,11 @@ export type PositionArray = ({ name: ShipNames | null; status: CellStates } | nu
 export type Alignment = 'horizontal' | 'vertical';
 
 export type AiLevel = 'easy' | 'medium' | 'hard';
+
+export const shipTypes: ShipInfo[] = [
+  { name: 'carrier', size: 5 },
+  { name: 'battleship', size: 4 },
+  { name: 'cruiser', size: 3 },
+  { name: 'submarine', size: 3 },
+  { name: 'destroyer', size: 2 },
+];
