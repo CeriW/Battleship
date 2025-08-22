@@ -16,11 +16,12 @@ import { TurnIndicator } from './components/TurnIndicator';
 import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
 import { StartScreen } from './components/StartScreen';
 import { Status } from './components/Status';
+import Confetti from 'react-confetti'
 
 const computerThinkingTime = 1000;
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
+  const { userShips, computerShips, playerTurn, setPlayerTurn, aiLevel, avatar, setAvatar, gameStatus } =
     useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
   const computerTurnInProgress = useRef(false);
@@ -31,7 +32,7 @@ const GameBoards = () => {
     //   // TODO - there will be a UI element for this
     // }
 
-    if (playerTurn === 'computer' && !gameEnded && !computerTurnInProgress.current) {
+    if (playerTurn === 'computer' && gameStatus === 'in-progress' && !computerTurnInProgress.current) {
       computerTurnInProgress.current = true;
 
       setTimeout(() => {
@@ -44,11 +45,13 @@ const GameBoards = () => {
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }
-  }, [playerTurn, gameEnded]);
+  }, [playerTurn, gameStatus, makeComputerGuess, setPlayerTurn, setAvatar]);
 
   return (
     <>
-      <StartScreen />
+      {gameStatus === 'unstarted' && <StartScreen />}
+      {gameStatus === 'user-win' && <Confetti />}
+      {gameStatus === 'computer-win' && <Confetti />}
       <div className="game-container">
         <div
           className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}

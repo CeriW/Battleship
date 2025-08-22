@@ -2,7 +2,7 @@ import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { useContext } from 'react';
 import React from 'react'
-import { useWindowSize } from 'react-use'
+// import { useWindowSize } from 'react-use'
 import Confetti from 'react-confetti'
 
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
@@ -56,16 +56,4 @@ export const checkAllShipsSunk = (board: PositionArray) => {
 
   // Is every ship cell hit?
   return shipCells.every((ship) => ship?.status === CellStates.hit);
-};
-
-export const declareWinner = (player: 'user' | 'computer'): string => {
-  if (player === 'user') {
-    console.log('WINNER');
-    window.alert('You win!');
-    return 'WINNER';
-  } else {
-    console.log('LOSER');
-    window.alert('You lose!');
-    return 'LOSER';
-  }
 };

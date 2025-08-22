@@ -2,8 +2,9 @@ import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import { calculateHeatMap, HeatValues } from './calculateHeatMap';
-import { checkAllShipsSunk, declareWinner, isShipSunk } from './helpers';
+import { checkAllShipsSunk, isShipSunk } from './helpers';
 import { deriveAvatarEmotion, deriveAvatarName, GameEvents } from '../components/Avatar';
+import { declareWinner } from './GameEndScreen';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -12,7 +13,7 @@ export const useMakeComputerGuess = () => {
   const isGuessing = React.useRef(false);
 
   return useCallback(() => {
-    if (isGuessing.current || gameStatus) {
+    if (isGuessing.current || gameStatus !== 'in-progress') {
       return;
     }
 
@@ -84,5 +85,5 @@ export const useMakeComputerGuess = () => {
     }
 
     isGuessing.current = false;
-  }, [userShips, setUserShips, addToLog]);
+  }, [userShips, setUserShips, addToLog, aiLevel, setAvatar, setgameStatus, gameStatus]);
 };

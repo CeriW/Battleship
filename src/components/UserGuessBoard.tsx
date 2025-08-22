@@ -1,9 +1,10 @@
 import React from 'react';
 import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
-import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
+import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
+import { declareWinner } from '../logic/GameEndScreen';
 
 export const UserGuessBoard: React.FC = () => {
   const {
@@ -59,7 +60,7 @@ export const UserGuessBoard: React.FC = () => {
           className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
-            if (gameEnded || userTurnInProgress.current) {
+            if ((gameStatus !== 'in-progress' && gameStatus !== 'unstarted') || userTurnInProgress.current) {
               return;
             }
 

@@ -17,8 +17,9 @@ const createMockContext = (overrides: Partial<GameContextType> = {}): GameContex
   setPlayerTurn: () => {},
   log: [],
   addToLog: () => {},
-  gameEnded: false,
-  gameStatus: () => {},
+  
+  gameStatus: 'in-progress',
+  setgameStatus: () => {},
   aiLevel: 'hard' as AiLevel,
   setAiLevel: () => {},
   aiAdjacentShipModifier: 0,

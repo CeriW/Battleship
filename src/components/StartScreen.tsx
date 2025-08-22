@@ -11,13 +11,14 @@ import { GameEvents } from './Avatar';
 
 export const StartScreen = () => {
   const [gameStarted, setGameStarted] = useState(false);
-  const { setAiLevel, setComputerShips, setPlayerTurn, setAvatar } = useContext(GameContext);
+  const { setAiLevel, setComputerShips, setPlayerTurn, setAvatar, setgameStatus } = useContext(GameContext);
 
   const startGame = (difficulty: AiLevel) => {
     setAiLevel(difficulty);
     setComputerShips(placeShips());
     setPlayerTurn('user');
     setGameStarted(true);
+    setgameStatus('in-progress');
     setAvatar({ gameEvent: GameEvents.GAME_START });
   };
 
