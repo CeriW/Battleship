@@ -8,11 +8,11 @@ import { deriveAvatarEmotion, deriveAvatarName, GameEvents } from '../components
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
-  const { userShips, setUserShips, addToLog, aiLevel, setAvatar, setGameHasWinner, gameHasWinner } = useContext(GameContext);
+  const { userShips, setUserShips, addToLog, aiLevel, setAvatar, setgameStatus, gameStatus } = useContext(GameContext);
   const isGuessing = React.useRef(false);
 
   return useCallback(() => {
-    if (isGuessing.current || gameHasWinner) {
+    if (isGuessing.current || gameStatus) {
       return;
     }
 
@@ -77,7 +77,7 @@ export const useMakeComputerGuess = () => {
 
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'), 'computer-win');
-          setGameHasWinner('computer');
+          setgameStatus('computer-win');
           setAvatar({ gameEvent: GameEvents.COMPUTER_WIN });
         }
       }

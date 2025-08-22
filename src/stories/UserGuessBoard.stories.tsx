@@ -18,7 +18,7 @@ const createMockContext = (overrides: Partial<GameContextType> = {}): GameContex
   log: [],
   addToLog: () => {},
   gameEnded: false,
-  gameHasWinner: () => {},
+  gameStatus: () => {},
   aiLevel: 'hard' as AiLevel,
   setAiLevel: () => {},
   aiAdjacentShipModifier: 0,
