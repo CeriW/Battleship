@@ -14,13 +14,18 @@ export const declareWinner = (player: 'user' | 'computer'): string => {
   }
 };
 
-export const GameEndScreen = () => {
-    const { gameStatus } = useContext(GameContext);
+export const GameEndScreen = ({ player }: { player: 'user' | 'computer' }) => {
 
-    if (gameStatus === 'user-win') {
-        return <Confetti />
-    } else if (gameStatus === 'computer-win') {
-        return <Confetti />
+
+    if (player === 'user') {
+        return <div className="game-end-screen">    
+            <h1>You win!</h1>
+            <Confetti />
+        </div>
+    } else if (player === 'computer') {
+        return <div className="game-end-screen">
+            <h1>You lose!</h1>
+        </div>  
     }
 
     return null;

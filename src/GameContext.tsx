@@ -6,6 +6,7 @@ import { LogEntry, LogEntryTypes } from './components/Log';
 import { GameEvents } from './components/Avatar';
 
 export type GameStatus = 'unstarted' | 'user-win' | 'computer-win' | 'in-progress';
+export type Player = 'user' | 'computer';
 
 /* istanbul ignore next */
 const calculateAdjacentShipModifier = (aiLevel: AiLevel) => {
@@ -26,8 +27,8 @@ export type GameContextType = {
   computerShips: PositionArray;
   setUserShips: (ships: PositionArray) => void;
   setComputerShips: (ships: PositionArray) => void;
-  playerTurn: 'user' | 'computer';
-  setPlayerTurn: (turn: 'user' | 'computer') => void;
+  playerTurn: Player;
+  setPlayerTurn: (turn: Player) => void;
   log: React.ReactNode[];
   addToLog: (message: string, type: LogEntryTypes) => void;
   gameStatus: GameStatus;
@@ -50,9 +51,8 @@ export const GameContext = createContext<GameContextType>({} as GameContextType)
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [userShips, setUserShips] = useState<PositionArray>(placeShips()); // TODO - have user place their own ships
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
-  const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>(Math.random() > 0.5 ? 'user' : 'computer');
+  const [playerTurn, setPlayerTurn] = useState<Player>(Math.random() > 0.5 ? 'user' : 'computer');
   const [log, setLog] = useState<React.ReactNode[]>([]);
-  const [gameEnded, setGameEnded] = useState<boolean>(false);
   const [gameStatus, setgameStatus] = useState<GameStatus>('unstarted');
 
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');

@@ -17,6 +17,7 @@ import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './com
 import { StartScreen } from './components/StartScreen';
 import { Status } from './components/Status';
 import Confetti from 'react-confetti'
+import { GameEndScreen } from './logic/GameEndScreen';
 
 const computerThinkingTime = 1000;
 
@@ -49,9 +50,12 @@ const GameBoards = () => {
 
   return (
     <>
-      {gameStatus === 'unstarted' && <StartScreen />}
-      {gameStatus === 'user-win' && <Confetti />}
-      {gameStatus === 'computer-win' && <Confetti />}
+      
+      {gameStatus === 'unstarted' && <GameEndScreen player="user" />}
+      {gameStatus === 'user-win' && <GameEndScreen player="user" />}
+      {gameStatus === 'computer-win' && <GameEndScreen player="computer" />}
+      {gameStatus === 'in-progress' && (
+
       <div className="game-container">
         <div
           className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
@@ -92,6 +96,7 @@ const GameBoards = () => {
         {/* <h3>Heat map</h3> */}
         {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
       </div>
+    )}
     </>
   );
 };
