@@ -13,7 +13,7 @@ export const useMakeComputerGuess = () => {
   const isGuessing = React.useRef(false);
 
   return useCallback(() => {
-    if (isGuessing.current || gameStatus !== 'in-progress') {
+    if (isGuessing.current || gameStatus !== 'computer-turn') {
       return;
     }
 

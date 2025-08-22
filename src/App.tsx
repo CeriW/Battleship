@@ -3,26 +3,23 @@ import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
 
-import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
-import HeatMapBoard from './components/HeatMapBoard';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
 
-import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
-import AiSlider from './components/AiChooser';
+
 import { TurnIndicator } from './components/TurnIndicator';
-import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
-import { StartScreen } from './components/StartScreen';
+import { Avatar, deriveAvatarName, GameEvents } from './components/Avatar';
 import { Status } from './components/Status';
-import Confetti from 'react-confetti'
+
+import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
 
 const computerThinkingTime = 1000;
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, aiLevel, avatar, setAvatar, gameStatus } =
+  const { userShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } =
     useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
   const computerTurnInProgress = useRef(false);
@@ -33,7 +30,7 @@ const GameBoards = () => {
     //   // TODO - there will be a UI element for this
     // }
 
-    if (playerTurn === 'computer' && gameStatus === 'in-progress' && !computerTurnInProgress.current) {
+    if (gameStatus === 'computer-turn' && !computerTurnInProgress.current) {
       computerTurnInProgress.current = true;
 
       setTimeout(() => {
@@ -41,24 +38,24 @@ const GameBoards = () => {
 
         setTimeout(() => {
           makeComputerGuess();
-          setPlayerTurn('user');
+          setgameStatus('user-turn');
           computerTurnInProgress.current = false;
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }
-  }, [playerTurn, gameStatus, makeComputerGuess, setPlayerTurn, setAvatar]);
+  }, [gameStatus, makeComputerGuess, setAvatar, setgameStatus]);
 
   return (
     <>
       
-      {gameStatus === 'unstarted' && <GameEndScreen player="user" />}
+      {gameStatus === 'unstarted' && <StartScreen />}
       {gameStatus === 'user-win' && <GameEndScreen player="user" />}
       {gameStatus === 'computer-win' && <GameEndScreen player="computer" />}
-      {gameStatus === 'in-progress' && (
+      {(gameStatus === 'user-turn' || gameStatus === 'computer-turn') && (
 
       <div className="game-container">
         <div
-          className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
+          className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}
           style={
             {
               // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
@@ -70,7 +67,7 @@ const GameBoards = () => {
           <div className="player-guess-board-inner">
             <UserGuessBoard />
             <TurnIndicator
-              playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'}
+              playerTurn={gameStatus === 'computer-turn' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'}
             />
           </div>
         </div>

@@ -13,12 +13,9 @@ const createMockContext = (overrides: Partial<GameContextType> = {}): GameContex
   computerShips: initialiseShipArray(),
   setUserShips: () => {},
   setComputerShips: () => {},
-  playerTurn: 'user' as const,
-  setPlayerTurn: () => {},
   log: [],
   addToLog: () => {},
-  
-  gameStatus: 'in-progress',
+  gameStatus: 'user-turn' as const,
   setgameStatus: () => {},
   aiLevel: 'hard' as AiLevel,
   setAiLevel: () => {},

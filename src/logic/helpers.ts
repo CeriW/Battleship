@@ -1,5 +1,5 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
-import { GameContext } from '../GameContext';
+import { GameContext, GameStatus } from '../GameContext';
 import { useContext } from 'react';
 import React from 'react'
 // import { useWindowSize } from 'react-use'
@@ -57,3 +57,4 @@ export const checkAllShipsSunk = (board: PositionArray) => {
   // Is every ship cell hit?
   return shipCells.every((ship) => ship?.status === CellStates.hit);
 };
+

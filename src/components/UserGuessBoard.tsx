@@ -10,8 +10,6 @@ export const UserGuessBoard: React.FC = () => {
   const {
     computerShips,
     setComputerShips,
-    playerTurn,
-    setPlayerTurn,
     addToLog,
     gameStatus,
     setgameStatus,
@@ -60,14 +58,13 @@ export const UserGuessBoard: React.FC = () => {
           className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
-            if ((gameStatus !== 'in-progress' && gameStatus !== 'unstarted') || userTurnInProgress.current) {
+            if (gameStatus !== 'user-turn' || userTurnInProgress.current) {
               return;
             }
 
             // Jest tests are unable to detect pointer-events: none
             if (
-              (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) ||
-              playerTurn === 'computer'
+              (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss))
             ) {
               return;
             }
@@ -107,7 +104,7 @@ export const UserGuessBoard: React.FC = () => {
               setAvatar({ gameEvent: GameEvents.USER_MISS });
             }
 
-            setPlayerTurn('computer');
+            setgameStatus('computer-turn');
             userTurnInProgress.current = false;
           }}
         >
