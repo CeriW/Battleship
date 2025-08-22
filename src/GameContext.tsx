@@ -30,6 +30,8 @@ export type GameContextType = {
   addToLog: (message: string, type: LogEntryTypes) => void;
   gameEnded: boolean;
   setGameEnded: (ended: boolean) => void;
+  gameHasWinner: 'user' | 'computer' | null;
+  setGameHasWinner: (winner: 'user' | 'computer' | null) => void;
   aiLevel: AiLevel;
   setAiLevel: (level: AiLevel) => void;
   avatar: { gameEvent: GameEvents };
@@ -51,6 +53,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [playerTurn, setPlayerTurn] = useState<'user' | 'computer'>(Math.random() > 0.5 ? 'user' : 'computer');
   const [log, setLog] = useState<React.ReactNode[]>([]);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
+  const [gameHasWinner, setGameHasWinner] = useState<'user' | 'computer' | null>(null);
 
   const [aiLevel, setAiLevel] = useState<AiLevel>('hard');
   const [aiAdjacentShipModifier, setAiAdjacentShipModifier] = useState<number>(calculateAdjacentShipModifier(aiLevel));
@@ -81,6 +84,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         addToLog,
         gameEnded,
         setGameEnded,
+        gameHasWinner,
+        setGameHasWinner,
         aiLevel,
         setAiLevel,
         aiAdjacentShipModifier,

@@ -12,8 +12,8 @@ export const UserGuessBoard: React.FC = () => {
     playerTurn,
     setPlayerTurn,
     addToLog,
-    gameEnded,
-    setGameEnded,
+    gameHasWinner,
+    setGameHasWinner,
     setAvatar,
     aiLevel,
   } = React.useContext(GameContext);
@@ -93,9 +93,9 @@ export const UserGuessBoard: React.FC = () => {
 
                 // Check for game end after state update
                 if (checkAllShipsSunk(newComputerShips)) {
-                  addToLog('user wins', 'user-win');
+                  addToLog('user wins', 'user-win'); // TODO - roll this into declareWinner
                   declareWinner('user');
-                  setGameEnded(true);
+                  setGameHasWinner('user');
                   setAvatar({ gameEvent: GameEvents.USER_WIN });
                 }
               }

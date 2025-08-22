@@ -41,7 +41,7 @@ const AvatarWithContext = ({ aiLevel, gameEvent }: { aiLevel: AiLevel; gameEvent
     log: [],
     addToLog: () => {},
     gameEnded: false,
-    setGameEnded: () => {},
+    gameHasWinner: () => {},
     aiLevel,
     setAiLevel: () => {},
     avatar: { gameEvent },

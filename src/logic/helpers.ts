@@ -1,6 +1,9 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
 import { useContext } from 'react';
+import React from 'react'
+import { useWindowSize } from 'react-use'
+import Confetti from 'react-confetti'
 
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 

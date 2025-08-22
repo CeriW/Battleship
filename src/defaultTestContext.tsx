@@ -15,7 +15,7 @@ export const defaultTestContext: GameContextType = {
   log: [],
   addToLog: () => {},
   gameEnded: false,
-  setGameEnded: jest.fn(),
+  gameHasWinner: jest.fn(),
   aiLevel: 'hard',
   setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
