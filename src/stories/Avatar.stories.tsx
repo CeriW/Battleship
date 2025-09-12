@@ -4,6 +4,7 @@ import Window from '../components/Window';
 import { Avatar, GameEvents } from '../components/Avatar';
 import { GameProvider, GameContext } from '../GameContext';
 import { AiLevel } from '../types';
+import { GameStatus } from '../GameContext';
 
 // Mock Math.random for consistent stories
 Math.random = () => 0.5;
@@ -36,12 +37,10 @@ const AvatarWithContext = ({ aiLevel, gameEvent }: { aiLevel: AiLevel; gameEvent
     computerShips: [],
     setUserShips: () => {},
     setComputerShips: () => {},
-    playerTurn: 'user' as const,
-    setPlayerTurn: () => {},
     log: [],
     addToLog: () => {},
-    gameEnded: false,
-    setGameEnded: () => {},
+    gameStatus: 'user-turn' as const,
+    setgameStatus: () => {},
     aiLevel,
     setAiLevel: () => {},
     avatar: { gameEvent },

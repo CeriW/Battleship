@@ -11,6 +11,7 @@
 @import './components/Avatar.scss';
 @import './components/StartScreen.scss';
 @import './components/Status.scss';
+@import './components/GameEndScreen.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -152,4 +153,19 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+button {
+  background: url('/img/button.png') no-repeat center center;
+  background-size: 100% 100%;
+  font-family: 'Oswald', sans-serif;
+  font-size: 30px;
+  color: white;
+  padding: 10px 20px 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(black, 0.5);
+  font-weight: medium;
 }

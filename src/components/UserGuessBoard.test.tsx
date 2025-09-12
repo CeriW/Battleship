@@ -114,7 +114,7 @@ describe('UserGuessBoard', () => {
           computerShips: mockComputerShips,
           userShips: mockComputerShips,
           setComputerShips: setComputerShips,
-          playerTurn: 'user',
+          gameStatus: 'user-turn',
         }}
       >
         <UserGuessBoard />
@@ -147,7 +147,7 @@ describe('UserGuessBoard', () => {
           computerShips: mockComputerShips,
           userShips: mockComputerShips,
           setComputerShips: setComputerShips,
-          playerTurn: 'user',
+          gameStatus: 'user-turn',
         }}
       >
         <UserGuessBoard />
@@ -221,7 +221,7 @@ describe('UserGuessBoard', () => {
           computerShips: mockComputerShips,
           userShips: mockComputerShips,
           setComputerShips: setComputerShips,
-          playerTurn: 'user',
+          gameStatus: 'user-turn',
         }}
       >
         <UserGuessBoard />
@@ -263,7 +263,7 @@ describe('UserGuessBoard', () => {
           computerShips: mockComputerShips,
           userShips: mockComputerShips,
           setComputerShips: setComputerShips,
-          playerTurn: 'user',
+          gameStatus: 'user-turn',
         }}
       >
         <UserGuessBoard />
@@ -364,7 +364,7 @@ describe('UserGuessBoard', () => {
 
   test('should not allow clicking on an already hit cell', () => {
     const mockSetComputerShips = jest.fn();
-    const mockSetPlayerTurn = jest.fn();
+    const mockSetGameStatus = jest.fn();
 
     const computerShips = Array(10)
       .fill(null)
@@ -377,8 +377,8 @@ describe('UserGuessBoard', () => {
           ...defaultTestContext,
           computerShips,
           setComputerShips: mockSetComputerShips,
-          playerTurn: 'user',
-          setPlayerTurn: mockSetPlayerTurn,
+          setgameStatus: mockSetGameStatus,
+          gameStatus: 'user-turn',
         }}
       >
         <UserGuessBoard />
@@ -389,12 +389,12 @@ describe('UserGuessBoard', () => {
     fireEvent.click(hitCell);
 
     expect(mockSetComputerShips).not.toHaveBeenCalled();
-    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+    expect(mockSetGameStatus).not.toHaveBeenCalled();
   });
 
   test('should not allow clicking on an already missed cell', () => {
     const mockSetComputerShips = jest.fn();
-    const mockSetPlayerTurn = jest.fn();
+    const mockSetGameStatus = jest.fn();
 
     const computerShips = Array(10)
       .fill(null)
@@ -407,8 +407,8 @@ describe('UserGuessBoard', () => {
           {
             computerShips,
             setComputerShips: mockSetComputerShips,
-            playerTurn: 'user',
-            setPlayerTurn: mockSetPlayerTurn,
+            setgameStatus: mockSetGameStatus,
+            gameStatus: 'user-turn',
             addToLog: jest.fn(),
           } as any
         }
@@ -421,12 +421,12 @@ describe('UserGuessBoard', () => {
     fireEvent.click(missedCell);
 
     expect(mockSetComputerShips).not.toHaveBeenCalled();
-    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+    expect(mockSetGameStatus).not.toHaveBeenCalled();
   });
 
   test('should not allow clicking when it is computers turn', () => {
     const mockSetComputerShips = jest.fn();
-    const mockSetPlayerTurn = jest.fn();
+    const mockSetGameStatus = jest.fn();
 
     render(
       <GameContext.Provider
@@ -436,8 +436,8 @@ describe('UserGuessBoard', () => {
               .fill(null)
               .map(() => Array(10).fill({ name: null, status: CellStates.unguessed })),
             setComputerShips: mockSetComputerShips,
-            playerTurn: 'computer',
-            setPlayerTurn: mockSetPlayerTurn,
+            setgameStatus: mockSetGameStatus,
+            gameStatus: 'computer-turn',
             addToLog: jest.fn(),
           } as any
         }
@@ -450,6 +450,6 @@ describe('UserGuessBoard', () => {
     fireEvent.click(cell);
 
     expect(mockSetComputerShips).not.toHaveBeenCalled();
-    expect(mockSetPlayerTurn).not.toHaveBeenCalled();
+    expect(mockSetGameStatus).not.toHaveBeenCalled();
   });
 });

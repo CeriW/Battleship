@@ -115,6 +115,18 @@ export const deriveAvatarName = (aiLevel: AiLevel) => {
   return 'Natasha';
 };
 
+export const deriveAvatarPronouns = (name: string) => {
+  switch (name) {
+    case 'Emily':
+    case 'Natasha':
+      return 'her';
+    case 'Alex':
+      return 'him';
+    default:
+      return 'them';
+  }
+};
+
 const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
   const userMissMessages = [
     'Haha, you missed!',

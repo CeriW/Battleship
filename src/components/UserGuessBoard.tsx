@@ -1,22 +1,13 @@
 import React from 'react';
 import { CellStates, ShipNames } from '../types';
 import { GameContext } from '../GameContext';
-import { checkAllShipsSunk, declareWinner, isShipSunk } from '../logic/helpers';
+import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
 
 export const UserGuessBoard: React.FC = () => {
-  const {
-    computerShips,
-    setComputerShips,
-    playerTurn,
-    setPlayerTurn,
-    addToLog,
-    gameEnded,
-    setGameEnded,
-    setAvatar,
-    aiLevel,
-  } = React.useContext(GameContext);
+  const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
+    React.useContext(GameContext);
 
   const userTurnInProgress = React.useRef(false);
 
@@ -59,15 +50,12 @@ export const UserGuessBoard: React.FC = () => {
           className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
           data-testid="cell"
           onClick={() => {
-            if (gameEnded || userTurnInProgress.current) {
+            if (gameStatus !== 'user-turn' || userTurnInProgress.current) {
               return;
             }
 
             // Jest tests are unable to detect pointer-events: none
-            if (
-              (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) ||
-              playerTurn === 'computer'
-            ) {
+            if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
               return;
             }
 
@@ -93,10 +81,10 @@ export const UserGuessBoard: React.FC = () => {
 
                 // Check for game end after state update
                 if (checkAllShipsSunk(newComputerShips)) {
-                  addToLog('user wins', 'user-win');
-                  declareWinner('user');
-                  setGameEnded(true);
+                  setgameStatus('user-win');
                   setAvatar({ gameEvent: GameEvents.USER_WIN });
+                  userTurnInProgress.current = false;
+                  return; // Exit early if user won
                 }
               }
             } else {
@@ -106,7 +94,7 @@ export const UserGuessBoard: React.FC = () => {
               setAvatar({ gameEvent: GameEvents.USER_MISS });
             }
 
-            setPlayerTurn('computer');
+            setgameStatus('computer-turn');
             userTurnInProgress.current = false;
           }}
         >

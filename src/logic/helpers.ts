@@ -1,7 +1,7 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
-import { GameContext } from '../GameContext';
+import { GameContext, GameStatus } from '../GameContext';
 import { useContext } from 'react';
-
+// Keep helpers.ts UI-agnostic
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
 // Return a boolean to confirm whether the ship can fit or whether it would go off the side of the board at the proposed position
@@ -55,14 +55,3 @@ export const checkAllShipsSunk = (board: PositionArray) => {
   return shipCells.every((ship) => ship?.status === CellStates.hit);
 };
 
-export const declareWinner = (player: 'user' | 'computer'): string => {
-  if (player === 'user') {
-    console.log('WINNER');
-    window.alert('You win!');
-    return 'WINNER';
-  } else {
-    console.log('LOSER');
-    window.alert('You lose!');
-    return 'LOSER';
-  }
-};

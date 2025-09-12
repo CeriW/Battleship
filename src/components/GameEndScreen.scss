@@ -1,0 +1,20 @@
+.game-end-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  padding: 30px;
+  box-sizing: border-box;
+
+  .avatar {
+    min-height: unset;
+    margin: 50px 0;
+
+    .avatar-name {
+      display: none;
+    }
+  }
+}

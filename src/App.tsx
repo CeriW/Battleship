@@ -3,35 +3,28 @@ import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
 
-import { CellStates, ShipInfo } from './types';
 import Board from './components/Board';
-import HeatMapBoard from './components/HeatMapBoard';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
 
-import { calculateHeatMap } from './logic/calculateHeatMap';
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
-import AiSlider from './components/AiChooser';
+
 import { TurnIndicator } from './components/TurnIndicator';
-import { Avatar, deriveAvatarEmotion, deriveAvatarName, GameEvents } from './components/Avatar';
-import { StartScreen } from './components/StartScreen';
+import { Avatar, deriveAvatarName, GameEvents } from './components/Avatar';
 import { Status } from './components/Status';
 
-const computerThinkingTime = 1000;
+import { StartScreen } from './components/StartScreen';
+import { GameEndScreen } from './logic/GameEndScreen';
+
+const computerThinkingTime = 700;
 
 const GameBoards = () => {
-  const { userShips, computerShips, playerTurn, setPlayerTurn, gameEnded, addToLog, aiLevel, avatar, setAvatar } =
-    useContext(GameContext);
+  const { userShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
   const computerTurnInProgress = useRef(false);
 
   useEffect(() => {
-    // if (!gameEnded) {
-    //   // addToLog(`${playerTurn} turn`, 'general');
-    //   // TODO - there will be a UI element for this
-    // }
-
-    if (playerTurn === 'computer' && !gameEnded && !computerTurnInProgress.current) {
+    if (gameStatus === 'computer-turn' && !computerTurnInProgress.current) {
       computerTurnInProgress.current = true;
 
       setTimeout(() => {
@@ -39,56 +32,45 @@ const GameBoards = () => {
 
         setTimeout(() => {
           makeComputerGuess();
-          setPlayerTurn('user');
           computerTurnInProgress.current = false;
         }, computerThinkingTime / 2);
       }, computerThinkingTime / 2);
     }
-  }, [playerTurn, gameEnded]);
+  }, [gameStatus, makeComputerGuess, setAvatar, setgameStatus]);
 
   return (
     <>
-      <StartScreen />
-      <div className="game-container">
-        <div
-          className={`player-guess-board ${playerTurn === 'computer' ? 'computer-turn' : 'user-turn'}`}
-          style={
-            {
-              // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
-              // cursor: playerTurn === 'computer' ? 'none' : 'auto',
-            }
-          }
-        >
-          {/* <h3>User guess board</h3> */}
-          <div className="player-guess-board-inner">
-            <UserGuessBoard />
-            <TurnIndicator
-              playerTurn={playerTurn === 'computer' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'}
-            />
+      {gameStatus === 'unstarted' && <StartScreen />}
+      {gameStatus === 'user-win' && <GameEndScreen winner="user" />}
+      {gameStatus === 'computer-win' && <GameEndScreen winner="computer" />}
+      {(gameStatus === 'user-turn' || gameStatus === 'computer-turn') && (
+        <div className="game-container">
+          <div className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}>
+            <div className="player-guess-board-inner">
+              <UserGuessBoard />
+              <TurnIndicator
+                playerTurn={gameStatus === 'computer-turn' ? `${deriveAvatarName(aiLevel)}'s turn` : 'Your turn'}
+              />
+            </div>
           </div>
+
+          <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
+            <Avatar gameEvent={avatar.gameEvent} />
+          </Window>
+
+          <Window title="status" className="status">
+            <Status />
+          </Window>
+
+          <Window title="Your fleet" className="player-fleet">
+            <Board positions={userShips} icons="light" />
+          </Window>
+
+          <Window title="Feed" className="feed">
+            <Log />
+          </Window>
         </div>
-
-        <Window title="" className={`computer-avatar ${deriveAvatarName(aiLevel)}`}>
-          <Avatar gameEvent={avatar.gameEvent} />
-        </Window>
-
-        <Window title="status" className="status">
-          <Status />
-        </Window>
-
-        <Window title="Your fleet" className="player-fleet">
-          <Board positions={userShips} icons="light" />
-        </Window>
-
-        <Window title="Feed" className="feed">
-          <Log />
-        </Window>
-
-        {/* <h3>Computer board</h3>
-      <Board positions={computerShips} /> */}
-        {/* <h3>Heat map</h3> */}
-        {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
-      </div>
+      )}
     </>
   );
 };

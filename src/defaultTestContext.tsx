@@ -8,14 +8,14 @@ import { GameContextType } from './GameContext';
 export const defaultTestContext: GameContextType = {
   setUserShips: jest.fn(),
   setComputerShips: jest.fn(),
-  setPlayerTurn: jest.fn(),
+
   userShips: [],
   computerShips: [],
-  playerTurn: 'computer',
+
   log: [],
   addToLog: () => {},
-  gameEnded: false,
-  setGameEnded: jest.fn(),
+  gameStatus: 'user-turn',
+  setgameStatus: jest.fn(),
   aiLevel: 'hard',
   setAiLevel: jest.fn(),
   aiAdjacentShipModifier: 0,
