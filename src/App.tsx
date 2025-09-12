@@ -81,7 +81,6 @@ export function App() {
   return (
     <Router>
       <div className="app">
-        {/* <Navigation /> */}
         <Routes>
           <Route
             path="/"
