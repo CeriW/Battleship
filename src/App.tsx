@@ -77,6 +77,15 @@ const GameBoards = () => {
   );
 };
 
+/**
+ * Root React component that configures client-side routing and provides top-level app context.
+ *
+ * Renders a BrowserRouter with two routes:
+ * - "/" — the main game wrapped in GameProvider (provides game context) and GameBoards (game UI).
+ * - "/about" — the About page.
+ *
+ * @returns The app's top-level React element containing routing and global providers.
+ */
 export function App() {
   return (
     <Router>
