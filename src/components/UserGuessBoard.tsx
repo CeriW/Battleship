@@ -7,15 +7,8 @@ import { deriveAvatarName, GameEvents } from './Avatar';
 import { declareWinner } from '../logic/GameEndScreen';
 
 export const UserGuessBoard: React.FC = () => {
-  const {
-    computerShips,
-    setComputerShips,
-    addToLog,
-    gameStatus,
-    setgameStatus,
-    setAvatar,
-    aiLevel,
-  } = React.useContext(GameContext);
+  const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
+    React.useContext(GameContext);
 
   const userTurnInProgress = React.useRef(false);
 
@@ -63,9 +56,7 @@ export const UserGuessBoard: React.FC = () => {
             }
 
             // Jest tests are unable to detect pointer-events: none
-            if (
-              (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss))
-            ) {
+            if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
               return;
             }
 
@@ -91,8 +82,6 @@ export const UserGuessBoard: React.FC = () => {
 
                 // Check for game end after state update
                 if (checkAllShipsSunk(newComputerShips)) {
-                  addToLog('user wins', 'user-win'); // TODO - roll this into declareWinner
-                  declareWinner('user');
                   setgameStatus('user-win');
                   setAvatar({ gameEvent: GameEvents.USER_WIN });
                 }

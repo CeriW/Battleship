@@ -4,6 +4,7 @@ import { AiLevel, PositionArray } from './types';
 import { placeShips } from './logic/placeShips';
 import { LogEntry, LogEntryTypes } from './components/Log';
 import { GameEvents } from './components/Avatar';
+import { declareWinner } from './logic/GameEndScreen';
 
 export type GameStatus = 'unstarted' | 'user-turn' | 'computer-turn' | 'user-win' | 'computer-win';
 
@@ -62,8 +63,13 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setAiAdjacentShipModifier(calculateAdjacentShipModifier(aiLevel));
   }, [aiLevel]);
 
+  useEffect(() => {
+    if (gameStatus === 'user-win' || gameStatus === 'computer-win') {
+      declareWinner(gameStatus === 'user-win' ? 'user' : 'computer');
+    }
+  }, [gameStatus]);
+
   const addToLog = (message: string, type: LogEntryTypes) => {
-    console.log(message);
     setLog((prevLog) => [<LogEntry key={new Date().toISOString()} item={message} type={type} />, ...prevLog]);
   };
 
