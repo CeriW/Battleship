@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';

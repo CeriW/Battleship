@@ -1,6 +1,4 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
-import { GameContext, GameStatus } from '../GameContext';
-import { useContext } from 'react';
 // Keep helpers.ts UI-agnostic
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
