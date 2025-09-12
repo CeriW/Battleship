@@ -40,7 +40,6 @@ const GameBoards = () => {
 
   return (
     <>
-      <GameEndScreen winner={'computer'} />
       {gameStatus === 'unstarted' && <StartScreen />}
       {gameStatus === 'user-win' && <GameEndScreen winner="user" />}
       {gameStatus === 'computer-win' && <GameEndScreen winner="computer" />}
