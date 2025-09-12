@@ -1,10 +1,7 @@
 import { Alignment, CellStates, PositionArray, ShipNames } from '../types';
 import { GameContext, GameStatus } from '../GameContext';
 import { useContext } from 'react';
-import React from 'react'
-// import { useWindowSize } from 'react-use'
-import Confetti from 'react-confetti'
-
+// Keep helpers.ts UI-agnostic
 export const generateRandomAlignment = (): Alignment => (Math.random() < 0.5 ? 'horizontal' : 'vertical');
 
 // Return a boolean to confirm whether the ship can fit or whether it would go off the side of the board at the proposed position
