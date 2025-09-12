@@ -16,7 +16,7 @@ import { Status } from './components/Status';
 import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
 
-const computerThinkingTime = 1000;
+const computerThinkingTime = 700;
 
 const GameBoards = () => {
   const { userShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } = useContext(GameContext);
@@ -24,11 +24,6 @@ const GameBoards = () => {
   const computerTurnInProgress = useRef(false);
 
   useEffect(() => {
-    // if (!gameEnded) {
-    //   // addToLog(`${playerTurn} turn`, 'general');
-    //   // TODO - there will be a UI element for this
-    // }
-
     if (gameStatus === 'computer-turn' && !computerTurnInProgress.current) {
       computerTurnInProgress.current = true;
 
@@ -45,21 +40,13 @@ const GameBoards = () => {
 
   return (
     <>
+      <GameEndScreen winner={'computer'} />
       {gameStatus === 'unstarted' && <StartScreen />}
-      {gameStatus === 'user-win' && <GameEndScreen player="user" />}
-      {gameStatus === 'computer-win' && <GameEndScreen player="computer" />}
+      {gameStatus === 'user-win' && <GameEndScreen winner="user" />}
+      {gameStatus === 'computer-win' && <GameEndScreen winner="computer" />}
       {(gameStatus === 'user-turn' || gameStatus === 'computer-turn') && (
         <div className="game-container">
-          <div
-            className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}
-            style={
-              {
-                // pointerEvents: playerTurn === 'computer' ? 'none' : 'auto',
-                // cursor: playerTurn === 'computer' ? 'none' : 'auto',
-              }
-            }
-          >
-            {/* <h3>User guess board</h3> */}
+          <div className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}>
             <div className="player-guess-board-inner">
               <UserGuessBoard />
               <TurnIndicator
@@ -83,11 +70,6 @@ const GameBoards = () => {
           <Window title="Feed" className="feed">
             <Log />
           </Window>
-
-          {/* <h3>Computer board</h3>
-      <Board positions={computerShips} /> */}
-          {/* <h3>Heat map</h3> */}
-          {/* <HeatMapBoard positions={calculateHeatMap(userShips, aiLevel)} /> */}
         </div>
       )}
     </>

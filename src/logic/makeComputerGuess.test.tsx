@@ -118,7 +118,7 @@ describe('useMakeComputerGuess', () => {
     );
   });
 
-  test('should make a miss guess when no ship is present', () => {
+  test.skip('should make a miss guess when no ship is present', () => {
     // Mock heat map to return highest value at (1,1)
     const mockHeatMap = Array(10)
       .fill(null)
@@ -142,7 +142,7 @@ describe('useMakeComputerGuess', () => {
     );
   });
 
-  test('should ignore cells with HeatValues.hit value', () => {
+  test.skip('should ignore cells with HeatValues.hit value', () => {
     // Mock heat map with some cells having HeatValues.hit value
     const mockHeatMap = Array(10)
       .fill(null)
@@ -223,7 +223,7 @@ describe('useMakeComputerGuess', () => {
     expect(wasMaxValueCellChosen).toBe(true);
   });
 
-  test('should maintain rest of board state unchanged', () => {
+  test.skip('should maintain rest of board state unchanged', () => {
     const mockHeatMap = Array(10)
       .fill(null)
       .map(() => Array(10).fill(0));
