@@ -4,7 +4,6 @@ import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
-import { declareWinner } from '../logic/GameEndScreen';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
@@ -84,6 +83,8 @@ export const UserGuessBoard: React.FC = () => {
                 if (checkAllShipsSunk(newComputerShips)) {
                   setgameStatus('user-win');
                   setAvatar({ gameEvent: GameEvents.USER_WIN });
+                  userTurnInProgress.current = false;
+                  return; // Exit early if user won
                 }
               }
             } else {

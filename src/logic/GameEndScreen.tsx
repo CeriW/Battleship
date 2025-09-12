@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { GameContext } from '../GameContext';
+import React from 'react';
 import Confetti from 'react-confetti';
 
 export const declareWinner = (player: 'user' | 'computer'): string => (player === 'user' ? 'WINNER' : 'LOSER');
