@@ -76,11 +76,21 @@ export const useMakeComputerGuess = () => {
         addToLog(`${deriveAvatarName(aiLevel)} sunk ${cell?.name}`, 'sunk');
         setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
+        let didWin = false;
         if (checkAllShipsSunk(newUserShips)) {
           addToLog(declareWinner('computer'), 'computer-win');
           setgameStatus('computer-win');
           setAvatar({ gameEvent: GameEvents.COMPUTER_WIN });
+          didWin = true;
         }
+      }
+    }
+
+    // Advance turn only if the game didn't end on this guess
+    if (!didWin) {
+      setgameStatus('user-turn');
+    }
+    isGuessing.current = false;
       }
     }
 
