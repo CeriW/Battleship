@@ -1,6 +1,7 @@
 :root {
   --battleship-blue: #0088d1;
   --orange: #ff6800;
+  --light-orange: #ffeaca;
 }
 
 @import './components/Board.scss';
@@ -12,6 +13,7 @@
 @import './components/StartScreen.scss';
 @import './components/Status.scss';
 @import './components/GameEndScreen.scss';
+@import './components/About.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -155,17 +157,30 @@ body {
   background: #555;
 }
 
-button {
+button,
+.button {
   background: url('/img/button.png') no-repeat center center;
   background-size: 100% 100%;
   font-family: 'Oswald', sans-serif;
   font-size: 30px;
   color: white;
-  padding: 10px 20px 18px;
+  padding: 7px 20px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
   text-shadow: 2px 2px 0 rgba(black, 0.5);
   font-weight: medium;
+  text-decoration: none;
+  margin: 10px;
+}
+
+.about-link {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+a {
+  color: var(--light-orange);
 }

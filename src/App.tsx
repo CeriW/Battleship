@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
@@ -15,6 +16,7 @@ import { Status } from './components/Status';
 
 import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
+import { About } from './components/About';
 
 const computerThinkingTime = 700;
 
@@ -77,9 +79,21 @@ const GameBoards = () => {
 
 export function App() {
   return (
-    <GameProvider>
-      <GameBoards />
-    </GameProvider>
+    <Router>
+      <div className="app">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <GameProvider>
+                <GameBoards />
+              </GameProvider>
+            }
+          />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
