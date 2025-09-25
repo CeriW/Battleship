@@ -12,7 +12,17 @@ export const UserGuessBoard: React.FC = () => {
 
   const userTurnInProgress = React.useRef(false);
   const [duplicateGuess, setDuplicateGuess] = React.useState<{ row: number; col: number } | null>(null);
+  const duplicateTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+  // Cleanup timeout on component unmount
+  React.useEffect(() => {
+    return () => {
+      if (duplicateTimeoutRef.current) {
+        clearTimeout(duplicateTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleGuess = (row: number, col: number) => {
     if (gameStatus !== 'user-turn' || userTurnInProgress.current) {
@@ -23,11 +33,17 @@ export const UserGuessBoard: React.FC = () => {
 
     // Check if already guessed and provide feedback
     if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
+      // Clear any existing timeout to prevent conflicts
+      if (duplicateTimeoutRef.current) {
+        clearTimeout(duplicateTimeoutRef.current);
+      }
+
       setDuplicateGuess({ row, col });
 
       // Clear the duplicate feedback after 2 seconds
-      setTimeout(() => {
+      duplicateTimeoutRef.current = setTimeout(() => {
         setDuplicateGuess(null);
+        duplicateTimeoutRef.current = null;
       }, 2000);
       return;
     }
