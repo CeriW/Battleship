@@ -4,12 +4,72 @@ import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
+import AimInterface from './AimInterface';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
     React.useContext(GameContext);
 
   const userTurnInProgress = React.useRef(false);
+  const [duplicateGuess, setDuplicateGuess] = React.useState<{ row: number; col: number } | null>(null);
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+  const handleGuess = (row: number, col: number) => {
+    if (gameStatus !== 'user-turn' || userTurnInProgress.current) {
+      return;
+    }
+
+    const cell = computerShips[row][col];
+
+    // Check if already guessed and provide feedback
+    if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
+      setDuplicateGuess({ row, col });
+
+      // Clear the duplicate feedback after 2 seconds
+      setTimeout(() => {
+        setDuplicateGuess(null);
+      }, 2000);
+      return;
+    }
+
+    userTurnInProgress.current = true;
+
+    const newComputerShips = [...computerShips];
+    const shipIsHere = cell && cell.name;
+
+    if (shipIsHere) {
+      newComputerShips[row][col] = { ...cell, status: CellStates.hit };
+      const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
+      newComputerShips[row][col] = { ...cell, status: CellStates.hit };
+
+      addToLog(`You guessed ${letters[row]}${col + 1}, hit`, 'hit');
+      setAvatar({ gameEvent: GameEvents.USER_HIT });
+
+      if (shipIsSunk) {
+        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
+        setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
+
+        // Update the state immediately for game logic
+        setComputerShips(newComputerShips);
+
+        // Check for game end after state update
+        if (checkAllShipsSunk(newComputerShips)) {
+          setgameStatus('user-win');
+          setAvatar({ gameEvent: GameEvents.USER_WIN });
+          userTurnInProgress.current = false;
+          return; // Exit early if user won
+        }
+      }
+    } else {
+      newComputerShips[row][col] = { name: null, status: CellStates.miss };
+      setComputerShips(newComputerShips);
+      addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
+      setAvatar({ gameEvent: GameEvents.USER_MISS });
+    }
+
+    setgameStatus('computer-turn');
+    userTurnInProgress.current = false;
+  };
 
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -20,7 +80,6 @@ export const UserGuessBoard: React.FC = () => {
     );
   }
 
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const rows = [];
 
   // Used to assign classes like carrier-1, carrier-2 etc to individual cells for styling
@@ -44,59 +103,16 @@ export const UserGuessBoard: React.FC = () => {
 
       const shipIsSunk = cell?.name ? isShipSunk(cell.name as ShipNames, computerShips) : false;
 
+      const isDuplicate = duplicateGuess && duplicateGuess.row === y && duplicateGuess.col === x;
+
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
-          className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'}`}
+          className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'} ${
+            isDuplicate ? 'duplicate-guess' : ''
+          }`}
           data-testid="cell"
-          onClick={() => {
-            if (gameStatus !== 'user-turn' || userTurnInProgress.current) {
-              return;
-            }
-
-            // Jest tests are unable to detect pointer-events: none
-            if (cell && (cell.status === CellStates.hit || cell.status === CellStates.miss)) {
-              return;
-            }
-
-            userTurnInProgress.current = true;
-
-            const newComputerShips = [...computerShips];
-            const shipIsHere = cell && cell.name;
-
-            if (shipIsHere) {
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
-              const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
-              newComputerShips[y][x] = { ...cell, status: CellStates.hit };
-
-              addToLog(`You guessed ${letters[y]}${x + 1}, hit`, 'hit');
-              setAvatar({ gameEvent: GameEvents.USER_HIT });
-
-              if (shipIsSunk) {
-                addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
-                setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
-
-                // Update the state immediately for game logic
-                setComputerShips(newComputerShips);
-
-                // Check for game end after state update
-                if (checkAllShipsSunk(newComputerShips)) {
-                  setgameStatus('user-win');
-                  setAvatar({ gameEvent: GameEvents.USER_WIN });
-                  userTurnInProgress.current = false;
-                  return; // Exit early if user won
-                }
-              }
-            } else {
-              newComputerShips[y][x] = { name: null, status: CellStates.miss };
-              setComputerShips(newComputerShips);
-              addToLog(`You guessed ${letters[y]}${x + 1}, miss`, 'miss');
-              setAvatar({ gameEvent: GameEvents.USER_MISS });
-            }
-
-            setgameStatus('computer-turn');
-            userTurnInProgress.current = false;
-          }}
+          onClick={() => handleGuess(y, x)}
         >
           {cell?.status === CellStates.hit && !shipIsSunk && <HitIcon />}
           {cell?.status === CellStates.miss && <MissIcon />}
@@ -116,9 +132,15 @@ export const UserGuessBoard: React.FC = () => {
   }
 
   return (
-    <div className="board user-guess-board" data-testid="user-guess-board">
-      {columnMarkers}
-      {rows}
+    <div className="user-guess-board" data-testid="user-guess-board">
+      {/* Coordinate Input as Additional Option */}
+      <AimInterface onGuess={handleGuess} disabled={gameStatus !== 'user-turn' || userTurnInProgress.current} />
+
+      {/* Original Clickable Grid */}
+      <div className="board user-guess-board" data-testid="user-guess-board">
+        {columnMarkers}
+        {rows}
+      </div>
     </div>
   );
 };
