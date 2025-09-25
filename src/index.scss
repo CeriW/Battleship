@@ -78,7 +78,7 @@ body {
       / 1fr 1fr;
   }
 
-  @media (max-width: 550px) {
+  @media (max-width: 800px) {
     grid-template:
       'player-guess-board'
       'computer-avatar'

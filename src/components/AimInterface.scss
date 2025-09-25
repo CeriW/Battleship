@@ -4,12 +4,14 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto 15px auto;
+  margin-left: 9.09%;
+  margin-bottom: 45px;
+  width: 90.91%;
   padding: 15px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
 }
 
 .aim-controls {
@@ -24,7 +26,6 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: center;
   width: 100%;
 }
@@ -110,12 +111,6 @@
     max-width: 100%;
   }
 
-  .coordinate-form {
-    flex-direction: column;
-    gap: 8px;
-    max-width: 100%;
-  }
-
   .coordinate-input {
     font-size: 18px;
     padding: 10px 14px;
@@ -125,11 +120,6 @@
   .coordinate-form button {
     font-size: 18px;
     padding: 10px 16px 14px;
-    width: 100%;
-  }
-
-  .aim-instructions {
-    font-size: 16px;
   }
 }
 
