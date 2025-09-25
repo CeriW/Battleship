@@ -74,11 +74,23 @@ $ships: (
       background-color: rgba(255, 255, 255, 0.1);
     }
 
-    // Hover effect for desktop
+    // Hover effect for desktop - only when it's the user's turn
     @media (hover: hover) {
       &:hover {
         background-color: rgba(255, 255, 255, 0.05);
         border-color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    // Disable hover and cursor when it's not the user's turn
+    &.disabled {
+      cursor: not-allowed;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: transparent;
+          border-color: rgba(white, 0.4);
+        }
       }
     }
   }
@@ -157,7 +169,7 @@ $ships: (
     transform: rotate(-90deg);
   }
 
-  &.user-guess-board .ship:not(.sunk)::before {
+  .user-guess-board & .ship:not(.sunk)::before {
     display: none;
   }
 }

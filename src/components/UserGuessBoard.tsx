@@ -110,7 +110,7 @@ export const UserGuessBoard: React.FC = () => {
           key={`cell-${letters[y]}-${x}`}
           className={`cell ${shipClass} ${shipIsSunk ? 'sunk' : cell?.status || 'unguessed'} ${
             isDuplicate ? 'duplicate-guess' : ''
-          }`}
+          } ${gameStatus !== 'user-turn' ? 'disabled' : ''}`}
           data-testid="cell"
           onClick={() => handleGuess(y, x)}
         >
