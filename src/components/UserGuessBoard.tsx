@@ -132,12 +132,12 @@ export const UserGuessBoard: React.FC = () => {
   }
 
   return (
-    <div className="user-guess-board" data-testid="user-guess-board-container">
+    <div className="user-guess-board" data-testid="user-guess-board">
       {/* Coordinate Input as Additional Option */}
       <AimInterface onGuess={handleGuess} disabled={gameStatus !== 'user-turn' || userTurnInProgress.current} />
 
       {/* Original Clickable Grid */}
-      <div className="board user-guess-board-grid" data-testid="user-guess-board-grid">
+      <div className="board user-guess-board" data-testid="user-guess-board">
         {columnMarkers}
         {rows}
       </div>
