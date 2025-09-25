@@ -14,6 +14,7 @@
 @import './components/Status.scss';
 @import './components/GameEndScreen.scss';
 @import './components/About.scss';
+@import './components/AimInterface.scss';
 
 @mixin page-background {
   background-color: #0088d1;
@@ -40,6 +41,15 @@ body {
   overflow-x: hidden;
   font-family: 'Oswald', sans-serif;
   display: flex;
+
+  // Touch optimizations
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
@@ -68,7 +78,7 @@ body {
       / 1fr 1fr;
   }
 
-  @media (max-width: 550px) {
+  @media (max-width: 800px) {
     grid-template:
       'player-guess-board'
       'computer-avatar'
@@ -76,6 +86,8 @@ body {
       'player-fleet'
       'status'
       / 1fr;
+    gap: 20px;
+    padding: 1vw;
   }
 }
 
@@ -96,12 +108,23 @@ body {
   &.user-turn {
     .board .cell {
       cursor: url('/img/aim.png') 30 30, auto;
+
+      // Touch devices don't need custom cursor
+      @media (hover: none) and (pointer: coarse) {
+        cursor: pointer;
+      }
     }
   }
 
   .player-guess-board-inner {
     max-width: max(35vw, 550px);
     width: 100%;
+
+    // Mobile optimizations
+    @media (max-width: 768px) {
+      max-width: 100%;
+      padding: 0 10px;
+    }
   }
 }
 

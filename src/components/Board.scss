@@ -30,6 +30,15 @@ $ships: (
     font-size: 18px;
   }
 
+  // Mobile-specific optimizations
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
+
   .column-marker,
   .row-marker {
     display: flex;
@@ -52,10 +61,60 @@ $ships: (
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    transition: all 0.2s ease;
   }
 
   .cell.unguessed {
     cursor: pointer;
+
+    // Touch feedback
+    &:active {
+      transform: scale(0.95);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    // Hover effect for desktop - only when it's the user's turn
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    // Disable hover and cursor when it's not the user's turn
+    &.disabled {
+      cursor: not-allowed;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: transparent;
+          border-color: rgba(white, 0.4);
+        }
+      }
+    }
+  }
+
+  .cell.duplicate-guess {
+    animation: duplicatePulse 0.6s ease-in-out;
+    background-color: rgba(255, 0, 0, 0.3) !important;
+    border-color: #ff4444 !important;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
+  }
+
+  @keyframes duplicatePulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
+    }
   }
 
   .row-marker + .cell {
@@ -110,7 +169,7 @@ $ships: (
     transform: rotate(-90deg);
   }
 
-  &.user-guess-board .ship:not(.sunk)::before {
+  .user-guess-board & .ship:not(.sunk)::before {
     display: none;
   }
 }
