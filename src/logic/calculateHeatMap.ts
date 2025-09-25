@@ -1,7 +1,5 @@
-import { CellStates, HeatMapArray, PositionArray, Alignment, ShipNames, shipTypes } from '../types';
-import { doesShipFit, generatePotentialCoordinates } from './helpers';
-import { isShipSunk } from './helpers';
-import { AiLevel } from '../types';
+import { CellStates, HeatMapArray, PositionArray, Alignment, ShipNames, shipTypes, AiLevel } from '../types';
+import { doesShipFit, generatePotentialCoordinates, isShipSunk } from './helpers';
 
 export const HeatValues = {
   hit: 100,
