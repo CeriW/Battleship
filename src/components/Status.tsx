@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { GameContext } from '../GameContext';
-import { PositionArray, shipTypes } from '../types';
-import { CellStates } from '../types';
+import { PositionArray, shipTypes, CellStates } from '../types';
 import { isShipSunk } from '../logic/helpers';
 import { deriveAvatarName } from './Avatar';
 

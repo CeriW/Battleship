@@ -2,9 +2,8 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import Window from '../components/Window';
 import { Avatar, GameEvents } from '../components/Avatar';
-import { GameProvider, GameContext } from '../GameContext';
+import { GameContext } from '../GameContext';
 import { AiLevel } from '../types';
-import { GameStatus } from '../GameContext';
 
 // Mock Math.random for consistent stories
 Math.random = () => 0.5;

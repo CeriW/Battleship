@@ -22,6 +22,12 @@
   background-repeat: no-repeat;
   background-size: contain;
   background-attachment: fixed;
+
+  @media (max-width: 950px) {
+    background-image: url('/img/ocean.png');
+    background-size: unset;
+    background-repeat: repeat;
+  }
 }
 
 body {
@@ -53,14 +59,6 @@ body {
     / 5fr 2.2fr 2.2fr;
   gap: 30px;
   padding: 2vw;
-
-  // @media (max-width: 1500px) {
-  //   grid-template:
-  //     'player-guess-board player-guess-board player-guess-board player-guess-board'
-  //     'computer-avatar player-fleet status feed'
-  //     / 1fr 1fr 1fr 1fr;
-  //   gap: 50px 15px;
-  // }
 
   @media (max-width: 1500px) {
     grid-template:
