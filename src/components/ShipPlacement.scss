@@ -1,3 +1,70 @@
+// Mixins for common styles
+@mixin button-base {
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  color: white;
+  padding: 5px 15px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(black, 0.5);
+  font-weight: medium;
+  text-decoration: none;
+  margin: 5px;
+  min-height: 40px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@mixin button-background($image) {
+  background: url($image) no-repeat center center;
+  background-size: 100% 100%;
+}
+
+@mixin board-size($size) {
+  width: $size !important;
+  height: $size !important;
+  max-width: $size !important;
+  max-height: $size !important;
+}
+
+@mixin preview-style($r, $g, $b) {
+  background-color: rgba($r, $g, $b, 0.8) !important;
+  border-color: rgb($r, $g, $b) !important;
+  animation: previewPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 15px rgba($r, $g, $b, 0.6);
+
+  .preview-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: rgb($r, $g, $b);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba($r, $g, $b, 1);
+  }
+}
+
 .ship-placement {
   display: flex;
   flex-direction: column;
@@ -18,17 +85,6 @@
     background-image: url('/img/ocean.png');
     background-size: unset;
     background-repeat: repeat;
-  }
-
-  .ship-placement-footer {
-    width: 100%;
-    margin-top: 20px;
-    box-sizing: border-box;
-    padding: 0 20px;
-    max-width: 900px;
-    overflow-x: hidden;
-    float: none;
-    margin: 0 auto;
   }
 
   .ship-placement-header {
@@ -262,7 +318,6 @@
         max-width: 25px;
         max-height: 25px;
         cursor: pointer;
-        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -355,6 +410,10 @@
     border-radius: 15px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    width: min(100%, 900px);
+    float: none;
+    margin: 0 auto;
+    box-sizing: border-box;
 
     .footer-buttons {
       display: flex;
@@ -385,183 +444,41 @@
     }
 
     .random-button {
-      background: url('/img/button.png') no-repeat center center;
-      background-size: 100% 100%;
-      font-family: 'Oswald', sans-serif;
-      font-size: 24px;
-      color: white;
-      padding: 5px 15px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      text-shadow: 2px 2px 0 rgba(black, 0.5);
-      font-weight: medium;
-      text-decoration: none;
-      margin: 5px;
-      min-height: 40px; // More compact
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      user-select: none;
-
-      // Touch feedback
-      &:active {
-        transform: scale(0.95);
-      }
-
-      // Hover effect for desktop only
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          transform: translateY(-2px);
-        }
-      }
+      @include button-base;
+      @include button-background('/img/button.png');
     }
 
     .reset-button {
-      background: url('/img/button-red.png') no-repeat center center;
-      background-size: 100% 100%;
-      font-family: 'Oswald', sans-serif;
-      font-size: 24px;
-      color: white;
-      padding: 5px 15px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      text-shadow: 2px 2px 0 rgba(black, 0.5);
-      font-weight: medium;
-      text-decoration: none;
-      margin: 5px;
-      min-height: 40px; // More compact
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      user-select: none;
-
-      // Touch feedback
-      &:active:not(:disabled) {
-        transform: scale(0.95);
-      }
-
-      // Hover effect for desktop only
-      @media (hover: hover) and (pointer: fine) {
-        &:hover:not(:disabled) {
-          transform: translateY(-2px);
-        }
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-      }
+      @include button-base;
+      @include button-background('/img/button-red.png');
     }
 
     .start-game-button {
-      background: url('/img/button.png') no-repeat center center;
-      background-size: 100% 100%;
-      font-family: 'Oswald', sans-serif;
-      font-size: 24px;
-      color: white;
-      padding: 5px 15px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      text-shadow: 2px 2px 0 rgba(black, 0.5);
-      font-weight: medium;
-      text-decoration: none;
-      margin: 5px;
-      min-height: 40px; // More compact
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      user-select: none;
-
-      // Touch feedback
-      &:active:not(:disabled) {
-        transform: scale(0.95);
-      }
-
-      // Hover effect for desktop only
-      @media (hover: hover) and (pointer: fine) {
-        &:hover:not(:disabled) {
-          transform: translateY(-2px);
-        }
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-      }
+      @include button-base;
+      @include button-background('/img/button.png');
     }
   }
 }
 
 // Ship placement board - responsive square dimensions
 .ship-placement .board {
-  width: 500px !important;
-  height: 500px !important;
-  max-width: 500px !important;
-  max-height: 500px !important;
+  @include board-size(500px);
 
   @media (max-width: 1024px) {
-    width: 400px !important;
-    height: 400px !important;
-    max-width: 400px !important;
-    max-height: 400px !important;
-  }
-
-  @media (max-width: 768px) {
-    width: 400px !important;
-    height: 400px !important;
-    max-width: 400px !important;
-    max-height: 400px !important;
+    @include board-size(400px);
   }
 
   @media (max-width: 480px) {
-    width: 350px !important;
-    height: 350px !important;
-    max-width: 350px !important;
-    max-height: 350px !important;
+    @include board-size(350px);
   }
 }
 
 .ship-placement .board .cell.ship-preview {
-  background-color: rgba(0, 255, 0, 0.8) !important;
-  border-color: #00ff00 !important;
-  animation: previewPulse 1s ease-in-out infinite alternate;
-  box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
-
-  .preview-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: #00ff00;
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 1);
-  }
+  @include preview-style(0, 255, 0);
 }
 
 .ship-placement .board .cell.ship-preview-invalid {
-  background-color: rgba(255, 0, 0, 0.8) !important;
-  border-color: #ff0000 !important;
-  animation: previewPulse 1s ease-in-out infinite alternate;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-
-  .preview-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: #ff0000;
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 1);
-  }
+  @include preview-style(255, 0, 0);
 }
 
 @keyframes previewPulse {
@@ -570,31 +487,5 @@
   }
   100% {
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
-  }
-}
-
-// Mobile responsiveness
-@media (max-width: 768px) {
-  .ship-placement {
-    padding: 10px;
-
-    .ship-placement-header h2 {
-      font-size: 2rem;
-    }
-
-    .ship-placement-content {
-      gap: 20px;
-    }
-
-    .ship-selection {
-      flex: none;
-      width: 100%;
-    }
-
-    .ship-placement-footer {
-      flex-direction: column;
-      gap: 15px;
-      text-align: center;
-    }
   }
 }
