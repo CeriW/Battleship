@@ -5,9 +5,28 @@ import { HitIcon, MissIcon } from './Icons';
 interface BoardProps {
   positions: PositionArray;
   icons?: 'dark' | 'light';
+  onCellHover?: (row: number, col: number) => void;
+  onCellClick?: (row: number, col: number) => void;
+  onDragStart?: (row: number, col: number) => void;
+  onDragOver?: (row: number, col: number) => void;
+  onDragEnd?: (row: number, col: number) => void;
+  shipPreview?: { row: number; col: number }[] | null;
+  selectedShip?: ShipNames | null;
+  isDragging?: boolean;
 }
 
-export const Board: React.FC<BoardProps> = ({ positions, icons = 'dark' }) => {
+export const Board: React.FC<BoardProps> = ({
+  positions,
+  icons = 'dark',
+  onCellHover,
+  onCellClick,
+  onDragStart,
+  onDragOver,
+  onDragEnd,
+  shipPreview,
+  selectedShip,
+  isDragging,
+}) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
     columnMarkers.push(
@@ -36,6 +55,9 @@ export const Board: React.FC<BoardProps> = ({ positions, icons = 'dark' }) => {
         shipCounts[positions[y][x]?.name as ShipNames]++;
       }
 
+      const isPreviewCell = shipPreview?.some((preview) => preview.row === y && preview.col === x);
+      const isClickable = selectedShip && onCellClick;
+
       cells.push(
         <div
           key={`cell-${letters[y]}-${x}`}
@@ -47,11 +69,26 @@ export const Board: React.FC<BoardProps> = ({ positions, icons = 'dark' }) => {
                   }`
                 : ''
             }
-            ${positions[y][x]?.status ?? ''}`}
+            ${positions[y][x]?.status ?? ''}
+            ${isPreviewCell ? 'ship-preview' : ''}
+            ${isClickable ? 'clickable' : ''}`}
           data-testid="cell"
+          data-row={y}
+          data-col={x}
+          onMouseEnter={() => (isDragging ? onDragOver?.(y, x) : onCellHover?.(y, x))}
+          onClick={() => onCellClick?.(y, x)}
+          onTouchStart={() => onCellHover?.(y, x)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            onCellClick?.(y, x);
+          }}
+          onMouseDown={() => onDragStart?.(y, x)}
+          onMouseUp={() => onDragEnd?.(y, x)}
+          draggable={false}
         >
           {positions[y][x]?.status === CellStates.hit && <HitIcon />}
           {positions[y][x]?.status === CellStates.miss && <MissIcon fill={icons === 'light' ? '#fff' : '#000'} />}
+          {isPreviewCell && <div className="preview-indicator" />}
         </div>
       );
     }

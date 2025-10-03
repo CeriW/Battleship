@@ -1,0 +1,412 @@
+.ship-placement {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+
+  .ship-placement-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 2.5rem;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin: 0;
+      opacity: 0.9;
+
+      .desktop-instructions {
+        display: block;
+      }
+
+      .mobile-instructions {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .desktop-instructions {
+          display: none;
+        }
+
+        .mobile-instructions {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .ship-placement-content {
+    display: flex;
+    flex: 1;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: 0; // Allow flex items to shrink
+
+    @media (max-width: 1024px) {
+      gap: 20px;
+      padding: 0 10px;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 0 10px;
+    }
+  }
+
+  .ship-selection {
+    flex: 0 0 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    @media (max-width: 1024px) {
+      flex: 0 0 280px;
+      padding: 15px;
+    }
+
+    @media (max-width: 768px) {
+      flex: none;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h3 {
+      margin: 0 0 20px 0;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .ship-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .ship-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      min-height: 60px; // Better touch target
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+
+      // Touch feedback
+      &:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      // Hover effect for desktop only
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+      }
+
+      &.selected {
+        border-color: #4caf50;
+        background: rgba(76, 175, 80, 0.2);
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+      }
+
+      &.placed {
+        background: rgba(76, 175, 80, 0.3);
+        border-color: #4caf50;
+
+        .ship-name {
+          text-decoration: line-through;
+          opacity: 0.7;
+        }
+      }
+
+      .ship-visual {
+        display: flex;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+
+      .ship-segment {
+        width: 20px;
+        height: 20px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+
+        &.carrier {
+          background: #ff6b6b;
+        }
+        &.battleship {
+          background: #4ecdc4;
+        }
+        &.cruiser {
+          background: #45b7d1;
+        }
+        &.submarine {
+          background: #96ceb4;
+        }
+        &.destroyer {
+          background: #ffeaa7;
+        }
+      }
+
+      .ship-info {
+        flex: 1;
+
+        .ship-name {
+          font-weight: bold;
+          font-size: 1.1rem;
+          text-transform: capitalize;
+          margin-bottom: 5px;
+        }
+
+        .ship-size {
+          font-size: 0.9rem;
+          opacity: 0.8;
+        }
+      }
+
+      .remove-ship {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: #ff4757;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #ff3742;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .ship-controls {
+      margin-top: 20px;
+      text-align: center;
+
+      .rotate-button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        min-height: 48px; // Better touch target
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+
+        // Touch feedback
+        &:active {
+          transform: scale(0.95);
+          background: #45a049;
+        }
+
+        // Hover effect for desktop only
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          }
+        }
+      }
+    }
+  }
+
+  .placement-board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 0; // Allow flex item to shrink
+
+    .board-container {
+      // Ensure the board container doesn't interfere with aspect ratio
+      width: fit-content;
+      height: fit-content;
+    }
+  }
+
+  .ship-placement-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .placement-status {
+      .ready-to-start {
+        color: #4caf50;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .ships-remaining {
+        color: #ffa726;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+    }
+
+    .start-game-button {
+      background: linear-gradient(45deg, #4caf50, #45a049);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      min-height: 56px; // Better touch target
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+
+      // Touch feedback
+      &:active:not(:disabled) {
+        transform: scale(0.95);
+        background: linear-gradient(45deg, #45a049, #3d8b40);
+      }
+
+      // Hover effect for desktop only
+      @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+      }
+
+      &:disabled {
+        background: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+      }
+    }
+  }
+}
+
+// Ship placement board - force square dimensions
+.ship-placement .board {
+  width: 500px !important;
+  height: 500px !important;
+  max-width: 500px !important;
+  max-height: 500px !important;
+
+  @media (max-width: 1024px) {
+    width: 400px !important;
+    height: 400px !important;
+    max-width: 400px !important;
+    max-height: 400px !important;
+  }
+
+  @media (max-width: 768px) {
+    width: 300px !important;
+    height: 300px !important;
+    max-width: 300px !important;
+    max-height: 300px !important;
+  }
+
+  @media (max-width: 480px) {
+    width: 250px !important;
+    height: 250px !important;
+    max-width: 250px !important;
+    max-height: 250px !important;
+  }
+}
+
+.ship-placement .board .cell.ship-preview {
+  background-color: rgba(76, 175, 80, 0.5) !important;
+  border-color: #4caf50 !important;
+  animation: previewPulse 1s ease-in-out infinite alternate;
+
+  .preview-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+  }
+}
+
+@keyframes previewPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .ship-placement {
+    padding: 10px;
+
+    .ship-placement-header h2 {
+      font-size: 2rem;
+    }
+
+    .ship-placement-content {
+      gap: 20px;
+    }
+
+    .ship-selection {
+      flex: none;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .ship-placement-footer {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+    }
+  }
+}
