@@ -65,6 +65,38 @@ const wouldContinueHitLine = (board: PositionArray, x: number, y: number): boole
     return true;
   }
 
+  // Check for gap-filling pattern: HIT-[target]-HIT
+  // Look for hits on both sides with unguessed cells in between
+  let leftHitFound = false;
+  let rightHitFound = false;
+
+  // Check left side for a hit
+  for (let i = x - 1; i >= 0; i--) {
+    const cell = board[y][i];
+    if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
+      leftHitFound = true;
+      break;
+    } else if (cell?.status === CellStates.miss || cell?.status === CellStates.unguessed) {
+      break; // Stop at first non-hit that's not unguessed
+    }
+  }
+
+  // Check right side for a hit
+  for (let i = x + 1; i < 10; i++) {
+    const cell = board[y][i];
+    if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
+      rightHitFound = true;
+      break;
+    } else if (cell?.status === CellStates.miss || cell?.status === CellStates.unguessed) {
+      break; // Stop at first non-hit that's not unguessed
+    }
+  }
+
+  // If we have hits on both sides, this is a gap-filling opportunity
+  if (leftHitFound && rightHitFound) {
+    return true;
+  }
+
   // Check vertical line continuation
   // Count consecutive hits above
   let aboveHits = 0;
@@ -90,6 +122,37 @@ const wouldContinueHitLine = (board: PositionArray, x: number, y: number): boole
 
   // Check if this cell would continue a vertical line (at least 2 consecutive hits on one side)
   if (aboveHits >= 2 || belowHits >= 2) {
+    return true;
+  }
+
+  // Check for vertical gap-filling pattern: HIT-[target]-HIT
+  let aboveHitFound = false;
+  let belowHitFound = false;
+
+  // Check above for a hit
+  for (let i = y - 1; i >= 0; i--) {
+    const cell = board[i][x];
+    if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
+      aboveHitFound = true;
+      break;
+    } else if (cell?.status === CellStates.miss || cell?.status === CellStates.unguessed) {
+      break; // Stop at first non-hit that's not unguessed
+    }
+  }
+
+  // Check below for a hit
+  for (let i = y + 1; i < 10; i++) {
+    const cell = board[i][x];
+    if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
+      belowHitFound = true;
+      break;
+    } else if (cell?.status === CellStates.miss || cell?.status === CellStates.unguessed) {
+      break; // Stop at first non-hit that's not unguessed
+    }
+  }
+
+  // If we have hits on both sides vertically, this is a gap-filling opportunity
+  if (aboveHitFound && belowHitFound) {
     return true;
   }
 
