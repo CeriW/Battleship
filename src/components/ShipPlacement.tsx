@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { shipTypes, ShipNames, PositionArray, Alignment, CellStates } from '../types';
-import { initialiseShipArray, checkValidShipState } from '../logic/placeShips';
+import { initialiseShipArray, checkValidShipState, placeShips } from '../logic/placeShips';
 import Board from './Board';
 import { MissIcon } from './Icons';
 import './ShipPlacement.scss';
@@ -209,6 +209,18 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
     setHoveredPosition(null);
   };
 
+  const handleRandomPlacement = () => {
+    // Generate random ship placements
+    const randomShips = placeShips();
+    setPlacedShips(randomShips);
+
+    // Mark all ships as placed
+    const allShipNames = new Set(shipTypes.map((ship) => ship.name));
+    setPlacedShipNames(allShipNames);
+    setSelectedShip(null);
+    setHoveredPosition(null);
+  };
+
   const shipPreview = getShipPreview();
   const allShipsPlaced = placedShipNames.size === shipTypes.length;
 
@@ -310,6 +322,9 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
         </div>
 
         <div className="footer-buttons">
+          <button className="random-button" onClick={handleRandomPlacement}>
+            Surprise Me!
+          </button>
           <button className="reset-button" onClick={handleResetShips} disabled={placedShipNames.size === 0}>
             Reset Ships
           </button>

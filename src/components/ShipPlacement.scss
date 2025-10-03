@@ -200,13 +200,14 @@
         display: flex;
         gap: 2px;
         flex-shrink: 0;
+        min-width: 90px; // Width for 5 segments (14px + 2px border) * 5 + 4 gaps + extra padding
       }
 
       .ship-segment {
-        width: 20px;
-        height: 20px;
+        width: 14px;
+        height: 14px;
         border-radius: 3px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 2px solid white;
 
         &.carrier {
           background: #ff6800;
@@ -368,6 +369,39 @@
       .ships-remaining {
         color: #ffa726;
         font-weight: bold;
+      }
+    }
+
+    .random-button {
+      background: url('/img/button.png') no-repeat center center;
+      background-size: 100% 100%;
+      font-family: 'Oswald', sans-serif;
+      font-size: 30px;
+      color: white;
+      padding: 7px 20px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 rgba(black, 0.5);
+      font-weight: medium;
+      text-decoration: none;
+      margin: 10px;
+      min-height: 56px; // Better touch target
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+
+      // Touch feedback
+      &:active {
+        transform: scale(0.95);
+      }
+
+      // Hover effect for desktop only
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          transform: translateY(-2px);
+        }
       }
     }
 
