@@ -18,7 +18,7 @@ export const StartScreen = () => {
     setAiLevel(difficulty);
     setComputerShips(placeShips());
     setGameStarted(true);
-    setgameStatus('user-turn');
+    setgameStatus('ship-placement');
     setAvatar({ gameEvent: GameEvents.GAME_START });
   };
 

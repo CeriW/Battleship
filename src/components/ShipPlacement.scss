@@ -1,0 +1,491 @@
+// Mixins for common styles
+@mixin button-base {
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  color: white;
+  padding: 5px 15px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(black, 0.5);
+  font-weight: medium;
+  text-decoration: none;
+  margin: 5px;
+  min-height: 40px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@mixin button-background($image) {
+  background: url($image) no-repeat center center;
+  background-size: 100% 100%;
+}
+
+@mixin board-size($size) {
+  width: $size !important;
+  height: $size !important;
+  max-width: $size !important;
+  max-height: $size !important;
+}
+
+@mixin preview-style($r, $g, $b) {
+  background-color: rgba($r, $g, $b, 0.8) !important;
+  border-color: rgb($r, $g, $b) !important;
+  animation: previewPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 15px rgba($r, $g, $b, 0.6);
+
+  .preview-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: rgb($r, $g, $b);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba($r, $g, $b, 1);
+  }
+}
+
+.ship-placement {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #0088d1;
+  background-image: url('/img/bg-left.svg'), url('/img/bg-right.svg');
+  background-position: left top, right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-attachment: fixed;
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  justify-content: space-around;
+
+  @media (max-width: 950px) {
+    background-image: url('/img/ocean.png');
+    background-size: unset;
+    background-repeat: repeat;
+  }
+
+  .ship-placement-header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 2.5rem;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 0;
+      opacity: 0.9;
+
+      .desktop-instructions {
+        display: block;
+      }
+
+      .tablet-instructions {
+        display: none;
+      }
+
+      .mobile-instructions {
+        display: none;
+      }
+
+      // Show tablet instructions on touch devices (tablets)
+      @media (hover: none) and (pointer: coarse) {
+        .desktop-instructions {
+          display: none;
+        }
+
+        .tablet-instructions {
+          display: block;
+        }
+      }
+
+      // Show mobile instructions on small screens
+      @media (max-width: 768px) {
+        .desktop-instructions {
+          display: none;
+        }
+
+        .tablet-instructions {
+          display: none;
+        }
+
+        .mobile-instructions {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .ship-placement-content {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto 30px auto;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      gap: 20px;
+      padding: 0 10px;
+      margin: 0 auto 25px auto;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 0 10px;
+      margin: 0 auto 25px auto;
+    }
+  }
+
+  .ship-selection {
+    flex: 0 0 300px;
+    background: white;
+    border-radius: 15px;
+    padding: 0;
+    backdrop-filter: none;
+    border: 3px solid white;
+    overflow: hidden;
+    align-self: stretch;
+
+    @media (max-width: 1024px) {
+      flex: 0 0 280px;
+    }
+
+    @media (max-width: 768px) {
+      flex: none;
+      width: 100%;
+      max-width: 100%;
+      order: 2; // Show after board on mobile
+    }
+
+    h3 {
+      margin: 0;
+      padding: 10px 20px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-align: center;
+      background: #ff6800;
+      color: white;
+      text-shadow: 2px 2px 0 rgba(black, 0.5);
+      text-transform: uppercase;
+    }
+
+    .ship-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 8px;
+    }
+
+    .ship-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      min-height: 30px; // Even more compact
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      color: #333; // Dark text for visibility on white background
+
+      // Touch feedback
+      &:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      // Hover effect for desktop only
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background: rgba(128, 128, 128, 0.1);
+          border-color: #888;
+        }
+      }
+
+      &.selected {
+        border-color: #4caf50;
+        background: rgba(76, 175, 80, 0.2);
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+      }
+
+      &.placed {
+        background: rgba(76, 175, 80, 0.3);
+        border-color: #4caf50;
+
+        .ship-name {
+          text-decoration: line-through;
+          opacity: 0.7;
+        }
+      }
+
+      .ship-visual {
+        display: flex;
+        gap: 2px;
+        flex-shrink: 0;
+        min-width: 90px; // Width for 5 segments (14px + 2px border) * 5 + 4 gaps + extra padding
+      }
+
+      .ship-segment {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 2px solid white;
+
+        &.carrier {
+          background: #ff6800;
+        }
+        &.battleship {
+          background: #ff8c42;
+        }
+        &.cruiser {
+          background: #ffa366;
+        }
+        &.submarine {
+          background: #ffba8a;
+        }
+        &.destroyer {
+          background: #ffd1ae;
+        }
+      }
+
+      .ship-info {
+        flex: 1;
+
+        .ship-name {
+          font-weight: bold;
+          font-size: 1.1rem;
+          text-transform: capitalize;
+          margin-bottom: 5px;
+          color: #333;
+        }
+
+        .ship-size {
+          font-size: 0.9rem;
+          opacity: 0.8;
+          color: #666;
+        }
+      }
+
+      .remove-ship {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: #ff6800;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        min-width: 25px;
+        min-height: 25px;
+        max-width: 25px;
+        max-height: 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+        line-height: 1;
+        box-sizing: border-box;
+        flex-shrink: 0;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          display: block;
+        }
+
+        &:hover {
+          background: #e55a00;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .ship-controls {
+      margin-top: 3px;
+      text-align: center;
+      height: 50px; // More compact height
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .rotate-button {
+        background: url('/img/button.png') no-repeat center center;
+        background-size: 100% 100%;
+        font-family: 'Oswald', sans-serif;
+        font-size: 20px;
+        color: white;
+        padding: 7px 20px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0 rgba(black, 0.5);
+        font-weight: medium;
+        text-decoration: none;
+        margin: 10px;
+        min-height: 48px; // Better touch target
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+
+        // Touch feedback
+        &:active {
+          transform: scale(0.95);
+        }
+
+        // Hover effect for desktop only
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+
+  .placement-board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+
+    @media (max-width: 768px) {
+      order: 1; // Show before ship selection on mobile
+    }
+
+    .board-container {
+      width: fit-content;
+      height: fit-content;
+    }
+  }
+
+  .ship-placement-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: min(100%, 900px);
+    float: none;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    .footer-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+
+      @media (max-width: 550px) {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+    }
+
+    .placement-status {
+      color: white;
+      font-size: 1.4rem;
+      text-align: center;
+
+      .ready-to-start {
+        color: #66ff66;
+        font-weight: bold;
+      }
+
+      .ships-remaining {
+        color: #ffa726;
+        font-weight: bold;
+      }
+    }
+
+    .random-button {
+      @include button-base;
+      @include button-background('/img/button.png');
+    }
+
+    .reset-button {
+      @include button-base;
+      @include button-background('/img/button-red.png');
+    }
+
+    .start-game-button {
+      @include button-base;
+      @include button-background('/img/button.png');
+    }
+  }
+}
+
+// Ship placement board - responsive square dimensions
+.ship-placement .board {
+  @include board-size(500px);
+
+  @media (max-width: 1024px) {
+    @include board-size(400px);
+  }
+
+  @media (max-width: 480px) {
+    @include board-size(350px);
+  }
+}
+
+.ship-placement .board .cell.ship-preview {
+  @include preview-style(0, 255, 0);
+}
+
+.ship-placement .board .cell.ship-preview-invalid {
+  @include preview-style(255, 0, 0);
+}
+
+@keyframes previewPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+  }
+}

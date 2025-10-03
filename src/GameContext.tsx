@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 import React, { createContext, useEffect, useState } from 'react';
 import { AiLevel, PositionArray } from './types';
-import { placeShips } from './logic/placeShips';
+import { placeShips, initialiseShipArray } from './logic/placeShips';
 import { LogEntry, LogEntryTypes } from './components/Log';
 import { GameEvents } from './components/Avatar';
 import { declareWinner } from './logic/GameEndScreen';
 
-export type GameStatus = 'unstarted' | 'user-turn' | 'computer-turn' | 'user-win' | 'computer-win';
+export type GameStatus = 'unstarted' | 'ship-placement' | 'user-turn' | 'computer-turn' | 'user-win' | 'computer-win';
 
 /* istanbul ignore next */
 const calculateAdjacentShipModifier = (aiLevel: AiLevel) => {
@@ -47,7 +47,7 @@ export type GameContextType = {
 export const GameContext = createContext<GameContextType>({} as GameContextType);
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
-  const [userShips, setUserShips] = useState<PositionArray>(placeShips()); // TODO - have user place their own ships
+  const [userShips, setUserShips] = useState<PositionArray>(initialiseShipArray());
   const [computerShips, setComputerShips] = useState<PositionArray>(placeShips());
   const [log, setLog] = useState<React.ReactNode[]>([]);
   const [gameStatus, setgameStatus] = useState<GameStatus>('unstarted');

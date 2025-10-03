@@ -13,13 +13,19 @@ import { Status } from './components/Status';
 import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
 import { About } from './components/About';
+import ShipPlacement from './components/ShipPlacement';
 
 const computerThinkingTime = 700;
 
 const GameBoards = () => {
-  const { userShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } = useContext(GameContext);
+  const { userShips, setUserShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
   const computerTurnInProgress = useRef(false);
+
+  const handleShipPlacementComplete = (ships: any) => {
+    setUserShips(ships);
+    setgameStatus('user-turn');
+  };
 
   useEffect(() => {
     if (gameStatus === 'computer-turn' && !computerTurnInProgress.current) {
@@ -39,6 +45,7 @@ const GameBoards = () => {
   return (
     <>
       {gameStatus === 'unstarted' && <StartScreen />}
+      {gameStatus === 'ship-placement' && <ShipPlacement onComplete={handleShipPlacementComplete} />}
       {(gameStatus === 'user-turn' || gameStatus === 'computer-turn') && (
         <div className="game-container">
           <div className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}>
