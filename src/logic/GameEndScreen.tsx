@@ -29,25 +29,32 @@ export const GameEndScreen = ({ winner }: { winner: 'user' | 'computer' }) => {
     <div className="game-end-screen">
       {winner === 'user' && <Confetti />}
       <div className="game-end-screen-content">
-        <h1>{winner === 'user' ? 'Congratulations! You win!' : 'Sorry, you lose!'}</h1>
-        {winner === 'user' && (
-          <p>
-            You beat {deriveAvatarName(aiLevel)} in a battle of wits! It took you {calculateTurnsTaken(computerShips)}{' '}
-            turns to win.
-          </p>
-        )}
+        <div className="game-end-header">
+          <h1>{winner === 'user' ? 'Congratulations! You win!' : 'Sorry, you lose!'}</h1>
+        </div>
 
-        {winner === 'computer' && (
-          <p>
-            {deriveAvatarName(aiLevel)} beat you in a battle of wits! It took{' '}
-            {deriveAvatarPronouns(deriveAvatarName(aiLevel))} {calculateTurnsTaken(userShips)} turns to win.
-          </p>
-        )}
+        <div className="game-end-body">
+          {winner === 'user' && (
+            <p>
+              You beat {deriveAvatarName(aiLevel)} in a battle of wits! It took you {calculateTurnsTaken(computerShips)}{' '}
+              turns to win.
+            </p>
+          )}
 
-        <Avatar gameEvent={winner === 'user' ? GameEvents.USER_WIN : GameEvents.COMPUTER_WIN} />
+          {winner === 'computer' && (
+            <p>
+              {deriveAvatarName(aiLevel)} beat you in a battle of wits! It took{' '}
+              {deriveAvatarPronouns(deriveAvatarName(aiLevel))} {calculateTurnsTaken(userShips)} turns to win.
+            </p>
+          )}
 
-        <p>Would you like to play again?</p>
-        <button onClick={() => window.location.reload()}>Let's go</button>
+          <Avatar gameEvent={winner === 'user' ? GameEvents.USER_WIN : GameEvents.COMPUTER_WIN} />
+
+          <p>Would you like to play again?</p>
+          <button className="button" onClick={() => window.location.reload()}>
+            Let's go
+          </button>
+        </div>
       </div>
     </div>
   );
