@@ -38,58 +38,58 @@ const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): bool
 // Helper function to check if a cell would continue a line of hits
 const wouldContinueHitLine = (board: PositionArray, x: number, y: number): boolean => {
   // Check horizontal line continuation
-  let horizontalHits = 0;
-
   // Count consecutive hits to the left
+  let leftHits = 0;
   for (let i = x - 1; i >= 0; i--) {
     const cell = board[y][i];
     if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
-      horizontalHits++;
+      leftHits++;
     } else {
       break; // Stop at first non-hit
     }
   }
 
   // Count consecutive hits to the right
+  let rightHits = 0;
   for (let i = x + 1; i < 10; i++) {
     const cell = board[y][i];
     if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
-      horizontalHits++;
+      rightHits++;
     } else {
       break; // Stop at first non-hit
     }
   }
 
-  // If we have 2 or more hits in a horizontal line, this cell would continue it
-  if (horizontalHits >= 2) {
+  // Check if this cell would continue a horizontal line (at least 2 consecutive hits on one side)
+  if (leftHits >= 2 || rightHits >= 2) {
     return true;
   }
 
   // Check vertical line continuation
-  let verticalHits = 0;
-
   // Count consecutive hits above
+  let aboveHits = 0;
   for (let i = y - 1; i >= 0; i--) {
     const cell = board[i][x];
     if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
-      verticalHits++;
+      aboveHits++;
     } else {
       break; // Stop at first non-hit
     }
   }
 
   // Count consecutive hits below
+  let belowHits = 0;
   for (let i = y + 1; i < 10; i++) {
     const cell = board[i][x];
     if (cell?.status === CellStates.hit && cell?.name && !isShipSunk(cell.name as ShipNames, board)) {
-      verticalHits++;
+      belowHits++;
     } else {
       break; // Stop at first non-hit
     }
   }
 
-  // If we have 2 or more hits in a vertical line, this cell would continue it
-  if (verticalHits >= 2) {
+  // Check if this cell would continue a vertical line (at least 2 consecutive hits on one side)
+  if (aboveHits >= 2 || belowHits >= 2) {
     return true;
   }
 
