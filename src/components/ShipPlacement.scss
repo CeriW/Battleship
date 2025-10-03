@@ -1,7 +1,7 @@
 .ship-placement {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #0088d1;
   background-image: url('/img/bg-left.svg'), url('/img/bg-right.svg');
   background-position: left top, right top;
@@ -12,7 +12,7 @@
   padding: 20px;
   box-sizing: border-box;
   overflow-x: hidden;
-  justify-content: center;
+  justify-content: space-around;
 
   @media (max-width: 950px) {
     background-image: url('/img/ocean.png');
@@ -25,24 +25,25 @@
     margin-top: 20px;
     box-sizing: border-box;
     padding: 0 20px;
-    max-width: 100vw;
+    max-width: 900px;
     overflow-x: hidden;
+    float: none;
+    margin: 0 auto;
   }
 
   .ship-placement-header {
     text-align: center;
     margin-bottom: 30px;
-    margin-top: 20px;
 
     h2 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       margin: 0 0 10px 0;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
       text-transform: uppercase;
     }
 
     p {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       margin: 0;
       opacity: 0.9;
 
@@ -88,19 +89,18 @@
 
   .ship-placement-content {
     display: flex;
-    flex: 1;
     gap: 30px;
     align-items: center;
     justify-content: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 900px;
+    margin: 0 auto 30px auto;
     width: 100%;
-    min-height: 0; // Allow flex items to shrink
     box-sizing: border-box;
 
     @media (max-width: 1024px) {
       gap: 20px;
       padding: 0 10px;
+      margin: 0 auto 25px auto;
     }
 
     @media (max-width: 768px) {
@@ -108,6 +108,7 @@
       align-items: center;
       gap: 20px;
       padding: 0 10px;
+      margin: 0 auto 25px auto;
     }
   }
 
@@ -119,6 +120,7 @@
     backdrop-filter: none;
     border: 3px solid white;
     overflow: hidden;
+    align-self: stretch;
 
     @media (max-width: 1024px) {
       flex: 0 0 280px;
@@ -127,13 +129,14 @@
     @media (max-width: 768px) {
       flex: none;
       width: 100%;
-      max-width: 400px;
+      max-width: 100%;
+      order: 2; // Show after board on mobile
     }
 
     h3 {
       margin: 0;
-      padding: 15px 20px;
-      font-size: 1.5rem;
+      padding: 10px 20px;
+      font-size: 1.3rem;
       font-weight: bold;
       text-align: center;
       background: #ff6800;
@@ -145,22 +148,22 @@
     .ship-list {
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      padding: 20px;
+      gap: 3px;
+      padding: 8px;
     }
 
     .ship-item {
       display: flex;
       align-items: center;
-      gap: 15px;
-      padding: 15px;
+      gap: 8px;
+      padding: 6px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
       transition: all 0.3s ease;
       border: 2px solid transparent;
       position: relative;
-      min-height: 60px; // Better touch target
+      min-height: 30px; // Even more compact
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
@@ -283,9 +286,9 @@
     }
 
     .ship-controls {
-      margin-top: 20px;
+      margin-top: 3px;
       text-align: center;
-      height: 88px; // Fixed height: 20px margin + 48px button + 20px margin
+      height: 50px; // More compact height
       display: flex;
       align-items: center;
       justify-content: center;
@@ -329,11 +332,14 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-width: 0; // Allow flex item to shrink
+    align-items: center;
+    min-width: 0;
+
+    @media (max-width: 768px) {
+      order: 1; // Show before ship selection on mobile
+    }
 
     .board-container {
-      // Ensure the board container doesn't interfere with aspect ratio
       width: fit-content;
       height: fit-content;
     }
@@ -344,7 +350,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
-    padding: 20px;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 15px;
     backdrop-filter: blur(10px);
@@ -354,6 +360,12 @@
       display: flex;
       gap: 15px;
       align-items: center;
+
+      @media (max-width: 550px) {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
     }
 
     .placement-status {
@@ -376,9 +388,9 @@
       background: url('/img/button.png') no-repeat center center;
       background-size: 100% 100%;
       font-family: 'Oswald', sans-serif;
-      font-size: 30px;
+      font-size: 24px;
       color: white;
-      padding: 7px 20px 15px;
+      padding: 5px 15px 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -386,8 +398,8 @@
       text-shadow: 2px 2px 0 rgba(black, 0.5);
       font-weight: medium;
       text-decoration: none;
-      margin: 10px;
-      min-height: 56px; // Better touch target
+      margin: 5px;
+      min-height: 40px; // More compact
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
@@ -409,9 +421,9 @@
       background: url('/img/button-red.png') no-repeat center center;
       background-size: 100% 100%;
       font-family: 'Oswald', sans-serif;
-      font-size: 30px;
+      font-size: 24px;
       color: white;
-      padding: 7px 20px 15px;
+      padding: 5px 15px 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -419,8 +431,8 @@
       text-shadow: 2px 2px 0 rgba(black, 0.5);
       font-weight: medium;
       text-decoration: none;
-      margin: 10px;
-      min-height: 56px; // Better touch target
+      margin: 5px;
+      min-height: 40px; // More compact
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
@@ -448,9 +460,9 @@
       background: url('/img/button.png') no-repeat center center;
       background-size: 100% 100%;
       font-family: 'Oswald', sans-serif;
-      font-size: 30px;
+      font-size: 24px;
       color: white;
-      padding: 7px 20px 15px;
+      padding: 5px 15px 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -458,8 +470,8 @@
       text-shadow: 2px 2px 0 rgba(black, 0.5);
       font-weight: medium;
       text-decoration: none;
-      margin: 10px;
-      min-height: 56px; // Better touch target
+      margin: 5px;
+      min-height: 40px; // More compact
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
@@ -485,7 +497,7 @@
   }
 }
 
-// Ship placement board - force square dimensions
+// Ship placement board - responsive square dimensions
 .ship-placement .board {
   width: 500px !important;
   height: 500px !important;
@@ -500,17 +512,17 @@
   }
 
   @media (max-width: 768px) {
-    width: 300px !important;
-    height: 300px !important;
-    max-width: 300px !important;
-    max-height: 300px !important;
+    width: 400px !important;
+    height: 400px !important;
+    max-width: 400px !important;
+    max-height: 400px !important;
   }
 
   @media (max-width: 480px) {
-    width: 250px !important;
-    height: 250px !important;
-    max-width: 250px !important;
-    max-height: 250px !important;
+    width: 350px !important;
+    height: 350px !important;
+    max-width: 350px !important;
+    max-height: 350px !important;
   }
 }
 
@@ -577,7 +589,6 @@
     .ship-selection {
       flex: none;
       width: 100%;
-      max-width: 400px;
     }
 
     .ship-placement-footer {

@@ -79,10 +79,34 @@ export const Board: React.FC<BoardProps> = ({
           data-col={x}
           onMouseEnter={() => (isDragging ? onDragOver?.(y, x) : onCellHover?.(y, x))}
           onClick={() => onCellClick?.(y, x)}
-          onTouchStart={() => onCellHover?.(y, x)}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            onDragStart?.(y, x);
+            onCellHover?.(y, x);
+          }}
+          onTouchMove={(e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element) {
+              const row = parseInt(element.getAttribute('data-row') || '0');
+              const col = parseInt(element.getAttribute('data-col') || '0');
+              onDragOver?.(row, col);
+            }
+          }}
           onTouchEnd={(e) => {
             e.preventDefault();
-            onCellClick?.(y, x);
+            const touch = e.changedTouches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element) {
+              const row = parseInt(element.getAttribute('data-row') || '0');
+              const col = parseInt(element.getAttribute('data-col') || '0');
+              onDragEnd?.(row, col);
+              onCellClick?.(row, col);
+            } else {
+              onDragEnd?.(y, x);
+              onCellClick?.(y, x);
+            }
           }}
           onMouseDown={() => onDragStart?.(y, x)}
           onMouseUp={() => onDragEnd?.(y, x)}
