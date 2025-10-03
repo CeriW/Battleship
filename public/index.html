@@ -3,10 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
+    <!-- Primary Meta Tags -->
+    <title>Battleship Game - Play Online Strategy Game</title>
+    <meta name="title" content="Battleship Game - Play Online Strategy Game" />
+    <meta
+      name="description"
+      content="Play the classic Battleship strategy game online! Challenge the AI in this naval warfare game. Place your ships strategically and sink your opponent's fleet. Free to play, no download required."
+    />
+    <meta
+      name="keywords"
+      content="battleship, strategy game, naval warfare, online game, board game, ships, navy, military strategy, puzzle game"
+    />
+    <meta name="author" content="Battleship Game" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://your-domain.com/" />
+    <meta property="og:title" content="Battleship Game - Play Online Strategy Game" />
+    <meta
+      property="og:description"
+      content="Play the classic Battleship strategy game online! Challenge the AI in this naval warfare game. Place your ships strategically and sink your opponent's fleet."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/img/battleship.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Battleship Game" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://your-domain.com/" />
+    <meta property="twitter:title" content="Battleship Game - Play Online Strategy Game" />
+    <meta
+      property="twitter:description"
+      content="Play the classic Battleship strategy game online! Challenge the AI in this naval warfare game. Place your ships strategically and sink your opponent's fleet."
+    />
+    <meta property="twitter:image" content="%PUBLIC_URL%/img/battleship.png" />
+
+    <!-- Game-specific meta tags -->
+    <meta name="game:category" content="Strategy" />
+    <meta name="game:genre" content="Board Game" />
+    <meta name="game:platform" content="Web Browser" />
+    <meta name="game:players" content="1-2" />
+    <meta name="game:age_rating" content="E" />
+
+    <!-- Mobile and PWA meta tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Battleship" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="%PUBLIC_URL%/logo192.png" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PMWWQ1MN8V"></script>
@@ -20,22 +81,40 @@
       gtag('config', 'G-PMWWQ1MN8V');
     </script>
 
-
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- Structured Data for Search Engines -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Battleship Game",
+        "description": "Play the classic Battleship strategy game online! Challenge the AI in this naval warfare game.",
+        "genre": "Strategy",
+        "gamePlatform": "Web Browser",
+        "numberOfPlayers": "1-2",
+        "ageRating": "E",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "Battleship Game"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Battleship Game"
+        }
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
