@@ -26,12 +26,32 @@
         display: block;
       }
 
+      .tablet-instructions {
+        display: none;
+      }
+
       .mobile-instructions {
         display: none;
       }
 
+      // Show tablet instructions on touch devices (tablets)
+      @media (hover: none) and (pointer: coarse) {
+        .desktop-instructions {
+          display: none;
+        }
+
+        .tablet-instructions {
+          display: block;
+        }
+      }
+
+      // Show mobile instructions on small screens
       @media (max-width: 768px) {
         .desktop-instructions {
+          display: none;
+        }
+
+        .tablet-instructions {
           display: none;
         }
 
@@ -372,6 +392,24 @@
     background: #4caf50;
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+  }
+}
+
+.ship-placement .board .cell.ship-preview-invalid {
+  background-color: rgba(244, 67, 54, 0.5) !important;
+  border-color: #f44336 !important;
+  animation: previewPulse 1s ease-in-out infinite alternate;
+
+  .preview-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #f44336;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(244, 67, 54, 0.8);
   }
 }
 

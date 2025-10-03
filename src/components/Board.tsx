@@ -13,6 +13,7 @@ interface BoardProps {
   shipPreview?: { row: number; col: number }[] | null;
   selectedShip?: ShipNames | null;
   isDragging?: boolean;
+  isPreviewValid?: boolean;
 }
 
 export const Board: React.FC<BoardProps> = ({
@@ -26,6 +27,7 @@ export const Board: React.FC<BoardProps> = ({
   shipPreview,
   selectedShip,
   isDragging,
+  isPreviewValid = true,
 }) => {
   const columnMarkers = [];
   for (let i = 0; i <= 10; i++) {
@@ -70,7 +72,7 @@ export const Board: React.FC<BoardProps> = ({
                 : ''
             }
             ${positions[y][x]?.status ?? ''}
-            ${isPreviewCell ? 'ship-preview' : ''}
+            ${isPreviewCell ? (isPreviewValid ? 'ship-preview' : 'ship-preview-invalid') : ''}
             ${isClickable ? 'clickable' : ''}`}
           data-testid="cell"
           data-row={y}

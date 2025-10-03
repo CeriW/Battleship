@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { shipTypes, ShipNames, PositionArray, Alignment, CellStates } from '../types';
 import { initialiseShipArray, checkValidShipState } from '../logic/placeShips';
 import Board from './Board';
@@ -15,6 +15,20 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
   const [placedShips, setPlacedShips] = useState<PositionArray>(initialiseShipArray());
   const [placedShipNames, setPlacedShipNames] = useState<Set<ShipNames>>(new Set());
   const [isDragging, setIsDragging] = useState(false);
+
+  // Keyboard event listener for 'R' key to rotate
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'r' && selectedShip) {
+        handleRotateShip();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [selectedShip]);
 
   const getShipInfo = (shipName: ShipNames) => {
     return shipTypes.find((ship) => ship.name === shipName);
@@ -56,6 +70,22 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
       existingPositions: placedShips,
       adjacentShipModifier: 0, // Don't allow adjacent ships for user placement
     });
+  };
+
+  const isShipPreviewValid = () => {
+    if (!selectedShip || !hoveredPosition) return true;
+
+    const shipInfo = getShipInfo(selectedShip);
+    if (!shipInfo) return true;
+
+    // Check if ship would go off the board
+    const { row, col } = hoveredPosition;
+
+    if (shipAlignment === 'horizontal') {
+      return col + shipInfo.size <= 10;
+    } else {
+      return row + shipInfo.size <= 10;
+    }
   };
 
   const handleCellHover = (row: number, col: number) => {
@@ -159,7 +189,11 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
         <h2>Place Your Ships</h2>
         <p>
           <span className="desktop-instructions">
-            Click on a ship to select it, then click or drag on the board to place it. Click the rotate button to change
+            Click on a ship to select it, then click or drag on the board to place it. Press 'R' or click the rotate
+            button to change orientation.
+          </span>
+          <span className="tablet-instructions">
+            Tap on a ship to select it, then tap or drag on the board to place it. Tap the rotate button to change
             orientation.
           </span>
           <span className="mobile-instructions">
@@ -208,7 +242,7 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
           {selectedShip && (
             <div className="ship-controls">
               <button onClick={handleRotateShip} className="rotate-button">
-                Rotate Ship ({shipAlignment})
+                Rotate Ship ({shipAlignment === 'horizontal' ? 'vertical' : 'horizontal'})
               </button>
             </div>
           )}
@@ -226,6 +260,7 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
               shipPreview={shipPreview}
               selectedShip={selectedShip}
               isDragging={isDragging}
+              isPreviewValid={isShipPreviewValid()}
             />
           </div>
         </div>
