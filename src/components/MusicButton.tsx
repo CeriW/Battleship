@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MusicButton.scss';
-import { setGlobalAudioRef, setGlobalAudioEnabled } from '../utils/soundEffects';
+import { setGlobalAudioRef, setGlobalAudioEnabled, isAudioEnabled } from '../utils/soundEffects';
 
 // Global audio state management
-let globalAudioEnabled = true;
 let globalAudioRef: HTMLAudioElement | null = null;
 let lastTrack = 0;
 let globalIsPlaying = false;
@@ -28,7 +27,7 @@ const playNextTrack = () => {
   const nextTrack = getRandomTrack();
   loadTrack(nextTrack);
 
-  if (globalAudioRef && globalAudioEnabled) {
+  if (globalAudioRef && isAudioEnabled()) {
     globalAudioRef.play().catch((error) => {
       console.log('Audio playback failed:', error);
     });
@@ -36,14 +35,14 @@ const playNextTrack = () => {
 };
 
 // Export functions for sound effects to check if audio is enabled
-export const isAudioEnabled = () => globalAudioEnabled;
+// isAudioEnabled is now imported from soundEffects.ts
 
 // Export function to check if music is playing
 export const isMusicPlaying = () => globalIsPlaying;
 
 // Export function to skip to next track
 export const skipToNextTrack = () => {
-  if (globalAudioRef && globalAudioEnabled) {
+  if (globalAudioRef && isAudioEnabled()) {
     playNextTrack();
   }
 };
@@ -59,6 +58,9 @@ export const MusicButton = () => {
 
     // Set the global audio ref in sound effects utility
     setGlobalAudioRef(globalAudioRef);
+
+    // Initialize audio state to match the button state (off by default)
+    setGlobalAudioEnabled(false);
 
     // Handle track end - play next random track
     const handleTrackEnd = () => {
@@ -86,7 +88,6 @@ export const MusicButton = () => {
       globalAudioRef.pause();
       setIsPlaying(false);
       globalIsPlaying = false;
-      globalAudioEnabled = false;
       setGlobalAudioEnabled(false);
     } else {
       globalAudioRef.play().catch((error) => {
@@ -94,7 +95,6 @@ export const MusicButton = () => {
       });
       setIsPlaying(true);
       globalIsPlaying = true;
-      globalAudioEnabled = true;
       setGlobalAudioEnabled(true);
     }
   };

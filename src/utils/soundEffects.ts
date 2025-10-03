@@ -1,9 +1,7 @@
-import { isAudioEnabled } from '../components/MusicButton';
-
 // We need to access the global audio ref for fade out
 // This will be set by the MusicButton component
 let globalAudioRef: HTMLAudioElement | null = null;
-let globalAudioEnabled = true;
+let globalAudioEnabled = false; // Start with audio disabled by default
 
 export const setGlobalAudioRef = (ref: HTMLAudioElement | null) => {
   globalAudioRef = ref;
@@ -12,6 +10,9 @@ export const setGlobalAudioRef = (ref: HTMLAudioElement | null) => {
 export const setGlobalAudioEnabled = (enabled: boolean) => {
   globalAudioEnabled = enabled;
 };
+
+// Export function to check if audio is enabled
+export const isAudioEnabled = () => globalAudioEnabled;
 
 // Sound effects utility for the battleship game
 export const playHitSound = () => {
@@ -127,7 +128,7 @@ export const playLoseSound = () => {
 };
 
 export const fadeOutMusic = () => {
-  if (globalAudioRef && globalAudioEnabled) {
+  if (globalAudioRef && isAudioEnabled()) {
     const fadeOutInterval = setInterval(() => {
       if (globalAudioRef && globalAudioRef.volume > 0.1) {
         globalAudioRef.volume -= 0.1;
@@ -139,7 +140,7 @@ export const fadeOutMusic = () => {
 
         // Fade back in after 4 seconds
         setTimeout(() => {
-          if (globalAudioRef && globalAudioEnabled) {
+          if (globalAudioRef && isAudioEnabled()) {
             globalAudioRef.play().catch((error) => {
               console.log('Audio playback failed:', error);
             });
