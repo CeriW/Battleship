@@ -88,10 +88,11 @@ export const UserGuessBoard: React.FC = () => {
       }
     } else {
       newComputerShips[row][col] = { name: null, status: CellStates.miss };
-      setComputerShips(newComputerShips);
 
       // Play miss sound effect
       playMissSound();
+
+      setComputerShips(newComputerShips);
 
       addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
