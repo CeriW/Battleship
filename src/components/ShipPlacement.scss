@@ -2,10 +2,21 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background-color: #0088d1;
+  background-image: url('/img/bg-left.svg'), url('/img/bg-right.svg');
+  background-position: left top, right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-attachment: fixed;
   color: white;
   padding: 20px;
   box-sizing: border-box;
+
+  @media (max-width: 950px) {
+    background-image: url('/img/ocean.png');
+    background-size: unset;
+    background-repeat: repeat;
+  }
 
   .ship-placement-header {
     text-align: center;
@@ -237,15 +248,20 @@
       text-align: center;
 
       .rotate-button {
-        background: #4caf50;
+        background: url('/img/button.png') no-repeat center center;
+        background-size: 100% 100%;
+        font-family: 'Oswald', sans-serif;
+        font-size: 20px;
         color: white;
+        padding: 7px 20px 15px;
         border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
+        border-radius: 5px;
         cursor: pointer;
-        font-size: 1rem;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0 rgba(black, 0.5);
+        font-weight: medium;
+        text-decoration: none;
+        margin: 10px;
         min-height: 48px; // Better touch target
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
@@ -254,15 +270,12 @@
         // Touch feedback
         &:active {
           transform: scale(0.95);
-          background: #45a049;
         }
 
         // Hover effect for desktop only
         @media (hover: hover) and (pointer: fine) {
           &:hover {
-            background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           }
         }
       }
@@ -315,16 +328,20 @@
     }
 
     .reset-button {
-      background: linear-gradient(45deg, #ff6b6b, #ff5252);
+      background: url('/img/button-red.png') no-repeat center center;
+      background-size: 100% 100%;
+      font-family: 'Oswald', sans-serif;
+      font-size: 30px;
       color: white;
+      padding: 7px 20px 15px;
       border: none;
-      padding: 15px 30px;
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 rgba(black, 0.5);
+      font-weight: medium;
+      text-decoration: none;
+      margin: 10px;
       min-height: 56px; // Better touch target
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
@@ -333,36 +350,37 @@
       // Touch feedback
       &:active:not(:disabled) {
         transform: scale(0.95);
-        background: linear-gradient(45deg, #ff5252, #e53935);
       }
 
       // Hover effect for desktop only
       @media (hover: hover) and (pointer: fine) {
         &:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
       }
 
       &:disabled {
-        background: #666;
+        opacity: 0.5;
         cursor: not-allowed;
-        box-shadow: none;
         transform: none;
       }
     }
 
     .start-game-button {
-      background: linear-gradient(45deg, #4caf50, #45a049);
+      background: url('/img/button.png') no-repeat center center;
+      background-size: 100% 100%;
+      font-family: 'Oswald', sans-serif;
+      font-size: 30px;
       color: white;
+      padding: 7px 20px 15px;
       border: none;
-      padding: 15px 30px;
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 rgba(black, 0.5);
+      font-weight: medium;
+      text-decoration: none;
+      margin: 10px;
       min-height: 56px; // Better touch target
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
@@ -371,21 +389,18 @@
       // Touch feedback
       &:active:not(:disabled) {
         transform: scale(0.95);
-        background: linear-gradient(45deg, #45a049, #3d8b40);
       }
 
       // Hover effect for desktop only
       @media (hover: hover) and (pointer: fine) {
         &:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
       }
 
       &:disabled {
-        background: #666;
+        opacity: 0.5;
         cursor: not-allowed;
-        box-shadow: none;
         transform: none;
       }
     }
