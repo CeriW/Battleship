@@ -99,15 +99,15 @@
 
   .ship-selection {
     flex: 0 0 300px;
-    background: rgba(255, 255, 255, 0.1);
+    background: white;
     border-radius: 15px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0;
+    backdrop-filter: none;
+    border: 3px solid white;
+    overflow: hidden;
 
     @media (max-width: 1024px) {
       flex: 0 0 280px;
-      padding: 15px;
     }
 
     @media (max-width: 768px) {
@@ -117,15 +117,21 @@
     }
 
     h3 {
-      margin: 0 0 20px 0;
+      margin: 0;
+      padding: 15px 20px;
       font-size: 1.5rem;
+      font-weight: bold;
       text-align: center;
+      background: #ff6800;
+      color: white;
+      text-shadow: 2px 2px 0 rgba(black, 0.5);
     }
 
     .ship-list {
       display: flex;
       flex-direction: column;
       gap: 15px;
+      padding: 20px;
     }
 
     .ship-item {
@@ -143,6 +149,7 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
+      color: #333; // Dark text for visibility on white background
 
       // Touch feedback
       &:active {
@@ -211,11 +218,13 @@
           font-size: 1.1rem;
           text-transform: capitalize;
           margin-bottom: 5px;
+          color: #333;
         }
 
         .ship-size {
           font-size: 0.9rem;
           opacity: 0.8;
+          color: #666;
         }
       }
 
@@ -437,9 +446,10 @@
 }
 
 .ship-placement .board .cell.ship-preview {
-  background-color: rgba(76, 175, 80, 0.5) !important;
-  border-color: #4caf50 !important;
+  background-color: rgba(0, 255, 0, 0.8) !important;
+  border-color: #00ff00 !important;
   animation: previewPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
 
   .preview-indicator {
     position: absolute;
@@ -448,16 +458,17 @@
     transform: translate(-50%, -50%);
     width: 8px;
     height: 8px;
-    background: #4caf50;
+    background: #00ff00;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 1);
   }
 }
 
 .ship-placement .board .cell.ship-preview-invalid {
-  background-color: rgba(244, 67, 54, 0.5) !important;
-  border-color: #f44336 !important;
+  background-color: rgba(255, 0, 0, 0.8) !important;
+  border-color: #ff0000 !important;
   animation: previewPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 
   .preview-indicator {
     position: absolute;
@@ -466,9 +477,9 @@
     transform: translate(-50%, -50%);
     width: 8px;
     height: 8px;
-    background: #f44336;
+    background: #ff0000;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(244, 67, 54, 0.8);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 1);
   }
 }
 

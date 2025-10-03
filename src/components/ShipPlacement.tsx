@@ -78,14 +78,35 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
     const shipInfo = getShipInfo(selectedShip);
     if (!shipInfo) return true;
 
-    // Check if ship would go off the board
     const { row, col } = hoveredPosition;
 
+    // Check if ship would go off the board
+    let wouldGoOffBoard = false;
     if (shipAlignment === 'horizontal') {
-      return col + shipInfo.size <= 10;
+      wouldGoOffBoard = col + shipInfo.size > 10;
     } else {
-      return row + shipInfo.size <= 10;
+      wouldGoOffBoard = row + shipInfo.size > 10;
     }
+
+    if (wouldGoOffBoard) return false;
+
+    // Check if ship would overlap with existing ships
+    for (let i = 0; i < shipInfo.size; i++) {
+      let checkRow, checkCol;
+      if (shipAlignment === 'horizontal') {
+        checkRow = row;
+        checkCol = col + i;
+      } else {
+        checkRow = row + i;
+        checkCol = col;
+      }
+
+      if (placedShips[checkRow][checkCol]?.name) {
+        return false; // Overlaps with existing ship
+      }
+    }
+
+    return true;
   };
 
   const handleCellHover = (row: number, col: number) => {
