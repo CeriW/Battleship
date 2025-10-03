@@ -23,7 +23,7 @@ export const calculateTurnsTaken = (computerShips: PositionArray): number => {
 };
 
 export const GameEndScreen = ({ winner }: { winner: 'user' | 'computer' }) => {
-  const { aiLevel, computerShips, userShips } = useContext(GameContext);
+  const { aiLevel, computerShips, userShips, resetGame } = useContext(GameContext);
 
   return (
     <div className="game-end-screen">
@@ -51,7 +51,7 @@ export const GameEndScreen = ({ winner }: { winner: 'user' | 'computer' }) => {
           <Avatar gameEvent={winner === 'user' ? GameEvents.USER_WIN : GameEvents.COMPUTER_WIN} />
 
           <p>Would you like to play again?</p>
-          <button className="button" onClick={() => window.location.reload()}>
+          <button className="button" onClick={resetGame}>
             Let's go
           </button>
         </div>

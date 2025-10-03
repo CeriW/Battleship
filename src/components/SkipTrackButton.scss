@@ -1,0 +1,98 @@
+.skip-track-button {
+  background: url('/img/button.png') no-repeat center center;
+  background-size: 100% 100%;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  color: white;
+  padding: 5px 12px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(black, 0.5);
+  font-weight: medium;
+  text-decoration: none;
+  margin: 5px;
+  height: 40px;
+  width: 160px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+  }
+
+  .skip-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    height: 1em;
+    width: 1em;
+  }
+
+  .skip-text {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  &:hover .skip-icon {
+    transform: scale(1.05);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+
+    &:hover {
+      transform: none !important;
+    }
+
+    .skip-icon {
+      transform: none !important;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .skip-track-button {
+    padding: 4px 10px 6px;
+    font-size: 16px;
+
+    .skip-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+// Hide text on small screens, show only icon
+@media (max-width: 600px) {
+  .skip-track-button {
+    width: 50px;
+    padding: 5px;
+
+    .skip-text {
+      display: none;
+    }
+
+    .skip-icon {
+      font-size: 20px;
+    }
+  }
+}

@@ -76,7 +76,7 @@
   background-size: contain;
   background-attachment: fixed;
   color: white;
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
   overflow-x: hidden;
   justify-content: space-around;
@@ -89,7 +89,7 @@
 
   .ship-placement-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 
     h2 {
       font-size: 2.5rem;
@@ -145,11 +145,11 @@
 
   .ship-placement-content {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     align-items: center;
     justify-content: center;
     max-width: 900px;
-    margin: 0 auto 30px auto;
+    margin: 0 auto 15px auto;
     width: 100%;
     box-sizing: border-box;
 
@@ -404,7 +404,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 15px;

@@ -5,6 +5,7 @@ import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
 import AimInterface from './AimInterface';
+import { playHitSound, playMissSound, playSuccessSound, playWinSound, fadeOutMusic } from '../utils/soundEffects';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
@@ -62,6 +63,8 @@ export const UserGuessBoard: React.FC = () => {
       setAvatar({ gameEvent: GameEvents.USER_HIT });
 
       if (shipIsSunk) {
+        // Play success sound effect for sinking a ship
+        playSuccessSound();
         addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
 
@@ -70,15 +73,26 @@ export const UserGuessBoard: React.FC = () => {
 
         // Check for game end after state update
         if (checkAllShipsSunk(newComputerShips)) {
+          // Fade out background music and play win sound
+          fadeOutMusic();
+          playWinSound();
           setgameStatus('user-win');
           setAvatar({ gameEvent: GameEvents.USER_WIN });
           userTurnInProgress.current = false;
           return; // Exit early if user won
         }
+      } else {
+        // Play regular hit sound for non-sinking hits
+        playHitSound();
+        setComputerShips(newComputerShips);
       }
     } else {
       newComputerShips[row][col] = { name: null, status: CellStates.miss };
       setComputerShips(newComputerShips);
+
+      // Play miss sound effect
+      playMissSound();
+
       addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
     }

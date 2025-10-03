@@ -8,13 +8,14 @@ import { GameContext } from '../GameContext';
 import { placeShips } from '../logic/placeShips';
 import { AiLevel } from '../types';
 import { GameEvents } from './Avatar';
-import { Link } from 'react-router-dom';
+import { playBeepSound } from '../utils/soundEffects';
 
 export const StartScreen = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const { setAiLevel, setComputerShips, setAvatar, setgameStatus } = useContext(GameContext);
 
   const startGame = (difficulty: AiLevel) => {
+    playBeepSound();
     setAiLevel(difficulty);
     setComputerShips(placeShips());
     setGameStarted(true);
@@ -24,9 +25,6 @@ export const StartScreen = () => {
 
   return gameStarted ? null : (
     <div className="start-screen">
-      <Link to="/about" className="button about-link">
-        About
-      </Link>
       <img src={gameTitle} alt="Battleship" className="game-title" />
 
       <h2>Choose your opponent</h2>
