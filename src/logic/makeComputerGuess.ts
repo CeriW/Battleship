@@ -4,6 +4,7 @@ import { CellStates, ShipNames, PositionArray } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { checkAllShipsSunk, isShipSunk } from './helpers';
 import { deriveAvatarName, GameEvents } from '../components/Avatar';
+import { playAlarmSound, playFailSound, playLoseSound, fadeOutMusic } from '../utils/soundEffects';
 
 // Helper function to check if a cell is adjacent to an unsunk hit
 const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean => {
@@ -278,11 +279,16 @@ export const useMakeComputerGuess = () => {
 
       // If we've sunk a user's ship...
       if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
+        // Play fail sound effect when computer sinks user's ship (no alarm sound)
+        playFailSound();
         addToLog(`${deriveAvatarName(aiLevel)} sunk ${cell?.name}`, 'sunk');
         setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
         let didWin = false;
         if (checkAllShipsSunk(newUserShips)) {
+          // Fade out background music and play lose sound
+          fadeOutMusic();
+          playLoseSound();
           setgameStatus('computer-win');
           setAvatar({ gameEvent: GameEvents.COMPUTER_WIN });
           didWin = true;
@@ -295,6 +301,11 @@ export const useMakeComputerGuess = () => {
       } else {
         // If it was a miss, advance turn
         setgameStatus('user-turn');
+      }
+
+      // Play alarm sound for non-sinking hits
+      if (status === CellStates.hit && !isShipSunk(cell?.name as ShipNames, newUserShips)) {
+        playAlarmSound();
       }
     }
 

@@ -22,6 +22,7 @@ export const defaultTestContext: GameContextType = {
   setAiAdjacentShipModifier: jest.fn(),
   avatar: { gameEvent: GameEvents.COMPUTER_THINKING },
   setAvatar: jest.fn(),
+  resetGame: jest.fn(),
 };
 
 export default defaultTestContext;

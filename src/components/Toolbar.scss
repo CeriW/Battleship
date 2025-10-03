@@ -1,0 +1,111 @@
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+
+  .toolbar-content {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .toolbar-button {
+    background: url('/img/button.png') no-repeat center center;
+    background-size: 100% 100%;
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    color: white;
+    padding: 5px 12px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 rgba(black, 0.5);
+    font-weight: medium;
+    text-decoration: none;
+    margin: 5px;
+    height: 40px;
+    width: 120px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+      }
+    }
+
+    .about-icon {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      margin-right: 6px;
+      height: 1em;
+      width: 1em;
+    }
+
+    .about-text {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    &:hover .about-icon {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Ensure content doesn't get hidden behind toolbar
+.app {
+  padding-top: 60px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .toolbar {
+    height: 50px;
+    padding: 0 15px;
+  }
+
+  .app {
+    padding-top: 50px;
+  }
+}

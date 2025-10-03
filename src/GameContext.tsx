@@ -42,6 +42,7 @@ export type GameContextType = {
   // with surprising frequency. It was not uncommon to have multiple and sometimes all ships touching each other.
   aiAdjacentShipModifier: number;
   setAiAdjacentShipModifier: (modifier: number) => void;
+  resetGame: () => void;
 };
 
 export const GameContext = createContext<GameContextType>({} as GameContextType);
@@ -73,6 +74,14 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setLog((prevLog) => [<LogEntry key={new Date().toISOString()} item={message} type={type} />, ...prevLog]);
   };
 
+  const resetGame = () => {
+    setUserShips(initialiseShipArray());
+    setComputerShips(placeShips());
+    setLog([]);
+    setgameStatus('unstarted');
+    setAvatar({ gameEvent: GameEvents.COMPUTER_THINKING });
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -90,6 +99,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setAiAdjacentShipModifier,
         avatar,
         setAvatar,
+        resetGame,
       }}
     >
       {children}

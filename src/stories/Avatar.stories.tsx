@@ -46,6 +46,7 @@ const AvatarWithContext = ({ aiLevel, gameEvent }: { aiLevel: AiLevel; gameEvent
     setAvatar: () => {},
     aiAdjacentShipModifier: 0,
     setAiAdjacentShipModifier: () => {},
+    resetGame: () => {},
   });
 
   React.useEffect(() => {

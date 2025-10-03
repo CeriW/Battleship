@@ -3,6 +3,7 @@ import { shipTypes, ShipNames, PositionArray, Alignment, CellStates } from '../t
 import { initialiseShipArray, checkValidShipState, placeShips } from '../logic/placeShips';
 import Board from './Board';
 import { MissIcon } from './Icons';
+import { playSuccessSound, playBeepSound } from '../utils/soundEffects';
 import './ShipPlacement.scss';
 
 interface ShipPlacementProps {
@@ -198,11 +199,13 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
 
   const handleStartGame = () => {
     if (placedShipNames.size === shipTypes.length) {
+      playSuccessSound();
       onComplete(placedShips);
     }
   };
 
   const handleResetShips = () => {
+    playBeepSound();
     setPlacedShips(initialiseShipArray());
     setPlacedShipNames(new Set());
     setSelectedShip(null);
@@ -210,6 +213,7 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
   };
 
   const handleRandomPlacement = () => {
+    playBeepSound();
     // Generate random ship placements
     const randomShips = placeShips();
     setPlacedShips(randomShips);
@@ -311,7 +315,7 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
         <div className="placement-status">
           {allShipsPlaced ? (
             <div className="ready-to-start">
-              <span>✓ All ships placed! Ready to start the game.</span>
+              <span>✓ All ships placed!</span>
             </div>
           ) : (
             <div className="ships-remaining">

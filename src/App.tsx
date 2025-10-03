@@ -14,6 +14,7 @@ import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
 import { About } from './components/About';
 import ShipPlacement from './components/ShipPlacement';
+import { Toolbar } from './components/Toolbar';
 
 const computerThinkingTime = 700;
 
@@ -82,21 +83,17 @@ const GameBoards = () => {
 
 export function App() {
   return (
-    <Router>
-      <div className="app">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <GameProvider>
-                <GameBoards />
-              </GameProvider>
-            }
-          />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
-    </Router>
+    <GameProvider>
+      <Router>
+        <div className="app">
+          <Toolbar />
+          <Routes>
+            <Route path="/" element={<GameBoards />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </div>
+      </Router>
+    </GameProvider>
   );
 }
 
