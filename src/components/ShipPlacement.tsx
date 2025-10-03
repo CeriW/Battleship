@@ -180,6 +180,13 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
     }
   };
 
+  const handleResetShips = () => {
+    setPlacedShips(initialiseShipArray());
+    setPlacedShipNames(new Set());
+    setSelectedShip(null);
+    setHoveredPosition(null);
+  };
+
   const shipPreview = getShipPreview();
   const allShipsPlaced = placedShipNames.size === shipTypes.length;
 
@@ -277,9 +284,14 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
           )}
         </div>
 
-        <button className="start-game-button" onClick={handleStartGame} disabled={!allShipsPlaced}>
-          Start Game
-        </button>
+        <div className="footer-buttons">
+          <button className="reset-button" onClick={handleResetShips} disabled={placedShipNames.size === 0}>
+            Reset Ships
+          </button>
+          <button className="start-game-button" onClick={handleStartGame} disabled={!allShipsPlaced}>
+            Start Game
+          </button>
+        </div>
       </div>
     </div>
   );
