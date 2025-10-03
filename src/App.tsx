@@ -3,17 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameContext, GameProvider } from './GameContext';
 import './index.scss';
 import Window from './components/Window';
-
 import Board from './components/Board';
 import { useMakeComputerGuess } from './logic/makeComputerGuess';
-
 import UserGuessBoard from './components/UserGuessBoard';
 import { Log } from './components/Log';
-
 import { TurnIndicator } from './components/TurnIndicator';
 import { Avatar, deriveAvatarName, GameEvents } from './components/Avatar';
 import { Status } from './components/Status';
-
 import { StartScreen } from './components/StartScreen';
 import { GameEndScreen } from './logic/GameEndScreen';
 import { About } from './components/About';
@@ -50,8 +46,6 @@ const GameBoards = () => {
     <>
       {gameStatus === 'unstarted' && <StartScreen />}
       {gameStatus === 'ship-placement' && <ShipPlacement onComplete={handleShipPlacementComplete} />}
-      {gameStatus === 'user-win' && <GameEndScreen winner="user" />}
-      {gameStatus === 'computer-win' && <GameEndScreen winner="computer" />}
       {(gameStatus === 'user-turn' || gameStatus === 'computer-turn') && (
         <div className="game-container">
           <div className={`player-guess-board ${gameStatus === 'computer-turn' ? 'computer-turn' : 'user-turn'}`}>
@@ -80,6 +74,8 @@ const GameBoards = () => {
           </Window>
         </div>
       )}
+      {gameStatus === 'user-win' && <GameEndScreen winner="user" />}
+      {gameStatus === 'computer-win' && <GameEndScreen winner="computer" />}
     </>
   );
 };

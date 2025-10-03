@@ -150,11 +150,13 @@ body {
     display: flex;
     overflow-x: hidden;
     justify-content: space-between;
+    min-height: 0;
   }
 
   .board {
     font-size: 17px;
     width: calc(100% - 40px);
+    flex-shrink: 0;
   }
 }
 

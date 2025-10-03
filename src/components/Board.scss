@@ -22,9 +22,14 @@ $ships: (
 .board {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: min-content repeat(10, 1fr);
+  grid-template-rows: auto repeat(10, 1fr);
   aspect-ratio: 1 / 1;
   font-size: 28px;
+  min-height: 0;
+  min-width: 0;
+  contain: layout size;
+  will-change: auto;
+  transform: translateZ(0);
 
   @media (max-width: 1000px) {
     font-size: 18px;
@@ -63,6 +68,11 @@ $ships: (
     justify-content: center;
     position: relative;
     transition: all 0.2s ease;
+    min-height: 0;
+    min-width: 0;
+    contain: layout size;
+    will-change: auto;
+    overflow: hidden;
   }
 
   .cell.unguessed {
