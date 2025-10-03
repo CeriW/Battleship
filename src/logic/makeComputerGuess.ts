@@ -181,6 +181,11 @@ export const useMakeComputerGuess = () => {
         }, []);
       }
 
+      if (validIndices.length === 0) {
+        isGuessing.current = false;
+        return;
+      }
+
       targetIndex = validIndices[Math.floor(Math.random() * validIndices.length)];
     }
 
