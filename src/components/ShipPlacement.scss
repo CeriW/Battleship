@@ -11,6 +11,8 @@
   color: white;
   padding: 20px;
   box-sizing: border-box;
+  overflow-x: hidden;
+  justify-content: center;
 
   @media (max-width: 950px) {
     background-image: url('/img/ocean.png');
@@ -18,14 +20,24 @@
     background-repeat: repeat;
   }
 
+  .ship-placement-footer {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
   .ship-placement-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     h2 {
       font-size: 2.5rem;
       margin: 0 0 10px 0;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
     }
 
     p {
@@ -77,12 +89,13 @@
     display: flex;
     flex: 1;
     gap: 30px;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     min-height: 0; // Allow flex items to shrink
+    box-sizing: border-box;
 
     @media (max-width: 1024px) {
       gap: 20px;
@@ -125,6 +138,7 @@
       background: #ff6800;
       color: white;
       text-shadow: 2px 2px 0 rgba(black, 0.5);
+      text-transform: uppercase;
     }
 
     .ship-list {
@@ -160,8 +174,8 @@
       // Hover effect for desktop only
       @media (hover: hover) and (pointer: fine) {
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
-          transform: translateY(-2px);
+          background: rgba(128, 128, 128, 0.1);
+          border-color: #888;
         }
       }
 
@@ -194,19 +208,19 @@
         border: 1px solid rgba(255, 255, 255, 0.3);
 
         &.carrier {
-          background: #ff6b6b;
+          background: #ff6800;
         }
         &.battleship {
-          background: #4ecdc4;
+          background: #ff8c42;
         }
         &.cruiser {
-          background: #45b7d1;
+          background: #ffa366;
         }
         &.submarine {
-          background: #96ceb4;
+          background: #ffba8a;
         }
         &.destroyer {
-          background: #ffeaa7;
+          background: #ffd1ae;
         }
       }
 
@@ -232,21 +246,35 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        background: #ff4757;
+        background: #ff6800;
         color: white;
         border: none;
         border-radius: 50%;
         width: 25px;
         height: 25px;
+        min-width: 25px;
+        min-height: 25px;
+        max-width: 25px;
+        max-height: 25px;
         cursor: pointer;
         font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s ease;
+        padding: 0;
+        line-height: 1;
+        box-sizing: border-box;
+        flex-shrink: 0;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          display: block;
+        }
 
         &:hover {
-          background: #ff3742;
+          background: #e55a00;
           transform: scale(1.1);
         }
       }
@@ -255,6 +283,10 @@
     .ship-controls {
       margin-top: 20px;
       text-align: center;
+      height: 88px; // Fixed height: 20px margin + 48px button + 20px margin
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       .rotate-button {
         background: url('/img/button.png') no-repeat center center;
@@ -311,7 +343,7 @@
     align-items: center;
     margin-top: 20px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 15px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -323,16 +355,18 @@
     }
 
     .placement-status {
+      color: white;
+      font-size: 1.4rem;
+      text-align: center;
+
       .ready-to-start {
-        color: #4caf50;
+        color: #66ff66;
         font-weight: bold;
-        font-size: 1.1rem;
       }
 
       .ships-remaining {
         color: #ffa726;
         font-weight: bold;
-        font-size: 1.1rem;
       }
     }
 

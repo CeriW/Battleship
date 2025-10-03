@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { shipTypes, ShipNames, PositionArray, Alignment, CellStates } from '../types';
 import { initialiseShipArray, checkValidShipState } from '../logic/placeShips';
 import Board from './Board';
+import { MissIcon } from './Icons';
 import './ShipPlacement.scss';
 
 interface ShipPlacementProps {
@@ -260,20 +261,20 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
                       handleRemoveShip(ship.name);
                     }}
                   >
-                    ✕
+                    <MissIcon fill="white" />
                   </button>
                 )}
               </div>
             ))}
           </div>
 
-          {selectedShip && (
-            <div className="ship-controls">
+          <div className="ship-controls">
+            {selectedShip && (
               <button onClick={handleRotateShip} className="rotate-button">
                 Rotate Ship ({shipAlignment === 'horizontal' ? 'vertical' : 'horizontal'})
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="placement-board">
@@ -301,7 +302,10 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
               <span>✓ All ships placed! Ready to start the game.</span>
             </div>
           ) : (
-            <div className="ships-remaining">{shipTypes.length - placedShipNames.size} ships remaining</div>
+            <div className="ships-remaining">
+              {shipTypes.length - placedShipNames.size}{' '}
+              {shipTypes.length - placedShipNames.size === 1 ? 'ship' : 'ships'} remaining
+            </div>
           )}
         </div>
 
