@@ -3,10 +3,6 @@
 let globalAudioRef: HTMLAudioElement | null = null;
 let globalAudioEnabled = false; // Start with audio disabled by default
 
-// Module-scoped handles for fade effects to prevent overlapping intervals/timeouts
-let activeFadeInterval: NodeJS.Timeout | null = null;
-let activeFadeTimeout: NodeJS.Timeout | null = null;
-
 export const setGlobalAudioRef = (ref: HTMLAudioElement | null) => {
   globalAudioRef = ref;
 };
@@ -132,68 +128,35 @@ export const playLoseSound = () => {
 };
 
 export const fadeOutMusic = () => {
-  // Clear any existing fade effects to prevent overlapping
-  cancelFadeEffects();
-
-  if (!globalAudioRef || !isAudioEnabled()) {
-    return;
-  }
-
-  activeFadeInterval = setInterval(() => {
-    // Check current state before each action to prevent stale closures
-    if (!globalAudioRef || !isAudioEnabled()) {
-      cancelFadeEffects();
-      return;
-    }
-
-    if (globalAudioRef.volume > 0.1) {
-      globalAudioRef.volume -= 0.1;
-    } else {
-      globalAudioRef.pause();
-      clearInterval(activeFadeInterval!);
-      activeFadeInterval = null;
-
-      // Fade back in after 4 seconds
-      activeFadeTimeout = setTimeout(() => {
-        // Check current state before fading back in
-        if (!globalAudioRef || !isAudioEnabled()) {
-          cancelFadeEffects();
-          return;
+  if (globalAudioRef && isAudioEnabled()) {
+    const fadeOutInterval = setInterval(() => {
+      if (globalAudioRef && globalAudioRef.volume > 0.1) {
+        globalAudioRef.volume -= 0.1;
+      } else {
+        if (globalAudioRef) {
+          globalAudioRef.pause();
         }
+        clearInterval(fadeOutInterval);
 
-        globalAudioRef.play().catch((error) => {
-          console.log('Audio playback failed:', error);
-        });
+        // Fade back in after 4 seconds
+        setTimeout(() => {
+          if (globalAudioRef && isAudioEnabled()) {
+            globalAudioRef.play().catch((error) => {
+              console.log('Audio playback failed:', error);
+            });
 
-        // Fade back in
-        activeFadeInterval = setInterval(() => {
-          // Check current state before each fade in step
-          if (!globalAudioRef || !isAudioEnabled()) {
-            cancelFadeEffects();
-            return;
+            // Fade back in
+            const fadeInInterval = setInterval(() => {
+              if (globalAudioRef && globalAudioRef.volume < 0.5) {
+                globalAudioRef.volume += 0.1;
+              } else {
+                clearInterval(fadeInInterval);
+              }
+            }, 100); // Fade in over ~1 second
           }
-
-          if (globalAudioRef.volume < 0.5) {
-            globalAudioRef.volume += 0.1;
-          } else {
-            clearInterval(activeFadeInterval!);
-            activeFadeInterval = null;
-          }
-        }, 100); // Fade in over ~1 second
-      }, 4000); // Wait 4 seconds before fading back in
-    }
-  }, 100); // Fade out over ~1 second
-};
-
-// Function to cancel all fade effects and clear handles
-export const cancelFadeEffects = () => {
-  if (activeFadeInterval) {
-    clearInterval(activeFadeInterval);
-    activeFadeInterval = null;
-  }
-  if (activeFadeTimeout) {
-    clearTimeout(activeFadeTimeout);
-    activeFadeTimeout = null;
+        }, 4000); // Wait 4 seconds before fading back in
+      }
+    }, 100); // Fade out over ~1 second
   }
 };
 

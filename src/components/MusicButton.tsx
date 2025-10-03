@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './MusicButton.scss';
-import { setGlobalAudioRef, setGlobalAudioEnabled, isAudioEnabled, cancelFadeEffects } from '../utils/soundEffects';
+import { setGlobalAudioRef, setGlobalAudioEnabled, isAudioEnabled } from '../utils/soundEffects';
 
 // Global audio state management
 let globalAudioRef: HTMLAudioElement | null = null;
@@ -78,8 +78,6 @@ export const MusicButton = () => {
         globalAudioRef.pause();
         globalAudioRef = null;
       }
-      // Cancel any active fade effects to prevent memory leaks
-      cancelFadeEffects();
     };
   }, []);
 
@@ -91,8 +89,6 @@ export const MusicButton = () => {
       setIsPlaying(false);
       globalIsPlaying = false;
       setGlobalAudioEnabled(false);
-      // Cancel any active fade effects when audio is disabled
-      cancelFadeEffects();
     } else {
       globalAudioRef.play().catch((error) => {
         console.log('Audio playback failed:', error);
