@@ -41,6 +41,7 @@ body {
   overflow-x: hidden;
   font-family: 'Oswald', sans-serif;
   display: flex;
+  text-wrap: pretty;
 
   // Touch optimizations
   -webkit-touch-callout: none;

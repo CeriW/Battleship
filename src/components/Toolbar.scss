@@ -28,6 +28,15 @@
     flex: 1;
   }
 
+  .coordinate-input-container {
+    transition: opacity 0.3s ease-in-out;
+
+    &.faded {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
   .toolbar-right {
     display: flex;
     align-items: center;

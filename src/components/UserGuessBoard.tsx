@@ -59,13 +59,13 @@ export const UserGuessBoard: React.FC = () => {
       const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
       newComputerShips[row][col] = { ...cell, status: CellStates.hit };
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, hit`, 'hit');
+      addToLog(`You hit at ${letters[row]}${col + 1}!`, 'hit');
       setAvatar({ gameEvent: GameEvents.USER_HIT });
 
       if (shipIsSunk) {
         // Play success sound effect for sinking a ship
         playSuccessSound();
-        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
+        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
 
         // Update the state immediately for game logic
@@ -94,7 +94,7 @@ export const UserGuessBoard: React.FC = () => {
 
       setComputerShips(newComputerShips);
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
+      addToLog(`You missed at ${letters[row]}${col + 1}`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
     }
 

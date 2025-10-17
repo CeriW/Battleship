@@ -38,12 +38,12 @@ export const Toolbar = () => {
       newComputerShips[row][col] = { ...cell, status: CellStates.hit };
       const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, hit`, 'hit');
+      addToLog(`You hit at ${letters[row]}${col + 1}!`, 'hit');
       setAvatar({ gameEvent: GameEvents.USER_HIT });
 
       if (shipIsSunk) {
         playSuccessSound();
-        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
+        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
 
         setComputerShips(newComputerShips);
@@ -66,7 +66,7 @@ export const Toolbar = () => {
       playMissSound();
       setComputerShips(newComputerShips);
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
+      addToLog(`You missed at ${letters[row]}${col + 1}`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
     }
 
@@ -74,8 +74,8 @@ export const Toolbar = () => {
     userTurnInProgress.current = false;
   };
 
-  // Only show coordinate input during user's turn
-  const showCoordinateInput = gameStatus === 'user-turn';
+  // Always show coordinate input but fade when not user's turn
+  const isUserTurn = gameStatus === 'user-turn';
 
   return (
     <div className="toolbar">
@@ -85,13 +85,13 @@ export const Toolbar = () => {
             <span className="about-icon">🔍</span>
             <span className="about-text">About</span>
           </Link>
-          {showCoordinateInput && (
+          <div className={`coordinate-input-container ${!isUserTurn ? 'faded' : ''}`}>
             <UnifiedCoordinateInput
               onGuess={handleGuess}
-              disabled={gameStatus !== 'user-turn' || userTurnInProgress.current}
+              disabled={!isUserTurn || userTurnInProgress.current}
               variant="toolbar"
             />
-          )}
+          </div>
         </div>
         <div className="toolbar-right">
           <SkipTrackButton />

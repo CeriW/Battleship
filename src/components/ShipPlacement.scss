@@ -42,8 +42,8 @@
 @mixin board-size($size) {
   width: $size !important;
   height: $size !important;
-  max-width: $size !important;
-  max-height: $size !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 @mixin preview-style($r, $g, $b) {
@@ -68,7 +68,7 @@
 .ship-placement {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 116px); // 100vh minus toolbar (60px) and footer (~56px)
   background-color: #0088d1;
   background-image: url('/img/bg-left.svg'), url('/img/bg-right.svg');
   background-position: left top, right top;
@@ -76,15 +76,24 @@
   background-size: contain;
   background-attachment: fixed;
   color: white;
-  padding: 10px;
+  padding: 10px 10px 70px 10px; // Add bottom padding to prevent overlap with fixed footer
   box-sizing: border-box;
   overflow-x: hidden;
-  justify-content: space-around;
+  justify-content: center;
 
   @media (max-width: 950px) {
     background-image: url('/img/ocean.png');
     background-size: unset;
     background-repeat: repeat;
+  }
+
+  // Adjust bottom padding for different screen sizes
+  @media (max-width: 768px) {
+    padding: 10px; // No bottom padding needed since footer is not fixed
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 
   .ship-placement-header {
@@ -145,18 +154,18 @@
 
   .ship-placement-content {
     display: flex;
-    gap: 20px;
-    align-items: center;
+    gap: 100px;
+    align-items: flex-start;
     justify-content: center;
     max-width: 900px;
-    margin: 0 auto 15px auto;
+    margin: 30px auto 30px auto;
     width: 100%;
     box-sizing: border-box;
 
     @media (max-width: 1024px) {
       gap: 20px;
       padding: 0 10px;
-      margin: 0 auto 25px auto;
+      margin: 25px auto 25px auto;
     }
 
     @media (max-width: 768px) {
@@ -169,7 +178,7 @@
   }
 
   .ship-selection {
-    flex: 0 0 300px;
+    flex: 0 0 280px;
     background: white;
     border-radius: 15px;
     padding: 0;
@@ -179,13 +188,14 @@
     align-self: stretch;
 
     @media (max-width: 1024px) {
-      flex: 0 0 280px;
+      flex: 0 0 250px;
     }
 
     @media (max-width: 768px) {
       flex: none;
       width: 100%;
-      max-width: 100%;
+      max-width: 400px; // Limit width on mobile
+      margin: 0 auto; // Center horizontally
       order: 2; // Show after board on mobile
     }
 
@@ -204,26 +214,27 @@
     .ship-list {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      padding: 8px;
+      gap: 2px;
+      padding: 6px;
     }
 
     .ship-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px;
+      padding: 4px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 5px;
       cursor: pointer;
       transition: all 0.3s ease;
       border: 2px solid transparent;
       position: relative;
-      min-height: 30px; // Even more compact
+      min-height: 25px; // More compact
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       user-select: none;
       color: #333; // Dark text for visibility on white background
+      flex-direction: row; // Ensure horizontal layout
 
       // Touch feedback
       &:active {
@@ -259,7 +270,7 @@
         display: flex;
         gap: 2px;
         flex-shrink: 0;
-        min-width: 90px; // Width for 5 segments (14px + 2px border) * 5 + 4 gaps + extra padding
+        min-width: 100px; // Width for 5 segments (14px + 2px border) * 5 + 4 gaps + extra padding
       }
 
       .ship-segment {
@@ -287,26 +298,23 @@
 
       .ship-info {
         flex: 1;
+        display: flex;
+        align-items: center;
 
         .ship-name {
           font-weight: bold;
           font-size: 1.1rem;
           text-transform: capitalize;
-          margin-bottom: 5px;
           color: #333;
-        }
-
-        .ship-size {
-          font-size: 0.9rem;
-          opacity: 0.8;
-          color: #666;
+          white-space: nowrap; // Prevent text wrapping
         }
       }
 
       .remove-ship {
         position: absolute;
-        top: 5px;
+        top: 50%;
         right: 5px;
+        transform: translateY(-50%);
         background: #ff6800;
         color: white;
         border: none;
@@ -326,6 +334,7 @@
         line-height: 1;
         box-sizing: border-box;
         flex-shrink: 0;
+        margin: 0;
 
         svg {
           width: 20px;
@@ -335,7 +344,7 @@
 
         &:hover {
           background: #e55a00;
-          transform: scale(1.1);
+          transform: translateY(-50%) scale(1.1);
         }
       }
     }
@@ -401,35 +410,54 @@
   }
 
   .ship-placement-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 15px;
+    padding: 8px 20px;
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: min(100%, 900px);
-    float: none;
-    margin: 0 auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
     box-sizing: border-box;
+    z-index: 1000;
+
+    // Stack vertically and not fixed on mobile only
+    @media (max-width: 768px) {
+      position: static; // Not fixed on mobile
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 20px;
+      gap: 10px;
+      margin-top: 20px; // Add some top margin
+    }
 
     .footer-buttons {
       display: flex;
       gap: 15px;
       align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
 
-      @media (max-width: 550px) {
+      @media (max-width: 400px) {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         width: 100%;
       }
     }
 
+    // Responsive adjustments for footer height
+    @media (max-width: 480px) {
+      padding: 8px 15px;
+      gap: 8px;
+    }
+
     .placement-status {
       color: white;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       text-align: center;
 
       .ready-to-start {
@@ -457,19 +485,54 @@
       @include button-base;
       @include button-background('/img/button.png');
     }
+
+    // Compact mobile styling to keep buttons in row
+    @media (max-width: 768px) {
+      .random-button,
+      .reset-button,
+      .start-game-button {
+        font-size: 18px !important;
+        padding: 6px 16px 10px !important;
+        min-height: 38px !important;
+        flex-shrink: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .random-button,
+      .reset-button,
+      .start-game-button {
+        font-size: 16px !important;
+        padding: 5px 12px 8px !important;
+        min-height: 35px !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .random-button,
+      .reset-button,
+      .start-game-button {
+        font-size: 16px !important;
+        padding: 6px 16px 10px !important;
+        min-height: 40px !important;
+        width: 100%;
+      }
+    }
   }
 }
 
-// Ship placement board - responsive square dimensions
+// Ship placement board - ensure proper sizing
 .ship-placement .board {
-  @include board-size(500px);
+  @include board-size(max(400px, 25vw)); // Use board-size mixin for consistent sizing
 
-  @media (max-width: 1024px) {
-    @include board-size(400px);
+  // Make markers shorter
+  .column-marker {
+    font-size: 0.6em !important;
+    margin-bottom: 3% !important;
   }
 
-  @media (max-width: 480px) {
-    @include board-size(350px);
+  .row-marker {
+    font-size: 0.6em !important;
   }
 }
 
