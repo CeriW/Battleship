@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useAchievements } from '../context/AchievementContext';
 import { GameEvents } from '../components/Avatar';
 

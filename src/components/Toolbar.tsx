@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useEffect } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MusicButton } from './MusicButton';
 import { SkipTrackButton } from './SkipTrackButton';
