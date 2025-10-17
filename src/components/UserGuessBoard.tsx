@@ -4,7 +4,7 @@ import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
-import AimInterface from './AimInterface';
+import { UnifiedCoordinateInput } from './UnifiedCoordinateInput';
 import { playHitSound, playMissSound, playSuccessSound, playWinSound, fadeOutMusic } from '../utils/soundEffects';
 
 export const UserGuessBoard: React.FC = () => {
@@ -164,10 +164,14 @@ export const UserGuessBoard: React.FC = () => {
 
   return (
     <div className="user-guess-board">
-      {/* Coordinate Input as Additional Option */}
-      <AimInterface onGuess={handleGuess} disabled={gameStatus !== 'user-turn' || userTurnInProgress.current} />
+      {/* Small Screen Coordinate Input */}
+      <UnifiedCoordinateInput
+        onGuess={handleGuess}
+        disabled={gameStatus !== 'user-turn' || userTurnInProgress.current}
+        variant="mobile"
+      />
 
-      {/* Original Clickable Grid */}
+      {/* Clickable Grid */}
       <div className="board user-guess-board" data-testid="user-guess-board">
         {columnMarkers}
         {rows}

@@ -81,11 +81,14 @@
   }
 }
 
-// Hide text on small screens, show only icon
-@media (max-width: 600px) {
+// Hide text on screens below 1000px, show only icon
+@media (max-width: 1000px) {
   .skip-track-button {
     width: 50px;
-    padding: 5px;
+    display: flex;
+    padding: 5px 5px 12px;
+    align-items: center;
+    justify-content: center;
 
     .skip-text {
       display: none;
@@ -93,6 +96,11 @@
 
     .skip-icon {
       font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
     }
   }
 }

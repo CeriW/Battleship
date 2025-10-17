@@ -50,6 +50,15 @@ body {
   -ms-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+
+  // Optimize for shorter screens
+  @media (max-height: 700px) {
+    font-size: 20px;
+  }
+
+  @media (max-height: 500px) {
+    font-size: 18px;
+  }
 }
 
 #root {
@@ -89,6 +98,29 @@ body {
     gap: 20px;
     padding: 1vw;
   }
+
+  // Optimize for very short screens (height-based media queries)
+  @media (max-height: 700px) {
+    gap: 10px;
+    padding: 0.5vw;
+
+    // Stack everything vertically for very short screens
+    @media (max-width: 1000px) {
+      grid-template:
+        'player-guess-board'
+        'computer-avatar'
+        'feed'
+        'player-fleet'
+        'status'
+        / 1fr;
+    }
+  }
+
+  // Extra short screens (like landscape phones)
+  @media (max-height: 500px) {
+    gap: 8px;
+    padding: 0.25vw;
+  }
 }
 
 .computer-avatar {
@@ -124,6 +156,25 @@ body {
     @media (max-width: 768px) {
       max-width: 100%;
       padding: 0 10px;
+    }
+
+    // Optimize for shorter screens
+    @media (max-height: 700px) {
+      max-width: max(40vw, 400px);
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+        padding: 0 5px;
+      }
+    }
+
+    @media (max-height: 500px) {
+      max-width: max(45vw, 350px);
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+        padding: 0 3px;
+      }
     }
   }
 }

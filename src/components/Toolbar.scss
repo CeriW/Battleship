@@ -25,6 +25,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    flex: 1;
   }
 
   .toolbar-right {
@@ -107,5 +108,141 @@
 
   .app {
     padding-top: 50px;
+  }
+}
+
+// Optimize for shorter screens
+@media (max-height: 700px) {
+  .toolbar {
+    height: 45px;
+    padding: 0 10px;
+
+    .toolbar-button {
+      height: 35px;
+      width: 100px;
+      font-size: 16px;
+      padding: 3px 8px 5px;
+    }
+  }
+
+  .app {
+    padding-top: 45px;
+  }
+}
+
+@media (max-height: 500px) {
+  .toolbar {
+    height: 40px;
+    padding: 0 8px;
+
+    .toolbar-button {
+      height: 30px;
+      width: 80px;
+      font-size: 14px;
+      padding: 2px 6px 4px;
+      margin: 3px;
+    }
+  }
+
+  .app {
+    padding-top: 40px;
+  }
+}
+
+// Coordinate input styles for toolbar
+
+.coordinate-form-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  max-width: 370px;
+}
+
+.coordinate-input-toolbar {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  padding: 8px 12px;
+  text-align: left;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 180px;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: none;
+    font-size: 14px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--orange);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255, 104, 0, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.coordinate-submit-toolbar {
+  background: url('/img/button.png') no-repeat center center;
+  background-size: 100% 100%;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  color: white;
+  padding: 8px 16px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(black, 0.5);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 60px;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Responsive adjustments for coordinate input
+@media (max-height: 700px) {
+  .coordinate-input-toolbar {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .coordinate-submit-toolbar {
+    font-size: 14px;
+    padding: 6px 12px 10px;
+    min-width: 50px;
+  }
+}
+
+@media (max-height: 500px) {
+  .coordinate-input-toolbar {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .coordinate-submit-toolbar {
+    font-size: 12px;
+    padding: 4px 10px 8px;
+    min-width: 45px;
   }
 }
