@@ -22,6 +22,21 @@ export const About: React.FC = () => {
               </a>{' '}
               for more information on this project.
             </p>
+            <p>
+              This project was made using assets from{' '}
+              <a href="https://www.zapsplat.com" target="_blank" rel="noopener noreferrer">
+                Zapsplat
+              </a>
+              ,{' '}
+              <a href="https://www.flaticon.com" target="_blank" rel="noopener noreferrer">
+                Flaticon
+              </a>
+              , and{' '}
+              <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer">
+                Freepik
+              </a>
+              .
+            </p>
           </section>
         </div>
 
