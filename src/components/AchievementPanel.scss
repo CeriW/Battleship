@@ -66,6 +66,38 @@
       }
     }
 
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .reset-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-family: 'Oswald', sans-serif;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
     .close-button {
       background: none;
       border: none;
@@ -130,11 +162,13 @@
         }
       }
 
-      .close-button {
+      .header-buttons {
         position: absolute;
         top: 16px;
         right: 16px;
         order: 3;
+        flex-direction: row;
+        gap: 4px;
       }
     }
   }
