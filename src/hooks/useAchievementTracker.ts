@@ -166,6 +166,7 @@ export const useAchievementTracker = () => {
           quickWin,
           noMissGame,
           comebackWin,
+          playerShipsLost: stats.userShipsLost,
           shipsSunk: stats.shipsSunk,
           aiLevel: stats.aiLevel,
         });
