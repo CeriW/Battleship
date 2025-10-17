@@ -19,6 +19,7 @@ interface GameStats {
   bestConsecutiveHits: number;
   startTime: number;
   aiLevel: string;
+  userShipsLost: number;
 }
 
 export const useAchievementTracker = () => {
@@ -40,6 +41,7 @@ export const useAchievementTracker = () => {
     bestConsecutiveHits: 0,
     startTime: Date.now(),
     aiLevel: 'hard',
+    userShipsLost: 0,
   });
 
   const resetGameStats = () => {
@@ -60,6 +62,7 @@ export const useAchievementTracker = () => {
       bestConsecutiveHits: 0,
       startTime: Date.now(),
       aiLevel: gameStatsRef.current.aiLevel,
+      userShipsLost: 0,
     };
   };
 
@@ -99,6 +102,7 @@ export const useAchievementTracker = () => {
         checkAchievements(gameEvent, {
           position: data?.position,
           consecutiveHits: stats.consecutiveHits,
+          currentGameShots: stats.shots,
         });
         break;
 
@@ -139,11 +143,19 @@ export const useAchievementTracker = () => {
         });
         break;
 
+      case GameEvents.COMPUTER_SUNK_USER:
+        stats.userShipsLost++;
+        checkAchievements(gameEvent, {
+          userShipsLost: stats.userShipsLost,
+        });
+        break;
+
       case GameEvents.USER_WIN: {
         const timeToWin = Date.now() - stats.startTime;
         const perfectGame = stats.misses === 0;
         const quickWin = stats.shots <= 20;
         const noMissGame = stats.misses === 0;
+        const comebackWin = stats.userShipsLost >= 3;
 
         checkAchievements(gameEvent, {
           shots: stats.shots,
@@ -153,6 +165,7 @@ export const useAchievementTracker = () => {
           perfectGame,
           quickWin,
           noMissGame,
+          comebackWin,
           shipsSunk: stats.shipsSunk,
           aiLevel: stats.aiLevel,
         });

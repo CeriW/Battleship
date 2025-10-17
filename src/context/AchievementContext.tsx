@@ -430,6 +430,11 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
               newProgress.perfectGames++;
             }
 
+            // Check for comeback win
+            if (data?.comebackWin) {
+              newProgress.gamesWithComeback++;
+            }
+
             // Check difficulty
             if (data?.aiLevel === 'easy') {
               newProgress.winsOnEasy++;
@@ -452,9 +457,8 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
               newProgress.bestConsecutiveHits = newProgress.consecutiveHits;
             }
 
-            // Check for first shot hit (only if this is the first hit of the game)
-            // Use previous progress to check if this is truly the first shot
-            if (newProgress.totalHits === 1 && prev.totalHits === 0) {
+            // Check for first shot hit (only if this is the first shot of the current game)
+            if (data?.currentGameShots === 1) {
               newProgress.firstShotHits++;
             }
 
