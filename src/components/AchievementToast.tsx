@@ -37,7 +37,13 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({ achievement,
   };
 
   return (
-    <div className={`achievement-toast ${isVisible ? 'visible' : ''} ${isExiting ? 'exiting' : ''}`}>
+    <div
+      className={`achievement-toast ${isVisible ? 'visible' : ''} ${isExiting ? 'exiting' : ''}`}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      style={{ ['--toast-duration' as any]: `${duration}ms` }}
+    >
       <div className="toast-content">
         <div className="toast-icon">{achievement.icon}</div>
         <div className="toast-text">
@@ -45,7 +51,7 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({ achievement,
           <div className="toast-name">{achievement.name}</div>
           <div className="toast-description">{achievement.description}</div>
         </div>
-        <button className="toast-close" onClick={handleClose}>
+        <button className="toast-close" onClick={handleClose} aria-label="Close achievement notification">
           ×
         </button>
       </div>
