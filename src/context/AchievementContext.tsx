@@ -453,7 +453,8 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
             }
 
             // Check for first shot hit (only if this is the first hit of the game)
-            if (newProgress.totalHits === 1 && newProgress.totalShots === 1) {
+            // Use previous progress to check if this is truly the first shot
+            if (newProgress.totalHits === 1 && prev.totalHits === 0) {
               newProgress.firstShotHits++;
             }
 
@@ -534,13 +535,14 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
             case 'quick_win':
               shouldUnlock = newProgress.quickWins >= 1;
               break;
-            case 'sniper':
+            case 'sniper': {
               // Only check sniper achievement after completing a game
               if (gameEvent === GameEvents.USER_WIN || gameEvent === GameEvents.USER_LOSE) {
                 const gameAccuracy = data?.hits && data?.shots ? data.hits / data.shots : 0;
                 shouldUnlock = gameAccuracy >= 0.9;
               }
               break;
+            }
             case 'destroyer_master':
               shouldUnlock = newProgress.destroyersSunk >= 10;
               break;
@@ -580,10 +582,11 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
             case 'lucky_guess':
               shouldUnlock = newProgress.bestConsecutiveHits >= 5;
               break;
-            case 'battleship_legend':
+            case 'battleship_legend': {
               const unlockedCount = achievements.filter((a) => a.unlocked).length;
               shouldUnlock = unlockedCount >= achievements.length - 1; // All except this one
               break;
+            }
             case 'submarine_hunter':
               shouldUnlock = newProgress.submarinesSunk >= 1;
               break;

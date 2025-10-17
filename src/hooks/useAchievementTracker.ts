@@ -139,7 +139,7 @@ export const useAchievementTracker = () => {
         });
         break;
 
-      case GameEvents.USER_WIN:
+      case GameEvents.USER_WIN: {
         const timeToWin = Date.now() - stats.startTime;
         const perfectGame = stats.misses === 0;
         const quickWin = stats.shots <= 20;
@@ -160,8 +160,9 @@ export const useAchievementTracker = () => {
         // Reset for next game
         resetGameStats();
         break;
+      }
 
-      case GameEvents.USER_LOSE:
+      case GameEvents.USER_LOSE: {
         checkAchievements(gameEvent, {
           shots: stats.shots,
           hits: stats.hits,
@@ -172,6 +173,7 @@ export const useAchievementTracker = () => {
         // Reset for next game
         resetGameStats();
         break;
+      }
 
       case GameEvents.GAME_START:
         stats.aiLevel = data?.aiLevel || 'hard';

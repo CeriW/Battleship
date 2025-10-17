@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Achievement } from '../types/achievements';
 import './AchievementToast.scss';
 
@@ -11,27 +11,51 @@ interface AchievementToastProps {
 export const AchievementToast: React.FC<AchievementToastProps> = ({ achievement, onClose, duration = 8000 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const isClosedRef = useRef(false);
+  const showTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const exitTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Show toast after a brief delay
-    const showTimer = setTimeout(() => {
+    showTimerRef.current = setTimeout(() => {
       setIsVisible(true);
     }, 100);
 
     // Auto-hide after duration
-    const hideTimer = setTimeout(() => {
+    hideTimerRef.current = setTimeout(() => {
       handleClose();
     }, duration);
 
     return () => {
-      clearTimeout(showTimer);
-      clearTimeout(hideTimer);
+      if (showTimerRef.current) {
+        clearTimeout(showTimerRef.current);
+      }
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+      if (exitTimerRef.current) {
+        clearTimeout(exitTimerRef.current);
+      }
     };
   }, [duration]);
 
   const handleClose = () => {
+    // Prevent duplicate close actions
+    if (isClosedRef.current) return;
+
+    isClosedRef.current = true;
+
+    // Clear all timers
+    if (showTimerRef.current) {
+      clearTimeout(showTimerRef.current);
+    }
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+
     setIsExiting(true);
-    setTimeout(() => {
+    exitTimerRef.current = setTimeout(() => {
       onClose();
     }, 300); // Match animation duration
   };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAchievements } from '../context/AchievementContext';
 import { Achievement } from '../types/achievements';
 import './AchievementPanel.scss';
@@ -10,6 +10,36 @@ interface AchievementPanelProps {
 
 export const AchievementPanel: React.FC<AchievementPanelProps> = ({ isOpen, onClose }) => {
   const { achievements, progress, unlockedAchievements } = useAchievements();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Store the currently focused element
+      previousActiveElement.current = document.activeElement as HTMLElement;
+
+      // Focus the panel
+      if (panelRef.current) {
+        panelRef.current.focus();
+      }
+
+      // Handle ESC key
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          onClose();
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    } else if (previousActiveElement.current) {
+      // Restore focus to the previously focused element
+      previousActiveElement.current.focus();
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -76,9 +106,17 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({ isOpen, onCl
 
   return (
     <div className="achievement-panel-overlay" onClick={onClose}>
-      <div className="achievement-panel" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={panelRef}
+        className="achievement-panel"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="achievements-header"
+        tabIndex={-1}
+      >
         <div className="achievement-header">
-          <h2>Achievements</h2>
+          <h2 id="achievements-header">Achievements</h2>
           <div className="achievement-stats">
             <div className="stat">
               <span className="stat-value">{unlockedAchievements.length}</span>
