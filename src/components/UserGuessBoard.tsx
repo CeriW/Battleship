@@ -4,7 +4,7 @@ import { GameContext } from '../GameContext';
 import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
-import AimInterface from './AimInterface';
+import { UnifiedCoordinateInput } from './UnifiedCoordinateInput';
 import { playHitSound, playMissSound, playSuccessSound, playWinSound, fadeOutMusic } from '../utils/soundEffects';
 
 export const UserGuessBoard: React.FC = () => {
@@ -59,13 +59,13 @@ export const UserGuessBoard: React.FC = () => {
       const shipIsSunk = isShipSunk(cell.name as ShipNames, newComputerShips);
       newComputerShips[row][col] = { ...cell, status: CellStates.hit };
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, hit`, 'hit');
+      addToLog(`You hit at ${letters[row]}${col + 1}!`, 'hit');
       setAvatar({ gameEvent: GameEvents.USER_HIT });
 
       if (shipIsSunk) {
         // Play success sound effect for sinking a ship
         playSuccessSound();
-        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}`, 'sunk');
+        addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
 
         // Update the state immediately for game logic
@@ -94,7 +94,7 @@ export const UserGuessBoard: React.FC = () => {
 
       setComputerShips(newComputerShips);
 
-      addToLog(`You guessed ${letters[row]}${col + 1}, miss`, 'miss');
+      addToLog(`You missed at ${letters[row]}${col + 1}`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
     }
 
@@ -164,10 +164,14 @@ export const UserGuessBoard: React.FC = () => {
 
   return (
     <div className="user-guess-board">
-      {/* Coordinate Input as Additional Option */}
-      <AimInterface onGuess={handleGuess} disabled={gameStatus !== 'user-turn' || userTurnInProgress.current} />
+      {/* Small Screen Coordinate Input */}
+      <UnifiedCoordinateInput
+        onGuess={handleGuess}
+        disabled={gameStatus !== 'user-turn' || userTurnInProgress.current}
+        variant="mobile"
+      />
 
-      {/* Original Clickable Grid */}
+      {/* Clickable Grid */}
       <div className="board user-guess-board" data-testid="user-guess-board">
         {columnMarkers}
         {rows}

@@ -267,7 +267,6 @@ export const ShipPlacement: React.FC<ShipPlacementProps> = ({ onComplete }) => {
                 </div>
                 <div className="ship-info">
                   <div className="ship-name">{ship.name}</div>
-                  <div className="ship-size">{ship.size} tiles</div>
                 </div>
                 {placedShipNames.has(ship.name) && (
                   <button
