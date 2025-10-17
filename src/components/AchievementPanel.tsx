@@ -9,7 +9,7 @@ interface AchievementPanelProps {
 }
 
 export const AchievementPanel: React.FC<AchievementPanelProps> = ({ isOpen, onClose }) => {
-  const { achievements, progress, unlockedAchievements } = useAchievements();
+  const { achievements, progress, unlockedAchievements, resetProgress } = useAchievements();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
 
@@ -49,6 +49,15 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({ isOpen, onCl
     if (!a.unlocked && b.unlocked) return 1;
     return a.name.localeCompare(b.name);
   });
+
+  const handleResetAchievements = () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to reset all achievements and progress? This action cannot be undone.'
+    );
+    if (confirmed) {
+      resetProgress();
+    }
+  };
 
   const getProgressPercentage = (achievement: Achievement) => {
     if (achievement.unlocked) return 100;
@@ -127,9 +136,14 @@ export const AchievementPanel: React.FC<AchievementPanelProps> = ({ isOpen, onCl
               <span className="stat-label">Games</span>
             </div>
           </div>
-          <button className="close-button" onClick={onClose}>
-            ×
-          </button>
+          <div className="header-buttons">
+            <button className="reset-button" onClick={handleResetAchievements} title="Reset all achievements">
+              🔄
+            </button>
+            <button className="close-button" onClick={onClose}>
+              ×
+            </button>
+          </div>
         </div>
 
         <div className="achievement-list">
