@@ -6,10 +6,12 @@ import { HitIcon, MissIcon } from './Icons';
 import { deriveAvatarName, GameEvents } from './Avatar';
 import { UnifiedCoordinateInput } from './UnifiedCoordinateInput';
 import { playHitSound, playMissSound, playSuccessSound, playWinSound, fadeOutMusic } from '../utils/soundEffects';
+import { useAchievementTracker } from '../hooks/useAchievementTracker';
 
 export const UserGuessBoard: React.FC = () => {
   const { computerShips, setComputerShips, addToLog, gameStatus, setgameStatus, setAvatar, aiLevel } =
     React.useContext(GameContext);
+  const { trackGameEvent } = useAchievementTracker();
 
   const userTurnInProgress = React.useRef(false);
   const [duplicateGuess, setDuplicateGuess] = React.useState<{ row: number; col: number } | null>(null);
@@ -61,12 +63,17 @@ export const UserGuessBoard: React.FC = () => {
 
       addToLog(`You hit at ${letters[row]}${col + 1}!`, 'hit');
       setAvatar({ gameEvent: GameEvents.USER_HIT });
+      trackGameEvent(GameEvents.USER_HIT, { position: [row, col] });
 
       if (shipIsSunk) {
         // Play success sound effect for sinking a ship
         playSuccessSound();
         addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
+        trackGameEvent(GameEvents.USER_SUNK_COMPUTER, {
+          shipName: cell?.name,
+          oneShotKill: false, // TODO: Implement one-shot detection
+        });
 
         // Update the state immediately for game logic
         setComputerShips(newComputerShips);
@@ -78,6 +85,7 @@ export const UserGuessBoard: React.FC = () => {
           playWinSound();
           setgameStatus('user-win');
           setAvatar({ gameEvent: GameEvents.USER_WIN });
+          trackGameEvent(GameEvents.USER_WIN, { aiLevel });
           userTurnInProgress.current = false;
           return; // Exit early if user won
         }
@@ -96,6 +104,7 @@ export const UserGuessBoard: React.FC = () => {
 
       addToLog(`You missed at ${letters[row]}${col + 1}`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
+      trackGameEvent(GameEvents.USER_MISS);
     }
 
     setgameStatus('computer-turn');

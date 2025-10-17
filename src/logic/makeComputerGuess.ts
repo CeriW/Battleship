@@ -5,6 +5,7 @@ import { calculateHeatMap } from './calculateHeatMap';
 import { checkAllShipsSunk, isShipSunk } from './helpers';
 import { deriveAvatarName, GameEvents } from '../components/Avatar';
 import { playAlarmSound, playFailSound, playLoseSound, fadeOutMusic } from '../utils/soundEffects';
+import { useAchievementTracker } from '../hooks/useAchievementTracker';
 
 // Helper function to check if a cell is adjacent to an unsunk hit
 const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean => {
@@ -164,6 +165,7 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const useMakeComputerGuess = () => {
   const { userShips, setUserShips, addToLog, aiLevel, setAvatar, setgameStatus, gameStatus } = useContext(GameContext);
+  const { trackGameEvent } = useAchievementTracker();
   const isGuessing = React.useRef(false);
 
   return useCallback(() => {
@@ -294,6 +296,7 @@ export const useMakeComputerGuess = () => {
           playLoseSound();
           setgameStatus('computer-win');
           setAvatar({ gameEvent: GameEvents.COMPUTER_WIN });
+          trackGameEvent(GameEvents.USER_LOSE, { aiLevel });
           didWin = true;
         }
 

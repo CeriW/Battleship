@@ -1,0 +1,163 @@
+.achievement-button {
+  background: linear-gradient(135deg, var(--battleship-blue), #0066a1);
+  border: 2px solid var(--orange);
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 136, 209, 0.3);
+  transition: all 0.3s ease;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 136, 209, 0.4);
+    background: linear-gradient(135deg, #0066a1, #004d7a);
+    border-color: #ff8c00;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.has-notifications {
+    animation: pulse 2s infinite;
+    background: linear-gradient(135deg, var(--orange), #e55a00);
+    border-color: #ff8c00;
+    box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4);
+
+    &:hover {
+      background: linear-gradient(135deg, #e55a00, #cc4f00);
+      box-shadow: 0 6px 20px rgba(255, 104, 0, 0.5);
+    }
+  }
+
+  .achievement-icon {
+    font-size: 18px;
+    animation: bounce 2s infinite;
+  }
+
+  .achievement-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .achievement-count {
+    background: var(--orange);
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--orange);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    animation: notification-pulse 1s infinite;
+    border: 2px solid white;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.8);
+  }
+  100% {
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes notification-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Mobile responsive - hide text on small screens
+@media (max-width: 768px) {
+  .achievement-button {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 6px;
+
+    .achievement-text {
+      display: none;
+    }
+
+    .achievement-icon {
+      font-size: 16px;
+    }
+
+    .achievement-count {
+      font-size: 10px;
+      padding: 1px 6px;
+      min-width: 16px;
+    }
+  }
+}
+
+// Very small screens - icon only
+@media (max-width: 480px) {
+  .achievement-button {
+    padding: 4px 6px;
+    min-width: 36px;
+    justify-content: center;
+    gap: 4px;
+
+    .achievement-count {
+      display: none;
+    }
+
+    .achievement-icon {
+      font-size: 14px;
+    }
+  }
+}

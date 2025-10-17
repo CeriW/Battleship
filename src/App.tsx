@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameContext, GameProvider } from './GameContext';
+import { AchievementProvider } from './context/AchievementContext';
+import { AchievementModalProvider } from './context/AchievementModalContext';
+import { AchievementModalRenderer } from './components/AchievementModalRenderer';
+import { AchievementToastManager } from './components/AchievementToastManager';
 import './index.scss';
 import Window from './components/Window';
 import Board from './components/Board';
@@ -15,18 +19,26 @@ import { GameEndScreen } from './logic/GameEndScreen';
 import { About } from './components/About';
 import ShipPlacement from './components/ShipPlacement';
 import { Toolbar } from './components/Toolbar';
+import { useAchievementTracker } from './hooks/useAchievementTracker';
 
 const computerThinkingTime = 700;
 
 const GameBoards = () => {
   const { userShips, setUserShips, aiLevel, avatar, setAvatar, gameStatus, setgameStatus } = useContext(GameContext);
   const makeComputerGuess = useMakeComputerGuess();
+  const { trackGameEvent, updateAiLevel } = useAchievementTracker();
   const computerTurnInProgress = useRef(false);
 
   const handleShipPlacementComplete = (ships: any) => {
     setUserShips(ships);
     setgameStatus('user-turn');
+    trackGameEvent(GameEvents.GAME_START, { aiLevel });
   };
+
+  // Update AI level in achievement tracker when it changes
+  useEffect(() => {
+    updateAiLevel(aiLevel);
+  }, [aiLevel, updateAiLevel]);
 
   useEffect(() => {
     if (gameStatus === 'computer-turn' && !computerTurnInProgress.current) {
@@ -84,15 +96,21 @@ const GameBoards = () => {
 export function App() {
   return (
     <GameProvider>
-      <Router>
-        <div className="app">
-          <Toolbar />
-          <Routes>
-            <Route path="/" element={<GameBoards />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </div>
-      </Router>
+      <AchievementProvider>
+        <AchievementModalProvider>
+          <Router>
+            <div className="app">
+              <Toolbar />
+              <AchievementModalRenderer />
+              <AchievementToastManager />
+              <Routes>
+                <Route path="/" element={<GameBoards />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+            </div>
+          </Router>
+        </AchievementModalProvider>
+      </AchievementProvider>
     </GameProvider>
   );
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MusicButton.scss';
 import { setGlobalAudioRef, setGlobalAudioEnabled, isAudioEnabled } from '../utils/soundEffects';
+import { useAchievementTracker } from '../hooks/useAchievementTracker';
+import { GameEvents } from './Avatar';
 
 // Global audio state management
 let globalAudioRef: HTMLAudioElement | null = null;
@@ -49,6 +51,7 @@ export const skipToNextTrack = () => {
 
 export const MusicButton = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const { trackGameEvent } = useAchievementTracker();
 
   useEffect(() => {
     // Create audio element with first random track
@@ -96,6 +99,9 @@ export const MusicButton = () => {
       setIsPlaying(true);
       globalIsPlaying = true;
       setGlobalAudioEnabled(true);
+
+      // Track achievement for turning on sound
+      trackGameEvent(GameEvents.SOUND_ENABLED);
     }
   };
 
