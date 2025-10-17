@@ -68,6 +68,8 @@ export enum GameEvents {
   COMPUTER_WIN = 'computer-win',
   COMPUTER_LOSE = 'computer-lose',
 
+  SOUND_ENABLED = 'sound-enabled',
+
   COMPUTER_THINKING = 'computer-thinking',
 }
 
@@ -174,6 +176,10 @@ const deriveAvatarSpeech = ({ gameEvent }: { gameEvent: GameEvents }) => {
 
     case GameEvents.COMPUTER_THINKING:
       return computerThinkingMessages[Math.floor(Math.random() * computerThinkingMessages.length)];
+    case GameEvents.SOUND_ENABLED:
+      return 'Great! Now you can hear the full experience!';
+    default:
+      return 'Hello!';
   }
 };
 

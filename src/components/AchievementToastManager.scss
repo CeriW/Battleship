@@ -1,0 +1,23 @@
+.achievement-toast-container {
+  position: fixed;
+  top: 80px; // Moved down to avoid toolbar overlap
+  right: 20px;
+  z-index: 1000001; // Higher than individual toasts
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none; // Allow clicks to pass through to elements behind
+
+  // Make individual toasts clickable
+  .achievement-toast {
+    pointer-events: auto;
+  }
+
+  @media (max-width: 768px) {
+    top: 70px; // Slightly lower on mobile
+    right: 10px;
+    left: 10px;
+    align-items: center;
+  }
+}

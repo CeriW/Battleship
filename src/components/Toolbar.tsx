@@ -3,16 +3,19 @@ import { Link } from 'react-router-dom';
 import { MusicButton } from './MusicButton';
 import { SkipTrackButton } from './SkipTrackButton';
 import { UnifiedCoordinateInput } from './UnifiedCoordinateInput';
+import { AchievementButton } from './AchievementButton';
 import { GameContext } from '../GameContext';
 import { CellStates, ShipNames } from '../types';
 import { checkAllShipsSunk, isShipSunk } from '../logic/helpers';
 import { deriveAvatarName, GameEvents } from './Avatar';
 import { playHitSound, playMissSound, playSuccessSound, playWinSound, fadeOutMusic } from '../utils/soundEffects';
+import { useAchievementTracker } from '../hooks/useAchievementTracker';
 import './Toolbar.scss';
 
 export const Toolbar = () => {
   const { gameStatus, computerShips, setComputerShips, addToLog, setgameStatus, setAvatar, aiLevel } =
     useContext(GameContext);
+  const { trackGameEvent } = useAchievementTracker();
 
   const userTurnInProgress = useRef(false);
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
@@ -40,11 +43,16 @@ export const Toolbar = () => {
 
       addToLog(`You hit at ${letters[row]}${col + 1}!`, 'hit');
       setAvatar({ gameEvent: GameEvents.USER_HIT });
+      trackGameEvent(GameEvents.USER_HIT, { position: [row, col] });
 
       if (shipIsSunk) {
         playSuccessSound();
         addToLog(`You sunk ${deriveAvatarName(aiLevel)}'s ${cell?.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.USER_SUNK_COMPUTER });
+        trackGameEvent(GameEvents.USER_SUNK_COMPUTER, {
+          shipName: cell?.name,
+          oneShotKill: false, // TODO: Implement one-shot detection
+        });
 
         setComputerShips(newComputerShips);
 
@@ -53,6 +61,7 @@ export const Toolbar = () => {
           playWinSound();
           setgameStatus('user-win');
           setAvatar({ gameEvent: GameEvents.USER_WIN });
+          trackGameEvent(GameEvents.USER_WIN, { aiLevel });
           userTurnInProgress.current = false;
           return;
         }
@@ -68,6 +77,7 @@ export const Toolbar = () => {
 
       addToLog(`You missed at ${letters[row]}${col + 1}`, 'miss');
       setAvatar({ gameEvent: GameEvents.USER_MISS });
+      trackGameEvent(GameEvents.USER_MISS);
     }
 
     setgameStatus('computer-turn');
@@ -94,6 +104,7 @@ export const Toolbar = () => {
           </div>
         </div>
         <div className="toolbar-right">
+          <AchievementButton />
           <SkipTrackButton />
           <MusicButton />
         </div>
