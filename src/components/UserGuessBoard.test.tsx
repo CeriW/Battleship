@@ -7,6 +7,17 @@ import { GameContext, GameContextType } from '../GameContext';
 import { CellStates, ShipNames, PositionArray } from '../types';
 import defaultTestContext from '../defaultTestContext';
 
+// Mock AchievementContext
+jest.mock('../context/AchievementContext', () => ({
+  useAchievements: () => ({
+    achievements: [],
+    progress: {},
+    checkAchievements: jest.fn(),
+    unlockAchievement: jest.fn(),
+    resetProgress: jest.fn(),
+  }),
+}));
+
 describe('UserGuessBoard', () => {
   test('Renders a basic board', () => {
     const mockComputerShips = Array(10)
