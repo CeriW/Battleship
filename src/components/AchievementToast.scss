@@ -131,8 +131,9 @@
 @media (max-width: 768px) {
   .achievement-toast {
     min-width: auto;
-    max-width: none;
+    max-width: calc(100vw - 20px);
     transform: translateY(-100%);
+    margin: 0 10px;
 
     &.visible {
       transform: translateY(0);
@@ -143,12 +144,16 @@
     }
 
     .toast-content {
-      padding: 12px 16px;
-      gap: 12px;
+      padding: 10px 14px;
+      gap: 10px;
     }
 
     .toast-icon {
-      font-size: 28px;
+      font-size: 24px;
+    }
+
+    .toast-title {
+      font-size: 14px;
     }
 
     .toast-name {
@@ -157,6 +162,45 @@
 
     .toast-description {
       font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .toast-close {
+      font-size: 18px;
+      padding: 2px;
+    }
+  }
+}
+
+// Very small screens
+@media (max-width: 480px) {
+  .achievement-toast {
+    margin: 0 5px;
+    border-radius: 8px;
+
+    .toast-content {
+      padding: 8px 12px;
+      gap: 8px;
+    }
+
+    .toast-icon {
+      font-size: 20px;
+    }
+
+    .toast-title {
+      font-size: 12px;
+    }
+
+    .toast-name {
+      font-size: 14px;
+    }
+
+    .toast-description {
+      font-size: 12px;
+    }
+
+    .toast-close {
+      font-size: 16px;
     }
   }
 }
