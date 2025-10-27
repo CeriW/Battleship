@@ -7,8 +7,8 @@ import { deriveAvatarName, GameEvents } from '../components/Avatar';
 import { playAlarmSound, playFailSound, playLoseSound, fadeOutMusic } from '../utils/soundEffects';
 import { useAchievementTracker } from '../hooks/useAchievementTracker';
 
-// Helper function to check if a cell is adjacent to an unsunk hit
-const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean => {
+// Helper function to check if a cell is adjacent to hits based on ship sunk status
+const isAdjacentToHit = (board: PositionArray, x: number, y: number, isSunk: boolean): boolean => {
   // Check all 4 adjacent cells
   const directions = [
     { dx: 0, dy: -1 }, // up
@@ -27,7 +27,7 @@ const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): bool
       if (
         adjacentCell?.status === CellStates.hit &&
         adjacentCell?.name &&
-        !isShipSunk(adjacentCell.name as ShipNames, board)
+        isShipSunk(adjacentCell.name as ShipNames, board) === isSunk
       ) {
         return true;
       }
@@ -36,6 +36,13 @@ const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): bool
 
   return false;
 };
+
+// Convenience functions for specific use cases
+const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean =>
+  isAdjacentToHit(board, x, y, false);
+
+const isAdjacentToSunkShip = (board: PositionArray, x: number, y: number): boolean =>
+  isAdjacentToHit(board, x, y, true);
 
 // Helper function to check if a cell would continue a line of hits
 const wouldContinueHitLine = (board: PositionArray, x: number, y: number): boolean => {
@@ -185,8 +192,8 @@ export const useMakeComputerGuess = () => {
       const x = i % 10;
       const cell = userShips[y][x];
 
-      // Only consider unguessed cells
-      if (cell?.status === CellStates.unguessed || !cell) {
+      // Only consider unguessed cells that are not adjacent to sunk ships
+      if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
         // Check if this cell would continue a line of hits (highest priority)
         if (wouldContinueHitLine(userShips, x, y)) {
           lineContinuationCells.push(i);
@@ -219,28 +226,28 @@ export const useMakeComputerGuess = () => {
       // Note: maxValue and maxValueIndex were used in previous logic but are now unused
       // Keeping the heat map calculation for potential future use
 
-      // Create a list of all cells that have the most heat, filtering out already guessed cells
+      // Create a list of all cells that have the most heat, filtering out already guessed cells and cells adjacent to sunk ships
       const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
         if (top2Values.includes(value)) {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
-          // Only include unguessed cells
-          if (cell?.status === CellStates.unguessed || !cell) {
+          // Only include unguessed cells that are not adjacent to sunk ships
+          if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
             indices.push(index);
           }
         }
         return indices;
       }, []);
 
-      // If no valid cells found in top 2 values, fall back to any unguessed cell
+      // If no valid cells found in top 2 values, fall back to any unguessed cell that's not adjacent to sunk ships
       let validIndices = maxValueIndices;
       if (validIndices.length === 0) {
         validIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
-          if (cell?.status === CellStates.unguessed || !cell) {
+          if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
             indices.push(index);
           }
           return indices;
