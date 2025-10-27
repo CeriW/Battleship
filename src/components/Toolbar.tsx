@@ -91,7 +91,7 @@ export const Toolbar = () => {
     <div className="toolbar">
       <div className="toolbar-content">
         <div className="toolbar-left">
-          <Link to="/about" className="toolbar-button about-button">
+          <Link to="/about" className="toolbar-button about-button" title="About">
             <span className="about-icon">🔍</span>
             <span className="about-text">About</span>
           </Link>
