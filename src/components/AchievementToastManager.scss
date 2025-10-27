@@ -15,9 +15,17 @@
   }
 
   @media (max-width: 768px) {
-    top: 70px; // Slightly lower on mobile
-    right: 10px;
-    left: 10px;
+    top: 60px; // Lower on mobile to avoid toolbar
+    right: 5px;
+    left: 5px;
     align-items: center;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    top: 50px; // Even lower on very small screens
+    right: 2px;
+    left: 2px;
+    gap: 6px;
   }
 }

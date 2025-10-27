@@ -59,7 +59,6 @@
     text-decoration: none;
     margin: 5px;
     height: 40px;
-    width: 120px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -108,7 +107,29 @@
   padding-top: 60px;
 }
 
-// Responsive design
+// Responsive design - start hiding text on smaller screens
+@media (max-width: 1200px) {
+  .toolbar {
+    .toolbar-button {
+      .about-text,
+      .achievement-text,
+      .skip-text,
+      .music-text {
+        display: none;
+      }
+    }
+
+    .coordinate-form-toolbar {
+      max-width: 300px;
+    }
+
+    .coordinate-input-toolbar {
+      min-width: 135px;
+      font-size: 14px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .toolbar {
     height: 50px;
@@ -179,7 +200,7 @@
   text-align: left;
   text-transform: uppercase;
   flex: 1;
-  min-width: 180px;
+  min-width: 250px;
   transition: all 0.2s ease;
 
   &::placeholder {

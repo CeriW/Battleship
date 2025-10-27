@@ -375,36 +375,29 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
     localStorage.setItem('battleship-achievement-progress', JSON.stringify(progress));
   }, [progress]);
 
-  const unlockAchievement = useCallback(
-    (achievementId: AchievementId) => {
-      setAchievements((prev) => {
-        const updated = prev.map((achievement) => {
-          if (achievement.id === achievementId && !achievement.unlocked) {
-            return {
-              ...achievement,
-              unlocked: true,
-              unlockedAt: new Date(),
-            };
-          }
-          return achievement;
-        });
-        return updated;
+  const unlockAchievement = useCallback((achievementId: AchievementId) => {
+    setAchievements((prev) => {
+      const updated = prev.map((achievement) => {
+        if (achievement.id === achievementId && !achievement.unlocked) {
+          const unlockedAchievement = {
+            ...achievement,
+            unlocked: true,
+            unlockedAt: new Date(),
+          };
+
+          // Dispatch custom event for toast notification immediately with correct data
+          const event = new CustomEvent('achievement-unlocked', {
+            detail: unlockedAchievement,
+          });
+          window.dispatchEvent(event);
+
+          return unlockedAchievement;
+        }
+        return achievement;
       });
-
-      // Dispatch custom event for toast notification
-      const achievement = achievements.find((a) => a.id === achievementId);
-      if (achievement) {
-        const unlockedAchievement = { ...achievement, unlocked: true, unlockedAt: new Date() };
-
-        // Dispatch custom event for toast
-        const event = new CustomEvent('achievement-unlocked', {
-          detail: unlockedAchievement,
-        });
-        window.dispatchEvent(event);
-      }
-    },
-    [achievements]
-  );
+      return updated;
+    });
+  }, []);
 
   const checkAchievements = useCallback(
     (gameEvent: GameEvents, data?: any) => {
