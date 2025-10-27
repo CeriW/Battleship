@@ -219,7 +219,23 @@ export const useMakeComputerGuess = () => {
       const flatHeatMap = heatMap.flat();
       // Find the top 2 highest values
       const sortedValues = [...flatHeatMap].sort((a, b) => b - a);
-      const top2Values = [...new Set(sortedValues)].slice(0, 2);
+
+      let numOfChoices;
+      switch (aiLevel) {
+        case 'easy':
+          numOfChoices = 2;
+          break;
+        case 'medium':
+          numOfChoices = 3;
+          break;
+        case 'hard':
+          numOfChoices = 1;
+          break;
+        default:
+          numOfChoices = 2;
+          break;
+      }
+      const topValues = [...new Set(sortedValues)].slice(0, numOfChoices);
 
       // Get all indices that match any of the top 3 values
 
@@ -228,7 +244,7 @@ export const useMakeComputerGuess = () => {
 
       // Create a list of all cells that have the most heat, filtering out already guessed cells and cells adjacent to sunk ships
       const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
-        if (top2Values.includes(value)) {
+        if (topValues.includes(value)) {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
@@ -240,18 +256,33 @@ export const useMakeComputerGuess = () => {
         return indices;
       }, []);
 
-      // If no valid cells found in top 2 values, fall back to any unguessed cell that's not adjacent to sunk ships
+      // If no valid cells found in top 2 values, fall back to any unguessed cell
       let validIndices = maxValueIndices;
       if (validIndices.length === 0) {
         validIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
-          if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
+          if (cell?.status === CellStates.unguessed || !cell) {
             indices.push(index);
           }
           return indices;
         }, []);
+      }
+
+      // If we have cells from heat map but they're all adjacent to sunk ships,
+      // prefer cells that are NOT adjacent to sunk ships
+      if (validIndices.length > 1) {
+        const nonAdjacentToSunkShips = validIndices.filter((index) => {
+          const y = Math.floor(index / 10);
+          const x = index % 10;
+          return !isAdjacentToSunkShip(userShips, x, y);
+        });
+
+        // Only use the sunk ship filter if we have other good options
+        if (nonAdjacentToSunkShips.length > 0) {
+          validIndices = nonAdjacentToSunkShips;
+        }
       }
 
       if (validIndices.length === 0) {

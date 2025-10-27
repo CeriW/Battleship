@@ -8,6 +8,22 @@ export const HeatValues = {
   sunk: -1,
 };
 
+// Heat Map Multipliers - All constants for easy tweaking
+const HEAT_MULTIPLIERS = {
+  // Hit adjacency multipliers
+  immediatelyAdjacentExtraHeat: 6,
+  secondaryAdjacentExtraHeat: 3,
+
+  // Miss coolness multipliers
+  immediatelyAdjacentCoolnessMultiplier: 0.3,
+  secondaryAdjacentCoolnessMultiplier: 0.4,
+  tertiaryAdjacentCoolnessMultiplier: 0.5,
+
+  // Edge and sunk ship multipliers
+  edgeCoolnessMultiplier: 0.2,
+  sunkCoolnessMultiplier: 0.4,
+};
+
 // Check that for a proposed ship occupation, there are no overlaps with other ships
 // Returns true if the state is valid and usable
 export const checkValidShipPlacement = ({
@@ -122,9 +138,11 @@ const markMissAdjacentCellsColder = (
   existingBoard: PositionArray,
   missCoolnessRadius: 0 | 1 | 2
 ) => {
-  const immediatelyAdjacentCoolnessMultiplier = 0.3;
-  const secondaryAdjacentCoolnessMultiplier = 0.4;
-  const tertiaryAdjacentCoolnessMultiplier = 0.5;
+  const {
+    immediatelyAdjacentCoolnessMultiplier,
+    secondaryAdjacentCoolnessMultiplier,
+    tertiaryAdjacentCoolnessMultiplier,
+  } = HEAT_MULTIPLIERS;
   /* ---------------------------------------------------------------------- */
   /* COOL CELLS ADJACENT TO MISSES */
   /* If this cell is a miss, make adjacent cells colder
@@ -323,7 +341,7 @@ const markMissAdjacentCellsColder = (
 // Cells that are hits or adjacent to hits will not be marked cooler.
 export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const edgeCoolnessMultiplier = 0.4;
+  const { edgeCoolnessMultiplier } = HEAT_MULTIPLIERS;
 
   for (let i = 0; i < heatMap[0].length; i++) {
     if (existingBoard[0][i]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
@@ -352,7 +370,7 @@ export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionAr
 // Cells adjacent to sunk ships are marked cooler.
 export const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const sunkCoolnessMultiplier = 0.6;
+  const { sunkCoolnessMultiplier } = HEAT_MULTIPLIERS;
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
@@ -387,8 +405,7 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
   /* HEAT CELLS ADJACENT TO HITS */
   /* ---------------------------------------------------------------------- */
 
-  const immediatelyAdjacentExtraHeat = 6;
-  const secondaryAdjacentExtraHeat = 3;
+  const { immediatelyAdjacentExtraHeat, secondaryAdjacentExtraHeat } = HEAT_MULTIPLIERS;
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
