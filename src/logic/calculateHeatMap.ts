@@ -122,9 +122,9 @@ const markMissAdjacentCellsColder = (
   existingBoard: PositionArray,
   missCoolnessRadius: 0 | 1 | 2
 ) => {
-  const immediatelyAdjacentCoolnessMultiplier = 0.6;
-  const secondaryAdjacentCoolnessMultiplier = 0.7;
-  const tertiaryAdjacentCoolnessMultiplier = 0.8;
+  const immediatelyAdjacentCoolnessMultiplier = 0.3;
+  const secondaryAdjacentCoolnessMultiplier = 0.4;
+  const tertiaryAdjacentCoolnessMultiplier = 0.5;
   /* ---------------------------------------------------------------------- */
   /* COOL CELLS ADJACENT TO MISSES */
   /* If this cell is a miss, make adjacent cells colder
@@ -323,7 +323,7 @@ const markMissAdjacentCellsColder = (
 // Cells that are hits or adjacent to hits will not be marked cooler.
 export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const edgeCoolnessMultiplier = 0.6;
+  const edgeCoolnessMultiplier = 0.4;
 
   for (let i = 0; i < heatMap[0].length; i++) {
     if (existingBoard[0][i]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
@@ -387,8 +387,8 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
   /* HEAT CELLS ADJACENT TO HITS */
   /* ---------------------------------------------------------------------- */
 
-  const immediatelyAdjacentExtraHeat = 3;
-  const secondaryAdjacentExtraHeat = 1.5;
+  const immediatelyAdjacentExtraHeat = 6;
+  const secondaryAdjacentExtraHeat = 3;
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
