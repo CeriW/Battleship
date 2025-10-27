@@ -19,6 +19,9 @@ const HEAT_MULTIPLIERS = {
   secondaryAdjacentCoolnessMultiplier: 0.4,
   tertiaryAdjacentCoolnessMultiplier: 0.5,
 
+  // Diagonal miss bonus - encourages diagonal guessing from misses
+  diagonalMissBonus: 1.1,
+
   // Edge and sunk ship multipliers
   edgeCoolnessMultiplier: 0.2,
   sunkCoolnessMultiplier: 0.4,
@@ -337,6 +340,47 @@ const markMissAdjacentCellsColder = (
   return newHeatMap;
 };
 
+// Cells diagonally adjacent to misses get a heat bonus to encourage diagonal guessing
+export const markDiagonalMissBonus = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+  const newHeatMap = heatMap.map((row) => [...row]);
+  const { diagonalMissBonus } = HEAT_MULTIPLIERS;
+
+  for (let i = 0; i < 100; i++) {
+    let y = Math.floor(i / 10);
+    let x = i % 10;
+
+    if (existingBoard[y][x]?.status === CellStates.miss) {
+      // Check all 4 diagonal directions
+      const diagonalDirections = [
+        { dx: -1, dy: -1 }, // top-left
+        { dx: 1, dy: -1 }, // top-right
+        { dx: -1, dy: 1 }, // bottom-left
+        { dx: 1, dy: 1 }, // bottom-right
+      ];
+
+      for (const { dx, dy } of diagonalDirections) {
+        const newX = x + dx;
+        const newY = y + dy;
+
+        // Check bounds
+        if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+          const diagonalCell = existingBoard[newY][newX];
+
+          // Only apply bonus to unguessed cells that aren't adjacent to hits
+          if (
+            (diagonalCell?.status === CellStates.unguessed || !diagonalCell) &&
+            !isAdjacentToHit(existingBoard, newX, newY)
+          ) {
+            newHeatMap[newY][newX] *= diagonalMissBonus;
+          }
+        }
+      }
+    }
+  }
+
+  return newHeatMap;
+};
+
 // Edge cells are marked cooler.
 // Cells that are hits or adjacent to hits will not be marked cooler.
 export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
@@ -539,6 +583,7 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
   }
 
   heatMap = markEdgesColder(heatMap, existingBoard);
+  heatMap = markDiagonalMissBonus(heatMap, existingBoard);
   heatMap = markSunkAdjacentColder(heatMap, existingBoard);
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available
