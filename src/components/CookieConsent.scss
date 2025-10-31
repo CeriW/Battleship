@@ -1,0 +1,37 @@
+// Additional styles for cookie consent banner
+// Note: Most styling is inline in the component, but we can add responsive tweaks here
+
+// Ensure the cookie banner is accessible and visible
+:global(#rcc-confirm-button),
+:global(#rcc-decline-button) {
+  transition: all 0.2s ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Mobile responsive adjustments
+@media (max-width: 768px) {
+  :global(#rcc-confirm-button),
+  :global(#rcc-decline-button) {
+    font-size: 16px !important;
+    padding: 8px 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :global(#rcc-confirm-button),
+  :global(#rcc-decline-button) {
+    font-size: 14px !important;
+    padding: 6px 15px !important;
+  }
+}
+
+

@@ -20,6 +20,7 @@ import { About } from './components/About';
 import ShipPlacement from './components/ShipPlacement';
 import { Toolbar } from './components/Toolbar';
 import { useAchievementTracker } from './hooks/useAchievementTracker';
+import { CookieConsentBanner } from './components/CookieConsent';
 
 const computerThinkingTime = 700;
 
@@ -103,6 +104,7 @@ export function App() {
               <Toolbar />
               <AchievementModalRenderer />
               <AchievementToastManager />
+              <CookieConsentBanner />
               <Routes>
                 <Route path="/" element={<GameBoards />} />
                 <Route path="/about" element={<About />} />
