@@ -18,7 +18,7 @@ const deriveIntelligence = (aiLevel: AiLevel) => {
         case 'medium':
           return 3;
         case 'hard':
-          return Math.ceil(Math.random() * 3); // 1, 2, or 3
+          return Math.ceil(Math.random() * 2); // 1, 2
       }
     },
   };
@@ -312,22 +312,7 @@ export const useMakeComputerGuess = () => {
       // Find the top 2 highest values
       const sortedValues = [...flatHeatMap].sort((a, b) => b - a);
 
-      let numOfChoices;
-      switch (aiLevel) {
-        case 'easy':
-          numOfChoices = 4;
-          break;
-        case 'medium':
-          numOfChoices = 3;
-          break;
-        case 'hard':
-          numOfChoices = 2; // Use top 2 to add some unpredictability
-          break;
-        default:
-          numOfChoices = 2;
-          break;
-      }
-      const topValues = [...new Set(sortedValues)].slice(0, numOfChoices);
+      const topValues = [...new Set(sortedValues)].slice(0, deriveIntelligence(aiLevel).chooseBetweenNumberOfCells());
 
       // Get all indices that match any of the top 3 values
 

@@ -26,7 +26,7 @@ const HEAT_MULTIPLIERS = {
   diagonalMissBonus: 1.1,
 
   // Edge and sunk ship multipliers
-  edgeCoolnessMultiplier: 0.2,
+  edgeCoolnessMultiplier: 0.1,
   sunkCoolnessMultiplier: 0.4,
 };
 
