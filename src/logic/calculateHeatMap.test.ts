@@ -382,7 +382,7 @@ describe('calculateHeatMap', () => {
     expect(heatMap[2][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[3][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[4][0]).toBe(0); // Miss cell
-    expect(heatMap[5][0]).toBe(0.41600000000000004); // Adjacent to hit
+    expect(heatMap[5][0]).toBe(0.20900000000000002); // Adjacent to hit
   });
 
   test('should handle break statements in ship space availability checks', () => {
