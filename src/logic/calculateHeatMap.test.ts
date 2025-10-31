@@ -32,8 +32,8 @@ describe('markEdgesColder', () => {
     }
 
     for (let y = 1; y < 9; y++) {
-      expect(cooledBoard[y][0]).toBe(0.6);
-      expect(cooledBoard[y][9]).toBe(0.6);
+      expect(cooledBoard[y][0]).toBe(0.1);
+      expect(cooledBoard[y][9]).toBe(0.1);
     }
 
     // Corners
