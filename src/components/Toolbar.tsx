@@ -90,9 +90,9 @@ export const Toolbar = () => {
     <div className="toolbar">
       <div className="toolbar-content">
         <div className="toolbar-left">
-          <Link to="/about" className="toolbar-button about-button" title="Settings">
-            <span className="about-icon">⚙️</span>
-            <span className="about-text">Settings</span>
+          <Link to="/about" className="toolbar-button about-button" title="About">
+            <span className="about-icon">ℹ️</span>
+            <span className="about-text">About</span>
           </Link>
           <div className={`coordinate-input-container ${!isUserTurn ? 'faded' : ''}`}>
             <UnifiedCoordinateInput
