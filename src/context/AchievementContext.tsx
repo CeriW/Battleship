@@ -39,6 +39,14 @@ const createAchievements = (): Achievement[] => [
     rarity: 'uncommon',
     unlocked: false,
   },
+  {
+    id: 'efficient_win',
+    name: 'Efficient Victory',
+    description: 'Win a game in 25 rounds or less',
+    icon: '🎖️',
+    rarity: 'rare',
+    unlocked: false,
+  },
 
   // Accuracy Achievements
   {
@@ -531,6 +539,12 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
               break;
             case 'quick_win':
               shouldUnlock = newProgress.quickWins >= 1;
+              break;
+            case 'efficient_win':
+              // Check if the game was won in 25 rounds or less
+              if (gameEvent === GameEvents.USER_WIN && data?.shots) {
+                shouldUnlock = data.shots <= 25;
+              }
               break;
             case 'sniper': {
               // Only check sniper achievement after completing a game

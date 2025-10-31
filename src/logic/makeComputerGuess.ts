@@ -11,6 +11,16 @@ const deriveIntelligence = (aiLevel: AiLevel) => {
   return {
     biasGuessesTowardsCenter: aiLevel === 'hard' ? true : false,
     willGuessAdjacentToSunkShips: aiLevel === 'easy' ? true : false,
+    chooseBetweenNumberOfCells: () => {
+      switch (aiLevel) {
+        case 'easy':
+          return 4;
+        case 'medium':
+          return 3;
+        case 'hard':
+          return Math.ceil(Math.random() * 3); // 1, 2, or 3
+      }
+    },
   };
 };
 
@@ -223,45 +233,74 @@ export const useMakeComputerGuess = () => {
       const centerX = 4.5;
       const centerY = 4.5;
 
-      let bestHeat = -Infinity;
-      const tiedCells: number[] = [];
-
-      // Find all cells with the highest heat value
-      for (const index of lineContinuationCells) {
+      // Calculate heat values for all line continuation cells
+      const cellsWithHeat = lineContinuationCells.map((index) => {
         const y = Math.floor(index / 10);
         const x = index % 10;
-        const heat = heatMap[y][x];
-        if (heat > bestHeat) {
-          bestHeat = heat;
-          tiedCells.length = 0; // Clear previous ties
-          tiedCells.push(index);
-        } else if (heat === bestHeat) {
-          tiedCells.push(index);
-        }
-      }
+        return { index, heat: heatMap[y][x] };
+      });
 
-      // If there are ties, pick based on intelligence
-      if (tiedCells.length > 1) {
-        if (deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
-          let closestToCenter = tiedCells[0];
+      // Sort by heat value (highest first)
+      cellsWithHeat.sort((a, b) => b.heat - a.heat);
+
+      if (aiLevel === 'hard' && cellsWithHeat.length > 1) {
+        // Hard mode: pick from top 2 cells with weighted probability (70% top, 30% second)
+        const top2Cells = cellsWithHeat.slice(0, 2);
+        if (top2Cells[0].heat === top2Cells[1].heat && deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
+          // If tied, prefer center
+          const tied = top2Cells;
+          let closestToCenter = tied[0].index;
           let minDistance = Infinity;
-
-          for (const index of tiedCells) {
-            const y = Math.floor(index / 10);
-            const x = index % 10;
+          for (const cell of tied) {
+            const y = Math.floor(cell.index / 10);
+            const x = cell.index % 10;
             const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
             if (distance < minDistance) {
               minDistance = distance;
-              closestToCenter = index;
+              closestToCenter = cell.index;
             }
           }
           targetIndex = closestToCenter;
         } else {
-          // Random selection among ties
-          targetIndex = tiedCells[Math.floor(Math.random() * tiedCells.length)];
+          // Weighted random: 70% chance top, 30% chance second
+          targetIndex = Math.random() < 0.7 ? top2Cells[0].index : top2Cells[1].index;
         }
       } else {
-        targetIndex = tiedCells[0];
+        // Easy/Medium or single option: pick highest
+        let bestHeat = cellsWithHeat[0].heat;
+        const tiedCells: number[] = [];
+
+        for (const { index, heat } of cellsWithHeat) {
+          if (heat === bestHeat) {
+            tiedCells.push(index);
+          } else {
+            break; // Sorted, so we can stop here
+          }
+        }
+
+        // If there are ties, pick based on intelligence
+        if (tiedCells.length > 1) {
+          if (deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
+            let closestToCenter = tiedCells[0];
+            let minDistance = Infinity;
+
+            for (const index of tiedCells) {
+              const y = Math.floor(index / 10);
+              const x = index % 10;
+              const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestToCenter = index;
+              }
+            }
+            targetIndex = closestToCenter;
+          } else {
+            // Random selection among ties
+            targetIndex = tiedCells[Math.floor(Math.random() * tiedCells.length)];
+          }
+        } else {
+          targetIndex = tiedCells[0];
+        }
       }
     } else if (adjacentToUnsunkHits.length > 0) {
       // Second priority: cells adjacent to unsunk hits
@@ -276,13 +315,13 @@ export const useMakeComputerGuess = () => {
       let numOfChoices;
       switch (aiLevel) {
         case 'easy':
-          numOfChoices = 2;
+          numOfChoices = 4;
           break;
         case 'medium':
           numOfChoices = 3;
           break;
         case 'hard':
-          numOfChoices = 1;
+          numOfChoices = 2; // Use top 2 to add some unpredictability
           break;
         default:
           numOfChoices = 2;
