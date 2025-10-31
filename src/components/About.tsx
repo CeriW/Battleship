@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { SkipTrackButton } from './SkipTrackButton';
 import './About.scss';
 
 export const About: React.FC = () => {
@@ -41,6 +42,7 @@ export const About: React.FC = () => {
         </div>
 
         <div className="about-actions">
+          <SkipTrackButton />
           <Link to="/" className="button">
             Back to Game
           </Link>

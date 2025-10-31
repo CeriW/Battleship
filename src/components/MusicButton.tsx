@@ -109,10 +109,10 @@ export const MusicButton = () => {
     <button
       className={`music-button ${isPlaying ? 'playing' : ''}`}
       onClick={toggleAudio}
-      title={isPlaying ? 'Turn Sound Off' : 'Turn Sound On'}
+      title={isPlaying ? 'Sound Off' : 'Sound On'}
     >
       <span className="music-icon">🔊</span>
-      <span className="music-text">{isPlaying ? 'Turn Sound Off' : 'Turn Sound On'}</span>
+      <span className="music-text">{isPlaying ? 'Sound Off' : 'Sound On'}</span>
     </button>
   );
 };

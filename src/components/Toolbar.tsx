@@ -1,7 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MusicButton } from './MusicButton';
-import { SkipTrackButton } from './SkipTrackButton';
 import { UnifiedCoordinateInput } from './UnifiedCoordinateInput';
 import { AchievementButton } from './AchievementButton';
 import { GameContext } from '../GameContext';
@@ -91,9 +90,9 @@ export const Toolbar = () => {
     <div className="toolbar">
       <div className="toolbar-content">
         <div className="toolbar-left">
-          <Link to="/about" className="toolbar-button about-button" title="About">
-            <span className="about-icon">🔍</span>
-            <span className="about-text">About</span>
+          <Link to="/about" className="toolbar-button about-button" title="Settings">
+            <span className="about-icon">⚙️</span>
+            <span className="about-text">Settings</span>
           </Link>
           <div className={`coordinate-input-container ${!isUserTurn ? 'faded' : ''}`}>
             <UnifiedCoordinateInput
@@ -105,7 +104,6 @@ export const Toolbar = () => {
         </div>
         <div className="toolbar-right">
           <AchievementButton />
-          <SkipTrackButton />
           <MusicButton />
         </div>
       </div>
