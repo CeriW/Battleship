@@ -8,6 +8,28 @@ export const HeatValues = {
   sunk: -1,
 };
 
+// Heat Map Multipliers - All constants for easy tweaking
+const HEAT_MULTIPLIERS = {
+  // Hit adjacency multipliers
+  immediatelyAdjacentExtraHeat: 6,
+  secondaryAdjacentExtraHeat: 3,
+
+  // Center bias multiplier - cells closer to center get higher heat when near hits
+  centerBiasMultiplier: 1.2,
+
+  // Miss coolness multipliers
+  immediatelyAdjacentCoolnessMultiplier: 0.3,
+  secondaryAdjacentCoolnessMultiplier: 0.4,
+  tertiaryAdjacentCoolnessMultiplier: 0.5,
+
+  // Diagonal miss bonus - encourages diagonal guessing from misses
+  diagonalMissBonus: 1.1,
+
+  // Edge and sunk ship multipliers
+  edgeCoolnessMultiplier: 0.1,
+  sunkCoolnessMultiplier: 0.4,
+};
+
 // Check that for a proposed ship occupation, there are no overlaps with other ships
 // Returns true if the state is valid and usable
 export const checkValidShipPlacement = ({
@@ -122,9 +144,11 @@ const markMissAdjacentCellsColder = (
   existingBoard: PositionArray,
   missCoolnessRadius: 0 | 1 | 2
 ) => {
-  const immediatelyAdjacentCoolnessMultiplier = 0.6;
-  const secondaryAdjacentCoolnessMultiplier = 0.7;
-  const tertiaryAdjacentCoolnessMultiplier = 0.8;
+  const {
+    immediatelyAdjacentCoolnessMultiplier,
+    secondaryAdjacentCoolnessMultiplier,
+    tertiaryAdjacentCoolnessMultiplier,
+  } = HEAT_MULTIPLIERS;
   /* ---------------------------------------------------------------------- */
   /* COOL CELLS ADJACENT TO MISSES */
   /* If this cell is a miss, make adjacent cells colder
@@ -319,11 +343,52 @@ const markMissAdjacentCellsColder = (
   return newHeatMap;
 };
 
+// Cells diagonally adjacent to misses get a heat bonus to encourage diagonal guessing
+export const markDiagonalMissBonus = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
+  const newHeatMap = heatMap.map((row) => [...row]);
+  const { diagonalMissBonus } = HEAT_MULTIPLIERS;
+
+  for (let i = 0; i < 100; i++) {
+    let y = Math.floor(i / 10);
+    let x = i % 10;
+
+    if (existingBoard[y][x]?.status === CellStates.miss) {
+      // Check all 4 diagonal directions
+      const diagonalDirections = [
+        { dx: -1, dy: -1 }, // top-left
+        { dx: 1, dy: -1 }, // top-right
+        { dx: -1, dy: 1 }, // bottom-left
+        { dx: 1, dy: 1 }, // bottom-right
+      ];
+
+      for (const { dx, dy } of diagonalDirections) {
+        const newX = x + dx;
+        const newY = y + dy;
+
+        // Check bounds
+        if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+          const diagonalCell = existingBoard[newY][newX];
+
+          // Only apply bonus to unguessed cells that aren't adjacent to hits
+          if (
+            (diagonalCell?.status === CellStates.unguessed || !diagonalCell) &&
+            !isAdjacentToHit(existingBoard, newX, newY)
+          ) {
+            newHeatMap[newY][newX] *= diagonalMissBonus;
+          }
+        }
+      }
+    }
+  }
+
+  return newHeatMap;
+};
+
 // Edge cells are marked cooler.
 // Cells that are hits or adjacent to hits will not be marked cooler.
 export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const edgeCoolnessMultiplier = 0.6;
+  const { edgeCoolnessMultiplier } = HEAT_MULTIPLIERS;
 
   for (let i = 0; i < heatMap[0].length; i++) {
     if (existingBoard[0][i]?.status !== CellStates.hit && !isAdjacentToHit(existingBoard, i, 0)) {
@@ -352,7 +417,7 @@ export const markEdgesColder = (heatMap: HeatMapArray, existingBoard: PositionAr
 // Cells adjacent to sunk ships are marked cooler.
 export const markSunkAdjacentColder = (heatMap: HeatMapArray, existingBoard: PositionArray): HeatMapArray => {
   const newHeatMap = heatMap.map((row) => [...row]);
-  const sunkCoolnessMultiplier = 0.6;
+  const { sunkCoolnessMultiplier } = HEAT_MULTIPLIERS;
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
@@ -387,8 +452,23 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
   /* HEAT CELLS ADJACENT TO HITS */
   /* ---------------------------------------------------------------------- */
 
-  const immediatelyAdjacentExtraHeat = 3;
-  const secondaryAdjacentExtraHeat = 1.5;
+  const { immediatelyAdjacentExtraHeat, secondaryAdjacentExtraHeat, centerBiasMultiplier } = HEAT_MULTIPLIERS;
+
+  // Helper function to calculate center bias multiplier
+  const getCenterBiasMultiplier = (x: number, y: number): number => {
+    // Calculate distance from center (4.5, 4.5)
+    const centerX = 4.5;
+    const centerY = 4.5;
+    const distanceFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+    const maxDistance = Math.sqrt(4.5 ** 2 + 4.5 ** 2); // Distance from center to corner
+
+    // Normalize distance (0 = center, 1 = corner)
+    const normalizedDistance = distanceFromCenter / maxDistance;
+
+    // Return multiplier that's higher for cells closer to center
+    // centerBiasMultiplier at center, 1.0 at edges
+    return 1 + (centerBiasMultiplier - 1) * (1 - normalizedDistance);
+  };
 
   for (let i = 0; i < 100; i++) {
     let y = Math.floor(i / 10);
@@ -401,37 +481,45 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
 
       // If we're not in the first row, and the cell above is not a hit, then it's hot
       if (y > 0 && isHeatable(heatMap[y - 1][x])) {
-        heatMap[y - 1][x] *= immediatelyAdjacentExtraHeat;
+        const centerBias = getCenterBiasMultiplier(x, y - 1);
+        heatMap[y - 1][x] *= immediatelyAdjacentExtraHeat * centerBias;
         // Add secondary heat to cells two spaces away
         if (y > 1 && isHeatable(heatMap[y - 2][x])) {
-          heatMap[y - 2][x] *= secondaryAdjacentExtraHeat;
+          const secondaryCenterBias = getCenterBiasMultiplier(x, y - 2);
+          heatMap[y - 2][x] *= secondaryAdjacentExtraHeat * secondaryCenterBias;
         }
       }
 
       // If we're not in the last row, and the cell below is not a hit, then it's hot
       if (y < existingBoard.length - 1 && isHeatable(heatMap[y + 1][x])) {
-        heatMap[y + 1][x] *= immediatelyAdjacentExtraHeat;
+        const centerBias = getCenterBiasMultiplier(x, y + 1);
+        heatMap[y + 1][x] *= immediatelyAdjacentExtraHeat * centerBias;
         // Add secondary heat to cells two spaces away
         if (y < existingBoard.length - 2 && isHeatable(heatMap[y + 2][x])) {
-          heatMap[y + 2][x] *= secondaryAdjacentExtraHeat;
+          const secondaryCenterBias = getCenterBiasMultiplier(x, y + 2);
+          heatMap[y + 2][x] *= secondaryAdjacentExtraHeat * secondaryCenterBias;
         }
       }
 
       // If we're not in the last column, and the cell to the right is not a hit, then it's hot
       if (x < existingBoard[y].length - 1 && isHeatable(heatMap[y][x + 1])) {
-        heatMap[y][x + 1] *= immediatelyAdjacentExtraHeat;
+        const centerBias = getCenterBiasMultiplier(x + 1, y);
+        heatMap[y][x + 1] *= immediatelyAdjacentExtraHeat * centerBias;
         // Add secondary heat to cells two spaces away
         if (x < existingBoard[y].length - 2 && isHeatable(heatMap[y][x + 2])) {
-          heatMap[y][x + 2] *= secondaryAdjacentExtraHeat;
+          const secondaryCenterBias = getCenterBiasMultiplier(x + 2, y);
+          heatMap[y][x + 2] *= secondaryAdjacentExtraHeat * secondaryCenterBias;
         }
       }
 
       // If we're not in the first column, and the cell to the left is not a hit, then it's hot
       if (x > 0 && isHeatable(heatMap[y][x - 1])) {
-        heatMap[y][x - 1] *= immediatelyAdjacentExtraHeat;
+        const centerBias = getCenterBiasMultiplier(x - 1, y);
+        heatMap[y][x - 1] *= immediatelyAdjacentExtraHeat * centerBias;
         // Add secondary heat to cells two spaces away
         if (x > 1 && isHeatable(heatMap[y][x - 2])) {
-          heatMap[y][x - 2] *= secondaryAdjacentExtraHeat;
+          const secondaryCenterBias = getCenterBiasMultiplier(x - 2, y);
+          heatMap[y][x - 2] *= secondaryAdjacentExtraHeat * secondaryCenterBias;
         }
       }
 
@@ -446,10 +534,12 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] *= secondaryAdjacentExtraHeat;
+            const centerBias = getCenterBiasMultiplier(i, y);
+            heatMap[y][i] *= secondaryAdjacentExtraHeat * centerBias;
 
             if (i > 0 && isHeatable(heatMap[y][i - 1])) {
-              heatMap[y][i - 1] *= secondaryAdjacentExtraHeat;
+              const leftCenterBias = getCenterBiasMultiplier(i - 1, y);
+              heatMap[y][i - 1] *= secondaryAdjacentExtraHeat * leftCenterBias;
             }
             break;
           }
@@ -465,10 +555,12 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
           }
 
           if (isHeatable(heatMap[y][i])) {
-            heatMap[y][i] *= secondaryAdjacentExtraHeat;
+            const centerBias = getCenterBiasMultiplier(i, y);
+            heatMap[y][i] *= secondaryAdjacentExtraHeat * centerBias;
 
             if (i < existingBoard[y].length - 1 && isHeatable(heatMap[y][i + 1])) {
-              heatMap[y][i + 1] *= secondaryAdjacentExtraHeat;
+              const rightCenterBias = getCenterBiasMultiplier(i + 1, y);
+              heatMap[y][i + 1] *= secondaryAdjacentExtraHeat * rightCenterBias;
             }
             break;
           }
@@ -486,10 +578,12 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] *= secondaryAdjacentExtraHeat;
+            const centerBias = getCenterBiasMultiplier(x, i);
+            heatMap[i][x] *= secondaryAdjacentExtraHeat * centerBias;
 
             if (i > 0 && isHeatable(heatMap[i - 1][x])) {
-              heatMap[i - 1][x] *= secondaryAdjacentExtraHeat;
+              const upCenterBias = getCenterBiasMultiplier(x, i - 1);
+              heatMap[i - 1][x] *= secondaryAdjacentExtraHeat * upCenterBias;
             }
             break;
           }
@@ -505,10 +599,12 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
           }
 
           if (isHeatable(heatMap[i][x])) {
-            heatMap[i][x] *= secondaryAdjacentExtraHeat;
+            const centerBias = getCenterBiasMultiplier(x, i);
+            heatMap[i][x] *= secondaryAdjacentExtraHeat * centerBias;
 
             if (i < existingBoard.length - 1 && isHeatable(heatMap[i + 1][x])) {
-              heatMap[i + 1][x] *= secondaryAdjacentExtraHeat;
+              const downCenterBias = getCenterBiasMultiplier(x, i + 1);
+              heatMap[i + 1][x] *= secondaryAdjacentExtraHeat * downCenterBias;
             }
             break;
           }
@@ -522,6 +618,7 @@ export const calculateHeatMap = (existingBoard: PositionArray, aiLevel: AiLevel)
   }
 
   heatMap = markEdgesColder(heatMap, existingBoard);
+  heatMap = markDiagonalMissBonus(heatMap, existingBoard);
   heatMap = markSunkAdjacentColder(heatMap, existingBoard);
 
   //  Now we've applied some general heat, let's figure out whether ships can fit in the spaces available

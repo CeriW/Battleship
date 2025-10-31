@@ -1,14 +1,31 @@
 import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
-import { CellStates, ShipNames, PositionArray } from '../types';
+import { CellStates, ShipNames, PositionArray, AiLevel } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { checkAllShipsSunk, isShipSunk } from './helpers';
 import { deriveAvatarName, GameEvents } from '../components/Avatar';
 import { playAlarmSound, playFailSound, playLoseSound, fadeOutMusic } from '../utils/soundEffects';
 import { useAchievementTracker } from '../hooks/useAchievementTracker';
 
-// Helper function to check if a cell is adjacent to an unsunk hit
-const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean => {
+const deriveIntelligence = (aiLevel: AiLevel) => {
+  return {
+    biasGuessesTowardsCenter: aiLevel === 'hard' ? true : false,
+    willGuessAdjacentToSunkShips: aiLevel === 'easy' ? true : false,
+    chooseBetweenNumberOfCells: () => {
+      switch (aiLevel) {
+        case 'easy':
+          return 4;
+        case 'medium':
+          return 3;
+        case 'hard':
+          return Math.ceil(Math.random() * 2); // 1, 2
+      }
+    },
+  };
+};
+
+// Helper function to check if a cell is adjacent to hits based on ship sunk status
+const isAdjacentToHit = (board: PositionArray, x: number, y: number, isSunk: boolean): boolean => {
   // Check all 4 adjacent cells
   const directions = [
     { dx: 0, dy: -1 }, // up
@@ -27,7 +44,7 @@ const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): bool
       if (
         adjacentCell?.status === CellStates.hit &&
         adjacentCell?.name &&
-        !isShipSunk(adjacentCell.name as ShipNames, board)
+        isShipSunk(adjacentCell.name as ShipNames, board) === isSunk
       ) {
         return true;
       }
@@ -36,6 +53,13 @@ const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): bool
 
   return false;
 };
+
+// Convenience functions for specific use cases
+const isAdjacentToUnsunkHit = (board: PositionArray, x: number, y: number): boolean =>
+  isAdjacentToHit(board, x, y, false);
+
+const isAdjacentToSunkShip = (board: PositionArray, x: number, y: number): boolean =>
+  isAdjacentToHit(board, x, y, true);
 
 // Helper function to check if a cell would continue a line of hits
 const wouldContinueHitLine = (board: PositionArray, x: number, y: number): boolean => {
@@ -185,15 +209,17 @@ export const useMakeComputerGuess = () => {
       const x = i % 10;
       const cell = userShips[y][x];
 
-      // Only consider unguessed cells
-      if (cell?.status === CellStates.unguessed || !cell) {
-        // Check if this cell would continue a line of hits (highest priority)
-        if (wouldContinueHitLine(userShips, x, y)) {
-          lineContinuationCells.push(i);
-        }
-        // Check if this cell is adjacent to any unsunk hit (second priority)
-        else if (isAdjacentToUnsunkHit(userShips, x, y)) {
-          adjacentToUnsunkHits.push(i);
+      if (!deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips) {
+        // Only consider unguessed cells that are not adjacent to sunk ships
+        if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
+          // Check if this cell would continue a line of hits (highest priority)
+          if (wouldContinueHitLine(userShips, x, y)) {
+            lineContinuationCells.push(i);
+          }
+          // Check if this cell is adjacent to any unsunk hit (second priority)
+          else if (isAdjacentToUnsunkHit(userShips, x, y)) {
+            adjacentToUnsunkHits.push(i);
+          }
         }
       }
     }
@@ -201,8 +227,81 @@ export const useMakeComputerGuess = () => {
     let targetIndex: number;
 
     if (lineContinuationCells.length > 0) {
-      // Prioritize cells that would continue a line of hits
-      targetIndex = lineContinuationCells[Math.floor(Math.random() * lineContinuationCells.length)];
+      // For line continuation, pick the cell with highest heat value
+      // If multiple cells have the same heat, pick the one closest to center (hard mode only)
+      const heatMap = calculateHeatMap(userShips, aiLevel);
+      const centerX = 4.5;
+      const centerY = 4.5;
+
+      // Calculate heat values for all line continuation cells
+      const cellsWithHeat = lineContinuationCells.map((index) => {
+        const y = Math.floor(index / 10);
+        const x = index % 10;
+        return { index, heat: heatMap[y][x] };
+      });
+
+      // Sort by heat value (highest first)
+      cellsWithHeat.sort((a, b) => b.heat - a.heat);
+
+      if (aiLevel === 'hard' && cellsWithHeat.length > 1) {
+        // Hard mode: pick from top 2 cells with weighted probability (70% top, 30% second)
+        const top2Cells = cellsWithHeat.slice(0, 2);
+        if (top2Cells[0].heat === top2Cells[1].heat && deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
+          // If tied, prefer center
+          const tied = top2Cells;
+          let closestToCenter = tied[0].index;
+          let minDistance = Infinity;
+          for (const cell of tied) {
+            const y = Math.floor(cell.index / 10);
+            const x = cell.index % 10;
+            const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestToCenter = cell.index;
+            }
+          }
+          targetIndex = closestToCenter;
+        } else {
+          // Weighted random: 70% chance top, 30% chance second
+          targetIndex = Math.random() < 0.7 ? top2Cells[0].index : top2Cells[1].index;
+        }
+      } else {
+        // Easy/Medium or single option: pick highest
+        let bestHeat = cellsWithHeat[0].heat;
+        const tiedCells: number[] = [];
+
+        for (const { index, heat } of cellsWithHeat) {
+          if (heat === bestHeat) {
+            tiedCells.push(index);
+          } else {
+            break; // Sorted, so we can stop here
+          }
+        }
+
+        // If there are ties, pick based on intelligence
+        if (tiedCells.length > 1) {
+          if (deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
+            let closestToCenter = tiedCells[0];
+            let minDistance = Infinity;
+
+            for (const index of tiedCells) {
+              const y = Math.floor(index / 10);
+              const x = index % 10;
+              const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestToCenter = index;
+              }
+            }
+            targetIndex = closestToCenter;
+          } else {
+            // Random selection among ties
+            targetIndex = tiedCells[Math.floor(Math.random() * tiedCells.length)];
+          }
+        } else {
+          targetIndex = tiedCells[0];
+        }
+      }
     } else if (adjacentToUnsunkHits.length > 0) {
       // Second priority: cells adjacent to unsunk hits
       targetIndex = adjacentToUnsunkHits[Math.floor(Math.random() * adjacentToUnsunkHits.length)];
@@ -212,21 +311,24 @@ export const useMakeComputerGuess = () => {
       const flatHeatMap = heatMap.flat();
       // Find the top 2 highest values
       const sortedValues = [...flatHeatMap].sort((a, b) => b - a);
-      const top2Values = [...new Set(sortedValues)].slice(0, 2);
+
+      const topValues = [...new Set(sortedValues)].slice(0, deriveIntelligence(aiLevel).chooseBetweenNumberOfCells());
 
       // Get all indices that match any of the top 3 values
 
       // Note: maxValue and maxValueIndex were used in previous logic but are now unused
       // Keeping the heat map calculation for potential future use
 
-      // Create a list of all cells that have the most heat, filtering out already guessed cells
+      // Create a list of all cells that have the most heat, filtering out already guessed cells and cells adjacent to sunk ships
       const maxValueIndices = flatHeatMap.reduce((indices: number[], value: number, index: number) => {
-        if (top2Values.includes(value)) {
+        if (topValues.includes(value)) {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
-          // Only include unguessed cells
-          if (cell?.status === CellStates.unguessed || !cell) {
+          // Only include unguessed cells that are not adjacent to sunk ships (unless easy mode)
+          const shouldExclude =
+            !deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips && isAdjacentToSunkShip(userShips, x, y);
+          if ((cell?.status === CellStates.unguessed || !cell) && !shouldExclude) {
             indices.push(index);
           }
         }
@@ -245,6 +347,21 @@ export const useMakeComputerGuess = () => {
           }
           return indices;
         }, []);
+      }
+
+      // If we have cells from heat map but they're all adjacent to sunk ships,
+      // prefer cells that are NOT adjacent to sunk ships (unless easy mode)
+      if (validIndices.length > 1 && !deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips) {
+        const nonAdjacentToSunkShips = validIndices.filter((index) => {
+          const y = Math.floor(index / 10);
+          const x = index % 10;
+          return !isAdjacentToSunkShip(userShips, x, y);
+        });
+
+        // Only use the sunk ship filter if we have other good options
+        if (nonAdjacentToSunkShips.length > 0) {
+          validIndices = nonAdjacentToSunkShips;
+        }
       }
 
       if (validIndices.length === 0) {
@@ -283,10 +400,10 @@ export const useMakeComputerGuess = () => {
       }
 
       // If we've sunk a user's ship...
-      if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
+      if (status === CellStates.hit && cell?.name && isShipSunk(cell.name as ShipNames, newUserShips)) {
         // Play fail sound effect when computer sinks user's ship (no alarm sound)
         playFailSound();
-        addToLog(`${deriveAvatarName(aiLevel)} sunk your ${cell?.name}!`, 'sunk');
+        addToLog(`${deriveAvatarName(aiLevel)} sunk your ${cell.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
         let didWin = false;

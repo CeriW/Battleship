@@ -35,7 +35,8 @@ export type AchievementId =
   | 'medium_expert'
   | 'hard_expert'
   | 'first_shot_hit'
-  | 'sound_on';
+  | 'sound_on'
+  | 'efficient_win';
 
 export interface Achievement {
   id: AchievementId;
