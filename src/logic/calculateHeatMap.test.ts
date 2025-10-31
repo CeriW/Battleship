@@ -27,7 +27,7 @@ describe('markEdgesColder', () => {
     const cooledBoard = markEdgesColder(initialiseHeatMapArray(), board);
 
     for (let x = 1; x < 9; x++) {
-      expect(cooledBoard[0][x]).toBe(0.6);
+      expect(cooledBoard[0][x]).toBe(0.1);
       expect(cooledBoard[9][x]).toBe(0.6);
     }
 
@@ -60,8 +60,8 @@ describe('markSunkAdjacentColder', () => {
     const cooledBoard = markSunkAdjacentColder(heatMap, board);
 
     // The cells of the sunk ship should have their heat reduced by the multiplier (0.6)
-    expect(cooledBoard[4][5]).toBe(1.2); // 2 * 0.6
-    expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
+    expect(cooledBoard[4][5]).toBe(0.8);
+    expect(cooledBoard[4][6]).toBe(0.8);
   });
 
   test('should not affect cells that are not part of sunk ships', () => {
@@ -100,7 +100,7 @@ describe('markSunkAdjacentColder', () => {
     // The hit cell should not be affected
     expect(cooledBoard[4][5]).toBe(HeatValues.hit);
     // The other cell should be cooled
-    expect(cooledBoard[4][6]).toBe(1.2); // 2 * 0.6
+    expect(cooledBoard[4][6]).toBe(0.8);
   });
 });
 
@@ -194,10 +194,10 @@ describe('calculateHeatMap', () => {
     const heatMap = calculateHeatMap(board, 'hard');
 
     expect(heatMap[y][x]).toBe(0);
-    expect(heatMap[y][x + 1]).toBe(0.42);
-    expect(heatMap[y][x - 1]).toBe(0.36);
-    expect(heatMap[y + 1][x]).toBe(0.36);
-    expect(heatMap[y - 1][x]).toBe(0.36);
+    expect(heatMap[y][x + 1]).toBe(0.12);
+    expect(heatMap[y][x - 1]).toBe(0.09);
+    expect(heatMap[y + 1][x]).toBe(0.09);
+    expect(heatMap[y - 1][x]).toBe(0.09);
   });
 
   test('a miss cell next to a hit cell should have a heat of 0', () => {
@@ -220,12 +220,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[4][7]).toBeGreaterThan(2);
-    expect(heatMap[4][8]).toBe(2.3);
+    expect(heatMap[4][8]).toBe(10.721111111111112);
     expect(heatMap[4][7]).toBeGreaterThanOrEqual(heatMap[4][8]);
 
     // Cells to left
     expect(heatMap[4][4]).toBeGreaterThan(2);
-    expect(heatMap[4][3]).toBe(2.3);
+    expect(heatMap[4][3]).toBe(11.958909593022325);
     expect(heatMap[4][4]).toBeGreaterThan(heatMap[4][3]);
   });
 
@@ -241,12 +241,12 @@ describe('calculateHeatMap', () => {
 
     // Cells to right
     expect(heatMap[6][5]).toBeGreaterThan(2);
-    expect(heatMap[7][5]).toBe(2.35);
+    expect(heatMap[7][5]).toBe(11.387113165555064);
     expect(heatMap[6][5]).toBeGreaterThan(heatMap[7][5]);
 
     // Cells to left
     expect(heatMap[4][5]).toBeGreaterThan(2);
-    expect(heatMap[3][5]).toBe(4.6);
+    expect(heatMap[3][5]).toBe(23.91781918604465);
     expect(heatMap[4][5]).toBeGreaterThan(heatMap[3][5]);
   });
 
@@ -377,7 +377,7 @@ describe('calculateHeatMap', () => {
     expect(heatMap[0][1]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][2]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[0][3]).toBe(0); // Miss cell
-    expect(heatMap[0][4]).toBe(0.452); // Adjacent to hit
+    expect(heatMap[0][4]).toBe(0.21200000000000002); // Adjacent to hit
 
     expect(heatMap[2][0]).toBe(HeatValues.hit); // Hit cell
     expect(heatMap[3][0]).toBe(HeatValues.hit); // Hit cell
