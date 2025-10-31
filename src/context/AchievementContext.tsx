@@ -42,7 +42,7 @@ const createAchievements = (): Achievement[] => [
   {
     id: 'efficient_win',
     name: 'Efficient Victory',
-    description: 'Win a game in 25 rounds or less',
+    description: 'Win a game in 25 shots or less',
     icon: '🎖️',
     rarity: 'rare',
     unlocked: false,
