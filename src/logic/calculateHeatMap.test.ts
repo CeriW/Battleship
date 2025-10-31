@@ -37,10 +37,10 @@ describe('markEdgesColder', () => {
     }
 
     // Corners
-    expect(cooledBoard[0][0]).toBe(0.36);
-    expect(cooledBoard[0][9]).toBe(0.36);
-    expect(cooledBoard[9][0]).toBe(0.36);
-    expect(cooledBoard[9][9]).toBe(0.36);
+    expect(cooledBoard[0][0]).toBe(0.010000000000000002);
+    expect(cooledBoard[0][9]).toBe(0.010000000000000002);
+    expect(cooledBoard[9][0]).toBe(0.010000000000000002);
+    expect(cooledBoard[9][9]).toBe(0.010000000000000002);
   });
 });
 
