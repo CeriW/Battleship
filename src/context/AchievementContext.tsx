@@ -541,7 +541,7 @@ export const AchievementProvider = ({ children }: { children: React.ReactNode })
               shouldUnlock = newProgress.quickWins >= 1;
               break;
             case 'efficient_win':
-              // Check if the game was won in 25 rounds or less
+              // Check if the game was won in 25 shots or less
               if (gameEvent === GameEvents.USER_WIN && data?.shots) {
                 shouldUnlock = data.shots <= 25;
               }

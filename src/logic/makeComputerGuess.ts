@@ -325,8 +325,10 @@ export const useMakeComputerGuess = () => {
           const y = Math.floor(index / 10);
           const x = index % 10;
           const cell = userShips[y][x];
-          // Only include unguessed cells that are not adjacent to sunk ships
-          if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
+          // Only include unguessed cells that are not adjacent to sunk ships (unless easy mode)
+          const shouldExclude =
+            !deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips && isAdjacentToSunkShip(userShips, x, y);
+          if ((cell?.status === CellStates.unguessed || !cell) && !shouldExclude) {
             indices.push(index);
           }
         }
@@ -348,8 +350,8 @@ export const useMakeComputerGuess = () => {
       }
 
       // If we have cells from heat map but they're all adjacent to sunk ships,
-      // prefer cells that are NOT adjacent to sunk ships
-      if (validIndices.length > 1) {
+      // prefer cells that are NOT adjacent to sunk ships (unless easy mode)
+      if (validIndices.length > 1 && !deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips) {
         const nonAdjacentToSunkShips = validIndices.filter((index) => {
           const y = Math.floor(index / 10);
           const x = index % 10;
