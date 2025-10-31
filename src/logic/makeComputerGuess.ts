@@ -413,10 +413,10 @@ export const useMakeComputerGuess = () => {
       }
 
       // If we've sunk a user's ship...
-      if (isShipSunk(cell?.name as ShipNames, newUserShips)) {
+      if (status === CellStates.hit && cell?.name && isShipSunk(cell.name as ShipNames, newUserShips)) {
         // Play fail sound effect when computer sinks user's ship (no alarm sound)
         playFailSound();
-        addToLog(`${deriveAvatarName(aiLevel)} sunk your ${cell?.name}!`, 'sunk');
+        addToLog(`${deriveAvatarName(aiLevel)} sunk your ${cell.name}!`, 'sunk');
         setAvatar({ gameEvent: GameEvents.COMPUTER_SUNK_USER });
 
         let didWin = false;
