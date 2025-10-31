@@ -32,11 +32,13 @@ export const HeatMapBoard = ({ positions }: any) => {
           key={`cell-${letters[y]}-${x}`}
           className="cell"
           style={{
-            // TODO - Not sure if I'm sticking with this. Should move to CSS if I do.
-            backgroundColor: positions[y][x] === maxValue ? 'black' : `rgba(255, 0, 0, ${positions[y][x] / 6})`,
-            color: positions[y][x] >= maxValue ? 'white' : `black`,
+            backgroundColor:
+              positions[y][x] === maxValue ? '#ff6b6b' : `rgba(255, 107, 107, ${Math.min(positions[y][x] / 6, 0.8)})`,
+            color: 'white',
             overflow: 'hidden',
             textAlign: 'left',
+            border: '1px solid #ddd',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
           }}
           data-testid="cell"
         >

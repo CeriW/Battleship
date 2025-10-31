@@ -20,6 +20,8 @@ import { About } from './components/About';
 import ShipPlacement from './components/ShipPlacement';
 import { Toolbar } from './components/Toolbar';
 import { useAchievementTracker } from './hooks/useAchievementTracker';
+import HeatMapBoard from './components/HeatMapBoard';
+import { calculateHeatMap } from './logic/calculateHeatMap';
 
 const computerThinkingTime = 700;
 

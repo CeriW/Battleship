@@ -1,11 +1,18 @@
 import React, { useContext, useCallback } from 'react';
 import { GameContext } from '../GameContext';
-import { CellStates, ShipNames, PositionArray } from '../types';
+import { CellStates, ShipNames, PositionArray, AiLevel } from '../types';
 import { calculateHeatMap } from './calculateHeatMap';
 import { checkAllShipsSunk, isShipSunk } from './helpers';
 import { deriveAvatarName, GameEvents } from '../components/Avatar';
 import { playAlarmSound, playFailSound, playLoseSound, fadeOutMusic } from '../utils/soundEffects';
 import { useAchievementTracker } from '../hooks/useAchievementTracker';
+
+const deriveIntelligence = (aiLevel: AiLevel) => {
+  return {
+    biasGuessesTowardsCenter: aiLevel === 'hard' ? true : false,
+    willGuessAdjacentToSunkShips: aiLevel === 'easy' ? true : false,
+  };
+};
 
 // Helper function to check if a cell is adjacent to hits based on ship sunk status
 const isAdjacentToHit = (board: PositionArray, x: number, y: number, isSunk: boolean): boolean => {
@@ -192,15 +199,17 @@ export const useMakeComputerGuess = () => {
       const x = i % 10;
       const cell = userShips[y][x];
 
-      // Only consider unguessed cells that are not adjacent to sunk ships
-      if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
-        // Check if this cell would continue a line of hits (highest priority)
-        if (wouldContinueHitLine(userShips, x, y)) {
-          lineContinuationCells.push(i);
-        }
-        // Check if this cell is adjacent to any unsunk hit (second priority)
-        else if (isAdjacentToUnsunkHit(userShips, x, y)) {
-          adjacentToUnsunkHits.push(i);
+      if (!deriveIntelligence(aiLevel).willGuessAdjacentToSunkShips) {
+        // Only consider unguessed cells that are not adjacent to sunk ships
+        if ((cell?.status === CellStates.unguessed || !cell) && !isAdjacentToSunkShip(userShips, x, y)) {
+          // Check if this cell would continue a line of hits (highest priority)
+          if (wouldContinueHitLine(userShips, x, y)) {
+            lineContinuationCells.push(i);
+          }
+          // Check if this cell is adjacent to any unsunk hit (second priority)
+          else if (isAdjacentToUnsunkHit(userShips, x, y)) {
+            adjacentToUnsunkHits.push(i);
+          }
         }
       }
     }
@@ -208,8 +217,52 @@ export const useMakeComputerGuess = () => {
     let targetIndex: number;
 
     if (lineContinuationCells.length > 0) {
-      // Prioritize cells that would continue a line of hits
-      targetIndex = lineContinuationCells[Math.floor(Math.random() * lineContinuationCells.length)];
+      // For line continuation, pick the cell with highest heat value
+      // If multiple cells have the same heat, pick the one closest to center (hard mode only)
+      const heatMap = calculateHeatMap(userShips, aiLevel);
+      const centerX = 4.5;
+      const centerY = 4.5;
+
+      let bestHeat = -Infinity;
+      const tiedCells: number[] = [];
+
+      // Find all cells with the highest heat value
+      for (const index of lineContinuationCells) {
+        const y = Math.floor(index / 10);
+        const x = index % 10;
+        const heat = heatMap[y][x];
+        if (heat > bestHeat) {
+          bestHeat = heat;
+          tiedCells.length = 0; // Clear previous ties
+          tiedCells.push(index);
+        } else if (heat === bestHeat) {
+          tiedCells.push(index);
+        }
+      }
+
+      // If there are ties, pick based on intelligence
+      if (tiedCells.length > 1) {
+        if (deriveIntelligence(aiLevel).biasGuessesTowardsCenter) {
+          let closestToCenter = tiedCells[0];
+          let minDistance = Infinity;
+
+          for (const index of tiedCells) {
+            const y = Math.floor(index / 10);
+            const x = index % 10;
+            const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestToCenter = index;
+            }
+          }
+          targetIndex = closestToCenter;
+        } else {
+          // Random selection among ties
+          targetIndex = tiedCells[Math.floor(Math.random() * tiedCells.length)];
+        }
+      } else {
+        targetIndex = tiedCells[0];
+      }
     } else if (adjacentToUnsunkHits.length > 0) {
       // Second priority: cells adjacent to unsunk hits
       targetIndex = adjacentToUnsunkHits[Math.floor(Math.random() * adjacentToUnsunkHits.length)];
